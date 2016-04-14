@@ -1,0 +1,45 @@
+0.15
+
+New (0.13.5, 0.14 & 0.15): 
+- View : Zoom 500%
+- View : view center
+- Zoom is no more limited to 250%
+- Option : menu Zoom 500%
+- Option : Show camera Cache
+- Option : camera Cache alpha
+- Now, at start, Cartoon Check For update.
+- point : multi-select & move (line, curve, complexe shape)
+- Point : set soft
+- Point : set hard
+- Help : wiki
+- Help : update
+- Now, the software check if an new version is available and ask if you want to download it
+- Image : change image
+- Shape : set shape to origin
+- Shape : set origin to shape
+- Shape : set shape to bottom
+- Shape : set shape to top
+- Object-layer : alpha 
+- add animation system (not finished) : draw only fps and some informations (debug)
+- animation UI (button, spin gadget..) : play, fps, startframe, endframe, currentframe
+- Add a StatusBar (for info, zoom...)
+- (not finished) Image shape : X,Y,W,H,Repeat
+
+Changes : 
+- when pt selected: we can see a red circle for this point
+- when pt selected: SpinGadget pt X /Y is now updated
+
+Fixes : 
+- when create a new shape, it was a bug with the view (line, curve, circle, box...)
+- when add points, it was a bug with view (line, curve, complexe shape)
+- numerous bugs with add pt fixed
+- Fixe a bug with delete key : work only if the active gadget = main canvas (to not erase our shape by mystake)
+- Fixe a bug with position X & Y object-layer and ShapeFx
+- Fixe a bug when create new doc, object-layer alpha, & size was 0
+- fixe a bug for Spingadget point X & Y (doesn't work with the last point)
+- fixe some bugs in the export for purebasic
+- fixe a bug with Add fx : fx isn't added to the shape
+- fixe a bug with color if load old file (because object\alpha = 0 with file < 0.14)
+- fixe a bug if load old file (object width & height was 0)
+- Some minor bugs fixes
+
