@@ -1,0 +1,23 @@
+   Copyright 2016 Blendman
+
+   Cartoon (Animation) ! 
+
+   
+
+Tous les fichiers inclus avec cette installation sont distribués sous la License du logiciel Cartoon (Animation) ; Vous ne pouvez pas utiliser ces fichiers en dehors de l'utilisation avec Cartoon (Animation).
+
+Le logiciel Cartoon (Animation) est distribué sous cette license, il est distribué tel quel, sans aucune garantie ni aucune condition d'aucune sorte. L'auteur ou le logiciel ne pourrait être responsable des dommages causés directement ou indirectement par l'utilisation du logiciel, quels qu'ils soient et quelle que soit cette utilisation. En cas de doute ou de conflit, la licence en Français est celle qui sera prise en compte en priorité.
+
+
+
+
+All files included with this installation are licensed under the 
+   Cartoon! License (the "License"); you may not use these 
+   files except in compliance with the License. 
+
+   Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+   either express or implied.  See the License for the specific 
+   language governing permissions and limitations under the 
+   License.
