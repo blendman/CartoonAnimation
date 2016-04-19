@@ -3,7 +3,14 @@
 
 Cartoon is a 2D animation software developped by Blendman, in purebasic. 
 
+#ScreenShots
+
+Version 0.17
+![Cartoon v0.17](https://raw.githubusercontent.com/blendman/CartoonAnimation/master/screenshots/cartoon0.17.jpg)
+
+Version 0.15
 ![Cartoon v0.15](http://blendman.free.fr/dev/pb/spriteanimation/cartoon0.15.jpg)
+
 
 A 2D animation creation software
 - vector drawing
