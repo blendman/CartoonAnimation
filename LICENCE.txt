@@ -2,6 +2,14 @@ Copyright 2016 Dracaena Studio - Blendman
 
 Cartoon (Animation) ! 
 
+License
+
+Depuis mai 2017, le logiciel Cartoon (Animation) est distribué sous license Open-source.
+vous pouvez le modifier, utiliser les sources dans un autre logiciel, mais vous devez fournir les nouvelles sources aux utilisateurs.
+N'oubliez de me citer dans les crédits (Blendman), ce serait sympa ;).
+
+
+
 Termes et conditions
 
 Ce programme est fourni "TEL QUEL". Dracaena studio ou tout représentant ne responsable responsable d'aucun dommage (ou dommages) attribué à Cartoon, quel que soit le dommage et quelle que soit l'utilisation du logiciel Cartoon. Vous êtes averti que vous utilisez Cartoon à vos propres risques. Aucune garantie implicite ou explicite n'est donnée par Dracaena Studio ou tout représentant.
@@ -18,6 +26,12 @@ Dracaena studio se réserve tous les droits sur ce programme et toutes les archiv
    
 Tous les fichiers inclus avec cette installation sont distribués sous la License du logiciel Cartoon (Animation) ; Vous ne pouvez pas utiliser ces fichiers en dehors de l'utilisation avec Cartoon (Animation).
 
+
+License
+
+Since May 2017, the cartoon software (Animation) is distributed under the open-source license.
+You can modify it, use the sources in another software, but you must provide the new sources to users.
+Do not forget to mention me in the credits (Blendman), it would be nice ;).
 
 
 Terms And Conditions
