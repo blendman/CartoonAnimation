@@ -1,0 +1,5 @@
+gen, ,0.13,
+obj,Object0,0,0,100,100,0,0,0
+shape,0,-8856356,bossu0,255,0,10,5,5,6,1024,768,D:\_projets\dev\_forum\GameLib\puregamelib_tools\spriteAnimation\_branch\drawing\bossu.png;2;504;0;1024;768;0;,-504,566,
+shapefx,0,0,0,-16746241,255,0,0,10,5,5,100,0,0,0
+pt,0,0,0,

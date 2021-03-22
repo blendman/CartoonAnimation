@@ -1,0 +1,193 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset2 Symbol;}}
+{\*\generator Riched20 6.3.9600}\viewkind4\uc1 
+\pard\sl240\slmult1\qc\b\f0\fs32\lang12 Vector Drawing (and animation)\par
+02 april 2016\par
+Version 0.08\par
+\i\fs24 (Made in Purebasic 5.42)\b0\fs18\par
+
+\pard\sl240\slmult1\b\i0\fs36\par
+English Version\b0\par
+\fs22\par
+\par
+\b 1) Introduction\b0\par
+\par
+In Vector Drawing, you use "Objects".\par
+An object is like a layer in other graphic tool, but it's composed by severals shapes.\par
+Each object can have one or more shapes.\par
+\par
+\b 1.1) Object\par
+\par
+\b0 You can change some parameters of the selected objected (in object panel) : \par
+- Name, x,y ,width, height, depth\par
+\par
+Shape tool :\par
+- first you select the shape you want to add : shape, box, ellipse, line, curve, image, text\par
+- than you draw it on the canvas\par
+\par
+You can add this shape on the current object, or create a new object.\par
+\par
+\i To create a new object, when creating a new shape, set the checkbox 'Create new objet', in object panel.\i0\par
+\par
+\b 1.2) Shapes\b0\par
+\par
+There are several type of shapes : \par
+- box : square or rectangle \par
+- ellipse : ellipse or circle \par
+- line : right line\par
+- curve : curved line\par
+- image : an image (png, jpg)\par
+- text : a text\par
+- complex shape : it's a particular shape, composed by several curves attached and close. The complex shape are the more powerfull type.\par
+\par
+Each shapes has its own parameters : \par
+- x, y, alpha, color, width, height, offset (x,y), depth\par
+- style (filled, line, dash, dot), parameters for style : width, height, distance\par
+- FX\par
+\par
+Fx are usefull to create special fx on the shape (border, shadow (internal, external)...\par
+Fx parameters : \par
+- Style (filled, line, dash, dot), width, height, distance, x,y,scale, alpha, color, activated\par
+\par
+\par
+\i How to create a new shape (box, circle, line, complex shape...) ?\i0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 To create a line or a curve,select the line or curve tool, then clic and move the mouse.\par
+{\pntext\f1\'B7\tab}to create a box or ellipse, select the tool, then clic and move the mouse.\par
+
+\pard\sl240\slmult1\par
+How to add a shape, from the shape preset : \par
+- select the shape you want in the combobox, panel shape\par
+- clic on "add" button\par
+\par
+You can add new complex shape preset, they are in the folder : data\\shapes\\\par
+\par
+\par
+\b 2) transformations\par
+\b0\par
+You can select, move, scale or rotate a shape (or several shapes if they are selected).\par
+\par
+\b 2.1) selection\b0\par
+\par
+Select severals shapes: use the shapelist or use th shift + clic on the shape to select it.\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 To move,rotate,scale a shape, first  :  select the object which contain this Shape, then move the mouse \par
+
+\pard\sl240\slmult1\par
+\b 2.2) add points / delete points\b0\par
+\par
+Add points to a shape : work with shape, line or curve.\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 To add point to the shape, curve or line, use 'addpoint' tool.\par
+{\pntext\f1\'B7\tab}To delete a point, use the "delete point tool" and clic on the point you want to delete\par
+
+\pard\sl240\slmult1\par
+\b 2.3) transformations : move, rotate, scale\b0\par
+\par
+You can move, rotate or scale a shape with the tool "move, "rotate" or scale".\par
+You can move one point with the "move" tool.\par
+\par
+
+\pard\sl240\slmult1\b 3) Edition\b0\par
+\par
+- Copy/paste a shape : \par
+With ctrl+C/Ctrl+V : you can copy a shape and past it.\par
+\par
+- delete the selected shape : you can use the "delete" key, or clic on the "-", in the shape panel\par
+\par
+\par
+\par
+\par
+\b\fs36 Version Fran\'e7aise\b0\par
+\fs22\par
+\par
+\b 1) Introduction\b0\par
+\par
+Dans le logiciel "Vector Drawing", you utilisez des "objets".\par
+un objet est comme un calque dans les autres applications graphiques (gimp, photoshop, inkscape...), sauf qu'il est compos\'e9 de "shapes " (ou formes).\par
+Chaque objet peut donc avoir une ou plusieurs shapes (formes).\par
+\par
+\b 1.1) Objet\par
+\par
+\b0 Apr\'e8s avoir cr\'e9\'e9 un objet (barre d'outil : box, ellipse, line, curve...), vous pouvez changer les parem\'e8tres de l'objet s\'e9lectionn\'e9 (dans l'onglet "object").\par
+- Name (nom), x,y ,width(largeur), height(hauteur), depth (profondeur position de l'objet (est-il au dessus ou en dessous des autres ?).\par
+\par
+Outil cr\'e9ation de forme (shape tool) :\par
+- d'abord, vous s\'e9lectionne le type de forme que vous souhaitez (forme complexe, box, ellipse, line, curve, image, text)\par
+- puis, vous cliquez sur le canvas et d\'e9placer votre souris pour agrandir certaines formes (ligne, courbe, box, ellipse notamment).\par
+\par
+Vous pouvez ajouter cette forme sur l'objet courrant ou cr\'e9er un nouvel objet avec cette forme. \par
+\par
+\i Pour cr\'e9er un nouvel objet, avant de cr\'e9er la forme, s\'e9lectionnez "Create new objet", dans l'onglet Object.\i0\par
+\par
+\b 1.2) Formes\b0\par
+\par
+Il y a plusieurs types de formes : There are several type of shapes : \par
+- box :  carr\'e9 ou rectangle \par
+- ellipse : ellipse ou cercle\par
+- line : ligne droite\par
+- curve : ligne courbe\par
+- image : une image (png, jpg)\par
+- text : un text\par
+- complexe shape (forme complexe) : c'est une forme particuli\'e8re, compos\'e9e de plusieurs courbes attach\'e9es les unes aux autres. Cette forme est la plus puissante car elle permet de nombreuses choses, notamment de cr\'e9er des formes tr\'e8s personnelles.\par
+\par
+Chaque forme a ses propres param\'e8tres : \par
+- x, y, transparence (alpha), couleur, width-largeur, height-hauteur, offset (centre), depth (profondeur)\par
+- un style (rempli (filled), lgine, ligne point till\'e9, points)\par
+- param\'e8tres du style : largeur de la ligne, hauteur, distance entre les points (width, height, distance)\par
+- FX : effet sp\'e9cial qu'on peut appliquer \'e0 la forme\par
+\par
+Les FX sont tr\'e8s utiles pour cr\'e9er des effets sp\'e9ciaux sur la forme (bordure ou ligne de contour, ombre interne ou externe, etc.\par
+Param\'e8tres: \par
+- Style (rempli, ligne, points till\'e9, point (filled, line, dash, dot), largeur/hauteur, distance, x,y, \'e9chelle (scale), transparence (alpha), couleur (color), actif.\par
+\par
+\par
+\i Comment cr\'e9er une nouvelle (box, circle, line, complexe shape...) ?\i0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 To create a line or a curve,select the line or curve tool, then clic and move the mouse.\par
+{\pntext\f1\'B7\tab}to create a box or ellipse, select the tool, then clic and move the mouse.\par
+
+\pard\sl240\slmult1\par
+How to add a shape, from the shape preset : \par
+- select the shape you want in the combobox, panel shape\par
+- clic on "add" button\par
+\par
+You can add new shape preset, they are in the folder : data\\shapes\\\par
+\par
+\par
+\b 2) transformations\par
+\b0\par
+You can select, move, scale or rotate a shape (or several shapes if they are selected).\par
+\par
+\b 2.1) selection\b0\par
+\par
+Select severals shapes: use the shapelist or use th shift + clic on the shape to select it.\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 To move,rotate,scale a shape, first  :  select the object which contain this Shape, then move the mouse \par
+
+\pard\sl240\slmult1\par
+\b 2.2) add points / delete points\b0\par
+\par
+Add points to a shape : work with shape, line or curve.\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 To add point to the shape, curve or line, use 'addpoint' tool.\par
+{\pntext\f1\'B7\tab}To delete a point, use the "delete point tool" and clic on the point you want to delete\par
+
+\pard\sl240\slmult1\par
+\b 2.3) transformations : move, rotate, scale\b0\par
+\par
+You can move, rotate or scale a shape with the tool "move, "rotate" or scale".\par
+You can move one point with the "move" tool.\par
+\par
+\b 3) Edition\b0\par
+\par
+- Copy/paste a shape : \par
+With ctrl+C/Ctrl+V : you can copy a shape and past it.\par
+\par
+- delete the selected shape : you can use the "delete" key, or clic on the "-", in the shape panel\par
+\par
+\par
+\par
+}
+ 
