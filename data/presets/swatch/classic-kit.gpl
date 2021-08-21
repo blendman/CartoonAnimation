@@ -1,0 +1,83 @@
+GIMP Palette
+Name: classic-kit
+Columns: 7
+# License CC-0 / Public domain
+# By David Revoy, more infos : http://www.davidrevoy.com/article27/
+
+0 0 0    Black
+37 37 37    Gray 15
+76 76 76    Grey 30
+127 127 127    Grey 50
+170 170 170    Grey 67
+216 216 216    Grey 85
+254 254 254    White
+127 0 0    Maroon
+208 0 0    English-red
+254 53 33    Tomato
+251 59 2    Orange-red
+254 139 104    Salmon
+251 231 31    Cadium-yellow
+242 252 36    Lemon yellow
+120 4 34    Dark crimson
+168 31 61    Deep carmine
+254 139 0    Orange
+254 167 17    Dark tangerine
+216 143 87    Persian orange
+193 177 127    Sand
+254 228 179    Peach
+99 53 45    Bole
+107 40 51    Dark cordovan
+162 64 43    Chestnut
+227 135 99    Dark salmon
+254 194 142    Apricot
+254 218 187    Unbleached silk
+241 226 197    Straw
+52 18 12    Bistre
+83 41 13    Dark chocolate
+101 50 42    Burnt sienna
+183 65 0    Sienna
+215 152 11    Yellow ochre
+209 179 139    Tan
+231 203 143    Dark wheat
+0 48 82    Prussian blue
+47 68 118    Dark grey blue
+0 70 170    Cobalt blue
+30 116 253    None
+119 179 254    Bright french blue
+170 199 254    Bright steel blue
+207 230 254    Ice blue
+29 50 57    Medium jungle green
+46 78 78    Dark slate grey
+73 103 92    Dark grullo green
+0 127 127    Teal
+66 169 175    Turquoise
+108 173 198    Cerulean frost
+172 216 185    Tiffany green
+21 33 28    Gray-asparagus
+35 47 44    Medium dark teal
+73 103 92    Xanadu
+118 197 120    Mint
+174 204 181    Timberwolf
+184 244 245    Celeste
+192 254 233    Aquamarine
+28 51 34    Cal Poly Pomona
+0 67 32    Forest green
+41 127 0    Napier green
+127 127 0    Olive
+64 155 104    Sea green
+188 245 28    Green-yellow
+230 243 133    Bright chartreuse
+137 22 136    Purple
+77 38 137    Violet
+192 74 109    Dark thulian pink
+221 48 98    Cerise
+254 19 146    Deep pink
+254 101 203    Rose pink
+254 202 218    Pink
+254 254 254    White
+228 16 0    RGB Red
+0 254 0    RGB Green
+0 0 254    RGB Blue
+0 254 254    CMYK Cyan
+254 0 254    CMYK Magenta
+254 254 0    CMYK Yellow

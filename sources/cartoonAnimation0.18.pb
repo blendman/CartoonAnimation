@@ -1001,7 +1001,7 @@ CompilerIf Not Defined(White, #PB_Constant)
   #White = $EEEEEE
 CompilerEndIf
 
-#ProgramVersionVD = "0.17"
+#ProgramVersionVD = "0.18"
 CompilerIf #PB_Compiler_Processor = #PB_Processor_x86     
     #ProgramBitVD = " (x86)"
 CompilerElse
@@ -7840,16 +7840,14 @@ OpenWinVectorDrawing()
 
 
 
-; IDE Options = PureBasic 5.42 LTS (Windows - x64)
-; CursorPosition = 6401
-; FirstLine = 197
-; Folding = AIAAAFAAAFAIDABga8DAAAAAAAAAAAAAAAAAAAAAAAAwAAvBAAABAAA5DAAAAAAAAAAAQAAAYAawAAAAAAAAAAAAAAAAAAAw0ASAlC9AAAACBHHAAAAAAoAAAAoBYAgAAAAAXAAAAg5
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 1003
+; Folding = BAAQAFAAAFAsDgBy--TCAAAAAAAAAAAAAAAAAAAAAAAwAAvBAAABAAA5DAAAAAAAAAAAQAAAYAazAAAAAAAAAAAAAAAAAAA50ASKl70AAAECBHHAAAAAAoAAAAoBYAgAAAAAXAAAAw
 ; EnableAsm
-; EnableUnicode
 ; EnableThread
 ; EnableXP
 ; EnableOnError
-; UseIcon = ..\..\spriteanimation.ico
+; UseIcon = spriteanimation.ico
 ; Executable = _release\x64\cartoon0.18\cartoon0.18.exe
-; CompileSourceDirectory
 ; EnablePurifier
+; EnableUnicode
