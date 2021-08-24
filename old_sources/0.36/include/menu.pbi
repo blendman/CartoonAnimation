@@ -321,8 +321,6 @@ Procedure Vd_OptionsReset()
     \SnapX  = 32
     \SnapY  = 32
     \Offset = 0
-    \PathSave$ = "save"
-    \PathOpen$ = "save"
     
   EndWith
   
@@ -1071,9 +1069,9 @@ EndProcedure
 ;}
 
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 353
-; FirstLine = 78
-; Folding = AT6uBQAAAAAcg-BAAeAg-
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 835
+; FirstLine = 80
+; Folding = ATJsBQAAAAAcg-BAAeAg-
 ; EnableXP
 ; DisableDebugger

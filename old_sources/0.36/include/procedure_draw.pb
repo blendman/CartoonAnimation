@@ -363,23 +363,13 @@ Procedure VDDrawShapeColor(vo,j)
       ; position des dégradé, position x,y du dégradé circulaire, couleur dégradé, etc...
       Select \ColorGrad
           
-        Case 0 ; color
+        Case 0
           VectorSourceColor(RGBA(Red(\color),Green(\color),Blue(\color),\Alpha)) ;* Obj(vo)\Alpha)*0.0039215)) ; 0.0039215 = 1/255
           
         Case 1 ; gradient lineaire
           n = ArraySize(\ColGrad())
-          If n=0
-            n=1
-            ReDim \ColGrad(n)
-            \ColGrad(n) = RGBA(0,0,0,255)
-          EndIf
           p = ArraySize(\pt())
-
-          If p>0
-            VectorSourceLinearGradient(\pt(0)\x+\w/2,\pt(0)\y+\h/2,\pt(p)\x,\pt(p)\y)  
-          Else
-             VectorSourceLinearGradient(\pt(0)\x+\w/2,\pt(0)\y+\h/2,\pt(0)\x,\pt(0)\y)  
-          EndIf
+          VectorSourceLinearGradient(\pt(0)\x+w/2,\pt(0)\y+h/2,\pt(p)\x,\pt(p)\y)         
           For i=0 To n
             d = i/n
             VectorSourceGradientColor(\ColGrad(i),d) 
@@ -387,22 +377,15 @@ Procedure VDDrawShapeColor(vo,j)
           
         Case 2 ; gradient circulaire
           n = ArraySize(\ColGrad())
-           If n=0
-             n=1
-             ReDim \ColGrad(n)
-            \ColGrad(n) = RGBA(0,0,0,255)
-          EndIf
-          VectorSourceCircularGradient(\pt(0)\x+\w/2,\pt(0)\y+\h/2,\w/2) 
+          VectorSourceCircularGradient(\pt(0)\x+w/2,\pt(0)\y+h/2,w/2) 
           For i=0 To n
             d = i/n
-            VectorSourceGradientColor(\ColGrad(i), d)                    
+            VectorSourceGradientColor(\ColGrad(i),d)                    
           Next
           
         Case 3 ; image texture 
           n = ArraySize(\ColGrad())
-          If IsImage(\Img)
-            VectorSourceImage(ImageID(\Img))  
-          EndIf
+          VectorSourceImage(ImageID(\Img))    
           For i=0 To n
             d = i/n
             VectorSourceGradientColor(\ColGrad(i),d) 
@@ -413,16 +396,16 @@ Procedure VDDrawShapeColor(vo,j)
     EndIf
     
     ; on choisit le type (line, dash, dot, filled..)
-      Select \Typ
-        Case 0
-          FillPath()
-        Case 1
-          StrokePath(\w,#PB_Path_RoundEnd) 
-        Case 2
-          DashPath(\w,\h)
-        Case 3
-          DotPath(\w,\d,#PB_Path_RoundEnd)
-      EndSelect
+    Select \Typ
+      Case 0
+        FillPath()
+      Case 1
+        StrokePath(\w,#PB_Path_RoundEnd) 
+      Case 2
+        DashPath(\w,\h)
+      Case 3
+        DotPath(\w,\d,#PB_Path_RoundEnd)
+    EndSelect
     
   EndWith
   
@@ -1168,8 +1151,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 376
-; FirstLine = 104
-; Folding = Ul-v-808-fe4---8-AXwju---PQ+-
+; CursorPosition = 221
+; FirstLine = 9
+; Folding = Ul---80b-6d---v-DcBP7+---A6--
 ; EnableXP
 ; DisableDebugger

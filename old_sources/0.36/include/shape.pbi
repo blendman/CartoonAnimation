@@ -657,8 +657,6 @@ Procedure Shape_Add(x,y)
         \Shape(m)\Nom$ = nom$+Str(m)
         \Shape(m)\Alpha = vdoptions\ToolOptions\Alpha
         \Shape(m)\Color = vdoptions\ToolOptions\Color; RGBA(220,220,120,255)
-        c = vdoptions\ToolOptions\Color
-        \Shape(m)\ColGrad(0) = RGBA(Red(c),Green(c),Blue(c),vdoptions\ToolOptions\Alpha)
         \Shape(m)\pt(0)\x = x
         \Shape(m)\pt(0)\y = y
         \Shape(m)\ShapTyp = vdOptions\Action - #VD_actionAddShape
@@ -1198,7 +1196,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
       ProcedureReturn 0
     Else
       
-      If ReadFile(10,file$)
+      If OpenFile(10,file$)
         
         ; Debug"openfile shape : "+file$
         Vd\DocFilename$ = file$
@@ -1325,7 +1323,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 If Obj(ObjId)\Shape(j)\Alpha =0
                   Obj(ObjId)\Shape(j)\Alpha =255
                 EndIf
-                ; Debug ""+Version+" / "+ValD(#ProgramVersionVD)
+                Debug ""+Version+" / "+ValD(#ProgramVersionVD)
               EndIf
               
               ; Style
@@ -1431,7 +1429,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
         ShapeGetProperties()
         VD_Layer_UpdateUI()
         
-        ; Debug "ok fin readfile shape"
+        Debug "ok fin readfile shape"
         CloseFile(10)
         If draw= 1
           Drawcanvas()
@@ -1825,15 +1823,6 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
   If shapeid > -1
     Select propertie
         
-      Case #ShapePropertie_ColorTyp
-        For i=0 To ArraySize(obj(ObjId)\Shape())
-          If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
-            Obj(ObjId)\Shape(i)\ColorGrad = GetGadgetState(#G_shapeColorTyp)
-            If GetGadgetState(#G_shapeColorTyp) >0 And GetGadgetState(#G_shapeColorTyp)<3
-            EndIf
-          EndIf
-        Next 
-        
       Case #ShapePropertie_Color
         c = Obj(ObjId)\Shape(ShapeId)\Color
         If value <>-1
@@ -1846,7 +1835,6 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
             With Obj(ObjId)\Shape(i)
               If \Selected Or i = shapeid
                 \Color=RGBA(Red(col),Green(col),Blue(col),Obj(ObjId)\Shape(i)\alpha)
-                \ColGrad(0)=RGBA(Red(col),Green(col),Blue(col),Obj(ObjId)\Shape(i)\alpha)
               EndIf
             EndWith
           Next 
@@ -1866,6 +1854,7 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
         EndIf
         
       Case #ShapePropertie_SetParent
+         If shapeid > -1
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected And shapeid <> i
               id = shapeId
@@ -1875,49 +1864,58 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
               Obj(ObjId)\Shape(i)\Parent\idUnik$ = Obj(ObjId)\Shape(id)\idUnik$
             EndIf
           Next 
+        EndIf
         
       Case #ShapePropertie_StrokeWidth ; lineW
+        If shapeid > -1
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
               Obj(ObjId)\Shape(i)\w = ValD(GetGadgetText(#G_shapeLineW))
               min(Obj(ObjId)\Shape(i)\w,0.001)
             EndIf
           Next 
+        EndIf
         
       Case #ShapePropertie_LineD
+        If shapeid > -1
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
               Obj(ObjId)\Shape(i)\d = ValD(GetGadgetText(#G_shapeLineD))
               min(Obj(ObjId)\Shape(i)\d,0.001)
             EndIf
           Next 
+        EndIf
         
       Case #ShapePropertie_LineH
+        If shapeid > -1
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
               Obj(ObjId)\Shape(i)\h = ValD(GetGadgetText(#G_shapeLineH))
               min(Obj(ObjId)\Shape(i)\h,0.001)
             EndIf
           Next 
+        EndIf
         
       Case #ShapePropertie_Style
+        If shapeid > -1
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
               Obj(ObjId)\Shape(i)\Typ = GetGadgetState(#G_shapeTyp)
             EndIf
           Next 
+        EndIf
         
       Case #ShapePropertie_Alpha
-        For i=0 To ArraySize(obj(ObjId)\Shape())
-          With  Obj(ObjId)\Shape(i)
-            If \Selected Or i = shapeid
-              \alpha = GetGadgetState(#G_shapeAlpha)
-              col = \Color
-              \Color = RGBA(Red(col),Green(col),Blue(col),\alpha)
-              \ColGrad(0)=\Color
+        If shapeid > -1
+          For i=0 To ArraySize(obj(ObjId)\Shape())
+            If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
+              Obj(ObjId)\Shape(i)\alpha = GetGadgetState(#G_shapeAlpha)
+              col = Obj(ObjId)\Shape(i)\Color
+              Obj(ObjId)\Shape(i)\Color = RGBA(Red(col),Green(col),Blue(col),Obj(ObjId)\Shape(i)\alpha)
             EndIf
-          EndWith
-        Next 
+          Next 
+        EndIf
+        
         
     EndSelect
   EndIf
@@ -2088,7 +2086,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1443
-; FirstLine = 175
-; Folding = wAAAAAAAgEBtAAAAAAAAAAAAA0qAAEAAAAAAAAAw+DA5ug-RB+
+; CursorPosition = 1992
+; FirstLine = 188
+; Folding = AAAAAAAAwEBtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9C+nF5
 ; EnableXP

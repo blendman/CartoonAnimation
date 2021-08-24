@@ -57,15 +57,12 @@ Repeat
             Case #G_ToolVDnew
               Doc_New()
               DrawCanvas() 
-              SetActiveGadget(#G_canvasVector)
               
             Case #G_ToolVDOpen
               Shape_Load()
-              SetActiveGadget(#G_canvasVector)
               
             Case #G_ToolVDSAve 
               Shape_Save()
-              SetActiveGadget(#G_canvasVector)
               
             Case #G_ToolVDMove To #G_ToolVDLast
               vdOptions\Action = EventGadget - #G_ToolVDMove
@@ -214,7 +211,7 @@ Repeat
               Obj(ObjId)\Alpha = GetGadgetState(#G_ObjAlpha)
               DrawCanvas()
               
-            Case #G_ObjDown
+            Case #G_Objdown
               ; c'est inversé, car les calques sont affichés de bas en haut
               If ObjId>0
                 newpos = ObjId-1
@@ -227,7 +224,7 @@ Repeat
                 VD_Layer_UpdateUI(1)
               EndIf
               
-            Case #G_ObjUp
+            Case #G_Objup
               ; c'est inversé, car les calques sont affichés de bas en haut
               If ObjId<ArraySize(Obj())
                 newpos = ObjId+1
@@ -252,8 +249,8 @@ Repeat
                   ; ShapeId = 0
                   oldObjId = ObjId
                   v_id = y/25
-                  n = ArraySize(Obj())
                   If x > 25
+                    n = ArraySize(Obj())
                     ; je suis obligé de faire n - calque actuel
                     ; car pour afficher les calque-objet, je dois inverser, car ils se créent de haut en bas 
                     ; et moi, je les veux de bas en haut ^^                                
@@ -295,11 +292,9 @@ Repeat
               DeleteArrayElement(Obj,ObjId)
               ObjId = 0                    
               VD_Layer_UpdateUI(1)
-              SetActiveGadget(#G_canvasVector)
               
             Case #G_ObjAdd    
               Vd_LayerAdd()
-              SetActiveGadget(#G_canvasVector)
               
             Case #G_ObjLock
               Obj(ObjId)\Locked = GetGadgetState(#G_ObjLock)
@@ -317,9 +312,11 @@ Repeat
               Obj(ObjId)\Hide = GetGadgetState(#G_ObjHide)
               Drawcanvas()
               
+              
             Case #G_ObjName
               Obj(ObjId)\Nom$ = GetGadgetText(#G_ObjName)
               VD_Layer_UpdateUI()
+              
               
             Case #G_ObjX, #G_ObjY 
               Obj(ObjId)\x = GetGadgetState(#G_ObjX)
@@ -569,9 +566,6 @@ Repeat
               ;}
               
               ;{ color, alpha 
-            Case #G_shapeColorTyp
-              Shape_SetPropertie(#ShapePropertie_ColorTyp)
-              
             Case #G_shapeColor
               Shape_SetPropertie(#ShapePropertie_Color)
               
@@ -1244,8 +1238,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 267
-; FirstLine = 62
-; Folding = beACIXa55AAAAA7BAIEAQKA9
+; CursorPosition = 670
+; FirstLine = 131
+; Folding = beACAAY55AAAAA7BAIEAQKA9
 ; EnableXP
 ; DisableDebugger

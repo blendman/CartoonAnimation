@@ -168,7 +168,6 @@ Enumeration ; Gadgets
   ; color
   #G_shapeColor
   #G_shapeColorTyp
-  #G_shapeColorTypProp ; to open a window to create gradients
   #G_shapeGradient    
   #G_shapeTexture 
   #G_shapeTextureOk 
@@ -734,7 +733,6 @@ Enumeration ; others
   
   ;{ Shape propertie
   #ShapePropertie_Color=0
-  #ShapePropertie_ColorTyp
   #ShapePropertie_Style
   #ShapePropertie_Alpha
   #ShapePropertie_StrokeWidth
@@ -795,7 +793,7 @@ EndEnumeration
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 170
-; FirstLine = 62
-; Folding = 5sCAwA5
+; CursorPosition = 227
+; FirstLine = 93
+; Folding = 5sCAQI5
 ; EnableXP

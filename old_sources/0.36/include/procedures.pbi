@@ -493,7 +493,7 @@ Procedure VD_CameraADd(name$,x,y,w,h,scale,zoom.d)
   EndWith
 EndProcedure
 ;}
- 
+
 
 XIncludeFile "layer.pbi"
 

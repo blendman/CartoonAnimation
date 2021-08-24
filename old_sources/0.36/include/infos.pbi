@@ -433,25 +433,6 @@ CompilerEndIf
 
 
 
-; 23/08/2021 0.36.5 (51)
-; // Changes
-; - toolbar : after clic on new, open, save -> SetActiveGadget(#G_canvasVector) (to not redo the action with space)
-; - layer add/delete : after clic on btn ->  SetActiveGadget(#G_canvasVector)
-; // fixes
-; - when clic on "view layer", it show/hide the current layer, not the layer on wich we have clicked
-; - sometimes, VD_UpdateShapeBankCanvas() try to open an inexistant file at start 
-
-
-; 23/08/2021 0.36.4 (50)
-; // New
-; - panel color : Add color typ cbbox
-; - we can change color typ (color, gradient linear, circular, texture (doesn't work for the moment)) for all selected shapes. 
-; // Changes
-; -  when change obj()\shape()\color, it update obj()\shape()\colorgrad(0)
-; -  Shape_Add() : set \colorgrad = color
-; -  VDDrawShapeColor() : if  ArraySize(\ColGrad()) =0 -> add a 2nd color for gradient
-
-
 ; 10/08/2021 0.36 (49)
 ; // New
 ; - clic on btn fx "-" : delete the current fx (except the fx0, need to be changed)
@@ -1300,8 +1281,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 441
-; FirstLine = 104
+; CursorPosition = 424
+; FirstLine = 108
 ; Folding = A5
 ; EnableXP
 ; DisableDebugger

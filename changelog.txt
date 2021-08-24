@@ -1,4 +1,527 @@
-0.17
+CHANGELOG
+
+24/08/2021 0.36.5
+// Changes
+- toolbar : after clic on new, open, save -> SetActiveGadget(#G_canvasVector) (To Not redo the action With space)
+- layer add/delete : after clic on btn ->  SetActiveGadget(#G_canvasVector)
+// fixes
+- when clic on "view layer", it show/hide the current layer, Not the layer on wich we have clicked
+
+23/08/2021 0.36.4
+// New
+- panel color : Add color typ cbbox
+- we can change color typ (color, gradient linear, circular, texture (doesn't work for the moment)) for all selected shapes. Gradient are wip.
+// Changes
+-  when change obj()\shape()\color, it update obj()\shape()\colorgrad(0)
+-  Shape_Add() : set \colorgrad = color
+-  VDDrawShapeColor() : If  ArraySize(\ColGrad()) =0 -> add a 2nd color For gradient
+
+10/08/2021 0.36 
+// New
+- clic on btn fx "-" : delete the current fx (except the fx0, need To be changed)
+- panel Fx : add btn fx "-"
+// Changes
+- fx : when set fx\actif, -> set\usefx = 1
+- fx : simplication of drawshapefx() (check If \usefx=1 before To check each fx is \actif=1)
+- gadget : several changes With some gadgets (position, size..)
+// Fixes
+- when change depth, sometimes, the selected shapeID change.
+- Shape_Load() : With old file, Obj()\Shape()\idunik$ could be = ""
+- we can't select text or image if view is <> 0,0
+- parented shapes parenté aren't stuck to their parents
+- when create a new shape, it should be selected by Default
+
+9/08/2021 0.35.3
+// Changes
+- Scene_Export() : on the image exported, I draw shape If \hide= 0
+// Fixes
+- If create a polygonal Line (ctrl+clic), when create the other point than first, the points created are Not at the mouse position
+- If create a bezier Line (ctrl+clic), when create the other point than first, the points created are Not at the mouse position
+
+6/08/2021 0.35 (47)
+// Changes
+- several changes in eventcanvas.pbi And procedure_draw.pbi : delete all *z Or * z1 ..; -> replace by scalecoordinate()
+- change With pen tool (addpathline) If we don't use distance or angle (=0)
+- If #vd_actionAddline Or addcurve -> add Shape_SetOrigin(1) when lefbuttonUp
+
+
+5/08/2021 0.34.8
+// New
+- rotation : in editmode "point", rotate only the points selected (For line, curve, shapecomplexe)
+// Changes
+- Addgadget() : With checkbox, add 2 pixels of space between name And checkbox.
+- rotation : line/curve : rotate the point, Not the shape (was like before)
+
+4/08/2021 0.34.7
+// New
+- windowimageprop() : add canvas To crop easily the image
+// Changes
+- change windowBGimagepropertie() To WindowBackgroundPropertie()
+- remove some gadgets from panel option (BG gadgets : w, h)
+- add VDDrawBG(depth=0) in drawing Procedure.
+- change width/height of displayed image For background To fit the change in WindowBackgroundPropertie()
+- move the group menu To selection menu
+// Fixes
+- If BG is over the shapes, the scale isn't used.
+- when open the program, the vdoptions\bgimg parameters don't have to be reset .
+- menufile has a MenuBar() in top
+
+
+3/08/2021 0.34.3
+// New
+- add BG_ResizeImage() To resize, And clip the BG image
+- add windowimageprop() (For bg image) : + gadgets resize, scale, clipoutW/H/X/Y
+- clic on btn BGproperties : open windowimageprop()
+// Changes
+- drawcanvas() use VDoptions\BGImg\Scale For BGimage.
+- BG_LoadImage() : now, it check If BG image need To be resize Or clip With BG_ResizeImage() 
+
+2/08/2021 0.34
+// New
+- options BG image : add btn properties (empty For the moment)
+- WindowCharacterEditor() : add maximize/minimizegagdet
+- Scene_Export() : add an options To save image in png, in big size, To use it With windowcharactercreator (.
+- Structure : shape\group$ : shape can have group (To use it For export image For exemple)
+- menu : #menuVD_ShapeSetGroup + lang() -> open windowgroup()
+- add windowgroup() : List, boutton namegroupe, add, set To group, unset
+- Set group  To selected shapes
+- group : Select shape of the group
+- bank : when on the canvas, we see now the name of the image
+
+31/07/2021 0.33.6
+// Changes
+- add mirored point when create With pencil (bezier free line)
+- add rotatecoordonnate For all shapetyp (it's no more the points that are rotate, but it's the shape.
+- VD_ResetCoord() : change scalecoordonnate If exportImage Or Not.
+// Fixes
+- bug rotation : sometimes, the points of the shape are completely moved
+
+30/07/2021 0.33.5
+// New
+- Change color For fx With swatch, For selected shapes
+- add window intro And logo (logo is wip)
+- add cross To cursor mouse (tool Select)
+- add shortcut : Ctrl+E(Mode edition point/object), Ctrl+M (point : miror/free)
+- add options\pathsave$ And \pathopen$ To keep the folder in which we have save Or open a file.
+// Changes
+- change the color of the selected shape To see it If shapeline are black.
+- change the alpha of the grid color (was 255-> 100) To see the shapes over.
+// Fixes
+- Bg imag : change height doesn't work.
+- rectangle Select : the last selected should be shapeId If shapeID = -1
+- bug export purebasic : change export color To "rgba()"
+- in mode <> point, With tool move, If we are over a point, it move point instead of move shape.
+- fixe a crash If ctrl+clic With toolcurve With no shape selected
+- fixe a crash If ctrl+clic+move With toolcurve With no shape selected
+- bug With grid drawing
+- If Select all, If shapeid=-1, it should be assigned To a shaped selected (last Or first)
+- bug To Select a shape With several layers, it check all alyers-> should check only the current layer
+- bug With Shape_Delete(), ReDim didn't erase the index0, do I use dim.
+- quand on supprime des objets puis qu'on load un shape depuis la banque, il ajoute le dernier objet supprimé
+- bug With Shape_Delete() With several layers, the layerid-1 is hiden
+
+29/07/2021 0.33
+// New
+- add selection rectangle With tool Select (wip)
+- add menu show origin
+- add an cross origin in drawscene (To see the 0,0 origin) (en option)
+- we can change FX (Style, color, alpha, active, widthtroke (lineW)) For all selected shapes (If Not hide And Not locked)
+- when clic on swatch canvas, it change the color of shape (style Not fx)
+- add Data\presets\swatch : add swatch presets
+- add tab "swatch"
+- add swatch.pbi (from animatoon), And modifiy it For cartoon
+- add vdoptions : swatch parameters
+- Enumeration : add constant For swatch
+- new window character editor (wip)
+- 3 new images (new, open, save)
+// Changes
+- window scene propertie : window can be resized, add a max And min (W , H)
+- change Shape_SetPropertie() To set color With swatch
+- when change #G_shapeListAdd : If it's a subfolder, the canvasbank is updated
+- when Select #G_shapeListAdd : i use now GetFilePart(BankImage$(bankImageID))
+- The canvasbank show the images from the subfolder Or from the mainfolder If no subfolder.
+- The bank show now the subfolders If exists of the main folder selected (And Not the name of each element in the main folder)
+- Now, the program verify on each subfolder For the folders in Data\shapes\ if the image of the shape exists
+- add lang() To texts For gadgets (bank)
+- add lang() To texts For menu (Selection, Layer, window, help)
+- other minor changes (tooltips..)
+// fixes
+- shape_load() : I check If the extension file is corect before To try To open the file. I have added a ProcedureReturn If Not good extension Or other error
+- Doc_new() : add a ProcedureReturn If Not ok.
+- Scene_Export : If camera\x Or Y <>0 the export image is cut
+- shape_save() : have To use createfile And Not openfile !!
+- With texte And "," -> remplace by "{-virg-}"
+- fixe error in Vd_DeletePoint(i)
+- Select all only If Not hiden
+
+28/07/2021 0.32
+// New
+- addgadget For simplication (distance, angle)
+- tab FX : clic on gadget "open" -> open the path of the fx.
+- tab FX : add gadget "open", To open the path of the fx.
+- add boundingbox when Select a shape
+- add point in the middle of 2 points.
+// Changes
+- show points only If editmode = point Or If action = line/curve creation.
+- change spingadget in string (For width, height, ...)
+- some parameters For shape should be get in float (lineW,H, D...)
+- changes in Structure sShape & sFXShape (w,h,d are .d now)
+- minimum size For : style And fx :  Line (width), height, distance is now 0.001 (was 1)
+// Fixes
+- when change color fx And cancel, the color is white.
+- when change color fx, the color in the requester isn't correct.
+- fx : when clic on "active", the fx of the shape should be activated
+- drawutil : draw only the anchors And node If in editmode.
+- when Select a shape, the open gagdget isn't updated
+- when use del key in edtmode "point", it should delete the selected point Not the shape.
+- when ctrl+N (doc_new), the tile of window should change.
+- when change editmode, the canvas should be updated
+- when deletepoint, the Next anchor has \center=1, And the editing of curve bug also.
+- If shape\locked : lock all change of properties (alpha, x,y, color...)
+- check If gadget are disable If we change of shapeid, And disabled/enabled gadget If needed
+- tool Line (pen) din't use vdOptions\ToolOptions\distance to create the points.
+
+27/07/2021 0.31
+// New
+- the FX can be scaled With curve 
+- the fx can be now closed Or open (by defaut it is closed) even If the Line (shape) is open Or close
+- gadget point : hide Or show the selected curve (by point)
+- we can Define If a Point (And the curve associated) is hiden Or visible 
+// Changes
+- improve the point selection
+- work on Curve line tool
+- some changes in ShapeSelectAll()
+// Fixes
+- we cant Select a text easily
+- we cant change the color of a text
+- selection box of the text isn't correct
+- panel color : alpha spin was too small
+- The shapeID selection was drawn 2 times.
+- fixe a bug when move a shape
+- the scale With 1 shape isn't good.
+- the scale With proportionnal (+ctrl) didn't work
+- when create an ellipse/box/roundedbox, the scale With proportionnal (+ctrl) didn't work
+- when copy/paste, old selection should be selected after paste
+- when vd\EditMode =#VD_Editmode_Point And ctrl+A : all points should be selected
+- when vd\EditMode =#VD_Editmode_Point And ctrl+D : the shapeId shouldn't be unselected
+
+26/07/2021 0.30.5
+// Changes
+- work on Curve line tool (simplify line, set transformation)
+
+25/07/2021 0.30.4
+// New
+- curve line tool : we can draw a free curve Line (For the moment, the anchor point aren't correctly placed).
+- Curve line tool : add option : Bezier, pencil (Free).
+
+25/07/2021 0.30
+// New
+- panel tool : add gadgets For shapeFX options by Default (open, color, alpha, shapetyp, width (If stroke))
+- panel tool : add gadgets For shape options by Default (open, color, alpha, shapety,p width (of stroke))
+- panel tool : clic on gagdet color change the defaut color of created shape.
+- line tool : we can draw a free line.
+- line tool : add option : polygon, Free
+- line tool : add "type" options For Line (polygon, 
+// changes
+- When editmode = objet, we can't move the points, only move the object.
+- now, To Select a shape, I use insidepath And insideStroke.
+- Add framegadget For tool options
+- now line Or curve are created With the tool options (open, style, alpha, color, width of stroke)
+- List view shape : no more multiselection (multiselection With shift+clic)
+- add lang() To texts For options tool
+// Fixes
+- we can't unselect the shapeid
+- delete point should delete only 1 point If shapetyp = line
+- draw shape shouldn't draw all points in red until the point\selected
+- when doc_new(), the window title should be ""
+
+24/07/2021 0.29.4
+// New
+- when clic on canvas bank, it Select the image (shape) To add, And update the gadget #G_shapeListAdd.
+- canvasbank, Add red Box (To see the selected bankimageId)
+// Change
+- text : use drawvectorparagraph now
+- text : is centered now
+// Fixes
+- when clic on layer, the shapeID is no more drawn
+- when move layer, the shapeID is Not drawn each time
+- check If a file is Not empty before To try To open it
+
+23/07/2021 0.29
+// New
+- add two containers For gadgets text & image (shape), To hide them If Not text Or image.
+// Changes
+- MouseOnshape(x,y), To know If a mouse in on a shape image Or text
+- add MouseOnshape(x,y) in VD_DrawScene() To know If we clic on an image Or text shape.
+- add lang() To some texts in gadgets (FX shape, layer panel, tooltip For toolbar)
+- add lang() To texts in menu (Files, edit, view)
+- add mouse x/y in statusbar
+- scale tool : now the size are fixed To the mouse cursor
+- scale tool : use ctrl To get proportionnal scale (box, circle,roundbox, image)
+- Rotate tool : use ctrl To get rotation *10
+- scale tool : we can scale the shape selected now (wip)
+// Fixes
+- scale tool, the sizeH is inversed With the y mouse position
+- bug With point selection, #VD_Editmode_All wasn't = 0
+
+22/07/2021 0.28.5
+// New
+- Add window Gradient (wip)
+
+21/07/2021 0.28.3
+// New
+- add alpha from layer With all shape of the layer (Not alpha calculated by shapes * obj\alpha)
+// Changes
+- selection border is now black For all shapes (Not only shapeID)
+// Fixes
+- With shift down, we can't select a shape if a big shape is under it
+- when lockselection, we can't move the selected shape
+- when clic without shift, all shapes are deselected
+
+20/07/2021 0.28
+// New
+- shift+P : deparanting selected shapes (WIP : some bug To fixe With it)
+- point : add a kind of smooth move mode (curve only)
+- point : when move a point, update the gadget point X/Y
+- add tab "tool" (panel left), For tool options, we can keep the bank tab.
+// Changes
+- insert a point in the curve at the mouse cursor
+- some changes in the UI when Select points (curve, complexes shapes)
+// Fixes
+- when move point With mirored mode, we should use x1-\X And Y1-\y
+- bug avec le dernier point d'une courbe et le mode usemirored mode.
+- usemirored mode should work only If shift =0.
+- when shift+Select a point, should check If it's a center point before to select the other points (tangent points)
+
+19/07/2021 0.27
+// New
+WIP - add tab "tool" (panel left), For tool options, we can keep the bank tab.
+- Edit mode (All, object, shape, point) (need To be improved)
+- Tool Edit mode
+- new gadget On point GUI : set point mirored, use point mirored
+- set point mirored, use point mirored
+- point can be moved With mirored mode (tangent like)
+- add vdoptions\debugOn To get some extra functions (gadget idunik For example)
+// Changes
+- add lang() To some texts in gadgets (shape, point)
+// Fixes
+- fixe 2 bugs in The export in purebasic (line)
+- when copy/paste : we should sort the new depth
+- when copy/paste : we should have a different id_unik For the new shape
+- when ShapePastToshape : we should sort the new depth
+- when ShapePastToshape : we should keep the id_unik For the shape selected
+
+18/07/2021 0.26.1
+// Fixes
+- fixe a bug With bank
+- fixe The export in purebasic which doesn't export the line and curve
+
+17/07/2021 0.26
+// New
+- add vdoptions\panelLayerW For width of panel layer
+- add vdoptions\BankCaseW For the width of the Case of bankimage
+- sortarray For bankimage And file on shapefolder
+- now, it check the folder in Data\shapes\ and create all the image preview, If they don't exists !
+- Tab "create" (bank of shapes) : add images of the elements of the current folder on the canvas
+- Doc_save() : add Date() To file, add shape : close, idunik$, parentid, depth, pos.
+- now, the fx can be opened too ! (we can have a color And black line For character :))
+- when playanimation, it display the scene (was empty before)
+// changes
+- change in the GUI (size of panel layer)
+- add lang() To some texts in some functions And menus
+- shape\idUnik$ And shape\parent\idunik$ are now a word$ To get a very different idunik (see Shape_CreateIdUnik())
+- some changes in the drawing utilities (dash stroke of selection, centre point...)
+- we can now deselected the shapeID
+- Select Or move a pt, gui is now updated
+// fixes
+- fixe bug With dispay scene, when playanimation
+
+16/07/2021 0.25
+// New
+- add a point in the middle of 2 selected Point (curve, line) (wip)
+- menu : deparenting (wip)
+- Tab "create" (bank of shapes) : add scrollarea & canvas To show image of the bank (wip)
+- With shift+clic, we can now Select Or deselect a shape.
+- when calcul center point, set pt()\center =1 (calcul is in the drawutil)
+- add close/open To curve
+- submenu #menuVD_AddPtAtMiddle
+- Add Shape_SetPropertie() To change propertie For selection (color, alpha...)
+- menu : parent (Ctrl+P)
+- menu : lock selected, unlock all, lock all except selected
+- SetOrigin To Mouse
+- add Mouse Cible cursor
+- add window preference (only autosave For the moment)
+- menu file : preference
+- add Layer_CheckifOk(ObjId) To verify If we can do anything on a layer
+// changes
+- DrawCanvas(x=0,y=0,Selected=0) : by Default, now selected =0, To Not be able To Select by Default And keep selection
+- SetLineDistance (dash, point) To selection
+- SetLineHeight (dash, point) To selection
+- SetStrokeWidth To selection
+- SetStyle To selection
+- SetAlpha To selection
+- Setcolor To selection
+- setorigin works With selection
+- Shape_delete() : works With selection
+- some change in doc_new(), shape_load()
+- add lang() To some texts in some functions And menus
+- ShapeGetProperties(state=1) has now 1 option, To set a simple solution If needed (set state instead of settext)
+- ShapeGetProperties() is only updated If we have selected a shape
+// Fixes
+- autosave didn't work, autosave only if vdoptions\dochaschanged
+- lock Layer didn't work
+- Shape_delete() only If Layer_CheckifOk(ObjId) = 1
+- Shape_delete() only If \hide =0 And \locked =0
+- Vd_DeletePoint() only If Layer_CheckifOk(ObjId) = 1
+- operation (leftbuton down) on layer only If Layer_CheckIfOk(ObjId) =1 
+- When movecanvas (space) the shape under mouse is selected
+- When movecanvas (space) the multi-selection is lost
+- Vd\LockSelection didn't work
+- sometimes, the gadgets For shape aren't updated
+- If mousemove, it shouldn't select the shape under the mouse
+- some bugfixes With scene properties And camera
+
+15/07/2021 0.24
+// New
+- export image : now, it use the x,y,w,h& % defined in window scene output properties (so by the active camera)
+- scene properties : add %, framegadget, output Width/height
+- scene properties : When change gadgets, it change the camera properties
+- scene properties : when change W,H, X, Y, %, it calcule the finale size of image And open a message If size > 8096x8096
+- copy/paste several shapes
+- add gadget "#G_shapeIdUnik" To see the idunik of the shape
+- add unpremultiply For export image (To fixe the PB bug With vectorlib export) (function by wilbert ! )
+- add shape : \finalX,Y To know the finalX,Y (= \x + tranformation +  parenting).
+ (need To be changed in all functions using \x, \Y)
+// Changes
+- add #PB_String_ReadOnly To AddGadget() For stringgadget
+- add lang() To some texts in some functions
+- add a Macro ShapeSetParentingPosition(vo,j) To use on every functions which need To know parenting operations
+- now, the position of shape is updated in GUI If we move the shape
+- it's more easy to select a point from a curve/line
+- // fixes
+- when we change the shape depth, it change the shapeID (For object Or shape loaded)
+- when loadshape\object, add the idunik For all shapes created
+- bug With depth when change it With buton (up, down) And List of shape
+- tool move And clicdown on a shape : the propertie aren't update (only if clicup)
+- If Select a shape which isn't text or image, hide and disable the gadget text & image
+- when change the layer order, that change the ObjID
+- when open a file, we can't use the layer GUI (to see or select the layer)
+- scene properties : we don't see the scene properties
+- when create a curve, the "anchor" point aren't correctly placed
+
+14/07/2021 0.23
+// New
+parent limitation : we can't select the points if the shape is parenting, because it ckeck the position without parenting
+- ajouter le système parent enfant avec l'outil move
+- add shape\parent : when move only
+- LoadScene shape\parent
+- add parent\x, y To shape position (If shape has parents)
+- add Structure VD_camera Dim VD_camera()
+- add window scene propertie + gadget : camera id,x,y,w,h,% (For output), zoom
+- add Lang.pbi, For futur localisation/traduction
+// Changes
+- lots of changes With panel & gadgets (color, size, position, name, tooltips...)
+- Set the color To "normal" (gadget, window), darkmode later ^^
+- set the tools in the toolbar at top
+- now, the tool options are displayed on the tab "tool" 
+- when load scene, the depth & pos are *10 now (To separate easily the depth between shape)
+// fixe
+- we shouldn't be able to create a shape if shift=1.
+- bug With shortcut (H, back, Shift+H...) And StringGadget (name of shape)
+
+13/07/2021 0.22
+// New
+- save selected
+- hide all except selected
+- Unhide all (by layer) ctrl+H
+- hideselected (by layer) key H
+- Add tool mirorH, mirroV
+- Add gadgets mirorH, mirroV
+- Add icone mirorH, mirroV
+- menu selection With : selectAll, deselectALL, lock selection
+// Changes
+- FX of shape are clipped now
+- change shortcut deleteshape To #PB_Shortcut_Back
+- code cleaning And reagencement (add menu.pbi, shape.pbi, paste code of shape in shape.pbi...)
+- VD_ExportPbCommand() : add hour of creation
+- VD_ExportPbCommand() : now, it export all the objects And shapes in the pb file
+- VD_ExportPbCommand() : add a code example in the export (openwindwo, And display canvasgadget And objects)
+// Fixes
+- fx gadget aren't updated when change of shapeID
+- export image didn't use the clip of shape
+- the show gadget isn't updated when hide or show the shape
+- the shape\depth was a few buggued. Now, when create a shape, it add a depth=(nb_shape+1)*20, To get more difference between all depth shape
+- when open colorequester, the color is black
+- we don't see the points/dash lline... with shape curve & line.
+- when create the first point of line, it create 2 points instead of 1
+- when create the first point of curve, it create 4 points instead of 3
+- fixe bug With grid, sometime the width is <0
+- bug sur certains shapes si on le charge en tant que shape et non en tant qu'objet (file\open) (le dernier point était bugué)
+- gadget name : set name of shape only If name <> #Empty$
+- With new file, it create a empty shape If we use tool addshape Or shape-bank And If we dont have a shape
+
+12/07/2021 0.21
+// New
+- we can create curves by clicking+ctrl (Ctrl+clic add point To curve)
+- we can create curves by clicking+ctrl lines (polygon) 
+- add tab "create" (is "tool" now), And add gadget To create a shape (combobox With folders, ccbox With files from folder selected, buton + And -)
+WIP - add To tool rotation the parameter : rotation (we can directly set the rotation of object in the option of tool
+- Obj\shape : add idunik, To know each shape event If they have the same name
+- we can load an image on the background
+- we can change the depth (position on the rendering function) of the image on the background
+- add X/Y position For BG-image (To move it If needed)
+- panel Shape : add parameters show/depth
+- panel option : add gagdet To set an image As background reference (img,x,y,alpha,w,h,depth)
+- change some colors of GUI (ToolBar top, tool container, container For scene path, window color)
+- when zoom/dezoom : the circle point should keep their Default size, To Select it easily 
+// Changes
+- changes in Enumeration
+- clean up code (move Global in structures.pbi, move Enumeration in Enumeration.pbi...)
+// fixes
+- the background isn't zoomed
+- some gadget (tab options) didn't show the correct value (alpha, use checker..)
+- at start, we have  points For an empty shape (because the shape Array start To 0.
+
+11/07/2021 0.20
+// New
+- we can draw an image on the background (As reference For example Or later, color Select)
+// Changes
+- change Options\bgimg To bgchecker If you use the checker.
+// Fixes
+- when create a new shape, it isn't created at mouse position
+- when deselect, all shape/point are still selected (in fact, shift was down)
+
+09/07/2021 0.19
+// New
+- add zoom With wheel mouse
+- add menu "edit" (copy, paste, selectAll, deselect ALL)
+// Changes
+- the code is now separated into several little files (infos, Enumeration, init, procedures, macros, loop...)
+- change zoom parameters With keyboard (Ctrl+/-)
+// fixes
+- when change of a shape, If cancel, the shape color is black
+- ctrl+V didn't paste at mouse position.
+
+08/07/2021 (0.18.5)
+// New
+- menu scene propertie (width/height), à revoir
+
+[11/02/2021] (0.18.13)
+// Changes
+- "control animation" panel is in "layer" panel now
+- panel name "object" -> "layer"
+// Fixes
+- fixe a crash when Select a tool With two options
+- fixe a bug of height of the toolbar
+- fixe a bug of height of the panel (right, left) And canvas
+
+[16/05/2016] (0.18.1)
+// New
+- View : show/hide timeline
+
+[24/04/2016] (0.18)
+// New
+- Rndbox by Diskay
 
 New (0.15.5, 0.16 & 0.17): 
 - Timeline : buttons play, stop, start, end, loop

@@ -331,14 +331,6 @@ Procedure CreateToolBarContainer()
     EndIf
   EndIf
 EndProcedure
-
-Procedure VD_AddGadgetItem(gad,name$,state=0)
-  nb = CountString(name$,",")-1
-  For i=0 To nb
-    AddGadgetItem(gad,i,StringField(name$,i+1,","))
-  Next
-  SetGadgetState(gad,state)
-EndProcedure
 Procedure VD_CreateTheGadgets()
   
   ; procedure to create the gadgets
@@ -469,32 +461,28 @@ Procedure VD_CreateTheGadgets()
     
     ;{ Color
     AddGadgetItem(#G_panelVD,-1,lang("Color"))
-    x1 = 10 : y1 = 10    
-    
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*4+10,lang("Color")) : y1 +15 
-      AddGadget(#G_shapeColor, #Gad_Btn, x1,y1,W7,h1,lang("Color"),0,255,lang("Change the color of the shape."),0,lang("Color")) : y1+h1+a
-      AddGadget(#G_shapeAlpha, #Gad_Spin, x1,y1,W7,h1,lang("Alpha"),0,255,lang("Change alpha of the shape.")) : y1+h1+a  
-      AddGadget(#G_shapeColorTyp, #Gad_Cbbox, x1,y1,W7,h1,lang("Color Typ"),0,255,lang("Change color typ of the shape."),0,lang("Color Typ")) : y1+h1+10   
-      VD_AddGadgetItem(#G_shapeColorTyp,lang( "color,linear gradient,circular gradient,texture,"))
-    EndIf
-       
+    x1 = 10 : y1 = 10        
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*3+10,lang("Color")) : y1 +15 
+    AddGadget(#G_shapeColor, #Gad_Btn, x1,y1,W7,h1,lang("Color"),0,255,lang("Change the color of the shape."),0,lang("Color")) : y1+h1+a
+    AddGadget(#G_shapeAlpha, #Gad_Spin, x1,y1,W7,h1,lang("Alpha"),0,255,lang("Change alpha of the shape.")) : y1+h1+10   
+     
     ; ButtonGadget(#G_shapeTexture, x1,y1,w7,h1,"Texture"): y1+h1+b*3 : x1=10
     
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*6,lang("Style")) : y1+15
-      AddGadget(#G_shapeTyp, #Gad_Cbbox, x1,y1,w1,h1,"",0,255,lang("Change the type of the shape (line, filled..).")) : y1+h1+a
-      VD_AddGadgetItem(#G_shapeTyp,lang( "filled,line,dash,dot,custom"))
-      AddGadget(#G_shapeLineW, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the width of the line shape."),0, lang("Width")) : y1+h1+a
-      AddGadget(#G_shapeLineH, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the Height of the line shape."),0, lang("Height")) : y1+h1+a
-      AddGadget(#G_shapeLineD, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the distance For the line shape (dot line)."),0, lang("Dist")) : y1+h1+a
-      y1+h1        
-      
-    EndIf
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*6,lang("Style")) : y1+15
+    AddGadget(#G_shapeTyp, #Gad_Cbbox, x1,y1,w1,h1,"",0,255,lang("Change the type of the shape (line, filled..).")) : y1+h1+a
+    line$ =lang( "filled,line,dash,dot,custom")
+    For i=0 To 3
+      AddGadgetItem(#G_shapeTyp,i,StringField(line$,i+1,","))
+    Next
+    AddGadget(#G_shapeLineW, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the width of the line shape."),0, lang("Width")) : y1+h1+a
+    AddGadget(#G_shapeLineH, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the Height of the line shape."),0, lang("Height")) : y1+h1+a
+    AddGadget(#G_shapeLineD, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the distance For the line shape (dot line)."),0, lang("Dist")) : y1+h1+a
     
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,(h1+a)+20,lang("Extra")) : y1+15  
-      AddGadget(#G_shapeRnd, #Gad_Spin, x1,y1,w7,h1,lang("Rnd "),-10000,10000,lang("Change the corner (For round box)")) : y1+h1+a        
-      y1+h1        
-    EndIf
-  
+    y1+h1        
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,(h1+a)+20,lang("Extra")) : y1+15  
+    AddGadget(#G_shapeRnd, #Gad_Spin, x1,y1,w7,h1,lang("Rnd "),-10000,10000,lang("Change the corner (For round box)")) : y1+h1+a        
+    y1+h1        
+    
     If ContainerGadget(#G_shapeContText,0,y1,PanelVDW-10,h1*3+10)
       y2=y1 : y1 = 5
       FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*3,lang("Text")) : y1+15   
@@ -931,16 +919,14 @@ Procedure VD_UpdateShapeBankCanvas(createImage=0, updatefolder=1)
                 ; si on n'a pas l'image, on la créé
                 If ok=0
                   nametxt$ = tmpnameimg$(i)
-                  If nametxt$<>#Empty$
-                    ;Debug "fichier à ouvrir "+nametxt$
-                    Doc_New()
-                    Shape_Load(0,nametxt$,0)
-                    path$ = GetPathPart(nametxt$)
-                    file$ = GetFilePart(nametxt$,#PB_FileSystem_NoExtension)+".png"
-                    ; Debug "onn'a pas l'image, on la crée : " +path$+file$
-                    Scene_Export(0,1, path$+file$)
-                    Doc_New()
-                  EndIf
+                  ; Debug "fichier à ouvrir "+nametxt$
+                  Doc_New()
+                  Shape_Load(0,nametxt$,0)
+                  path$ = GetPathPart(nametxt$)
+                  file$ = GetFilePart(nametxt$,#PB_FileSystem_NoExtension)+".png"
+                  ; Debug "onn'a pas l'image, on la crée : " +path$+file$
+                  Scene_Export(0,1, path$+file$)
+                  Doc_New()
                 EndIf
                 
               Next
@@ -2185,7 +2171,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 930
-; FirstLine = 222
-; Folding = CxobfAAAAPEoHQ1PAAw---BAAAAAAAAAAAAAAAAAAAAAAAHCv0
+; CursorPosition = 573
+; FirstLine = 53
+; Folding = CxobfAAAADACgx-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEe8
 ; EnableXP
