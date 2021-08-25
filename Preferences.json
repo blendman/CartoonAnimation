@@ -522,7 +522,7 @@
   "BankCaseW"                : 50,
   "WinH"                     : 705,
   "SnapX"                    : 32,
-  "PathOpen"                 : "E:\\dev\\github\\CartoonAnimation\\data\\shapes\\objects\\tree01.txt",
+  "PathOpen"                 : "data\\shapes\\objects\\",
   "SnapY"                    : 32,
   "ColorGadget"              : 9868950,
   "ShowCameraSafe"           : 0,
