@@ -10,6 +10,28 @@ If EventType() = #PB_EventType_KeyDown ; Or EventType() = #PB_EventType_Focus
   If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) & #PB_Shortcut_Space                         
     Vd\Space = 1                            
   EndIf
+  
+ElseIf EventType() = #PB_EventType_KeyUp 
+   ;{ key up
+  
+  ; Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
+  ; enter 13
+  ; altgr 18
+  ; tab 9
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) = #PB_Shortcut_Space 
+    Vd\space= 0                           
+    vd\keypressed = 0                           
+  EndIf                        
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)= 16 ; shift 
+    Vd\shift= 0                           
+    vd\keypressed = 0                          
+  EndIf  
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)= 17 ; ctrl 
+    Vd\ctrl= 0                           
+    vd\keypressed = 0                          
+  EndIf 
+  ;}
+   
 EndIf
 
 ; Debug "ctrl :"+Str(vd\Ctrl)
@@ -20,10 +42,11 @@ EndIf
 ;   LayerIsOk = Layer_CheckIfOk(ObjId)
 ; EndIf 
 
+   
 
-  If EventType() = #PB_EventType_LeftButtonDown Or 
-   (EventType() = #PB_EventType_MouseMove And                         
-    GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Buttons) & #PB_Canvas_LeftButton)
+If EventType() = #PB_EventType_LeftButtonDown Or
+   (EventType() = #PB_EventType_MouseMove And                       
+     GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Buttons) & #PB_Canvas_LeftButton)
     
     If StartVectorDrawing(CanvasVectorOutput(#G_canvasVector))
     
@@ -211,7 +234,7 @@ EndIf
                         Next
                       EndWith
                     EndIf
-                    
+                     Debug "ok cherche point"
                     VD_PointGetSelected(x1,y1) ; macros in shape.pbi
                   EndIf
                   
@@ -919,7 +942,7 @@ EndIf
     StopVectorDrawing() 
   EndIf
   
-  If Vd\move >= 1 Or Vd\cliclb = 1 Or update >= 1 Or vd\ClicSelect =1
+  If Vd\move >= 1 Or Vd\cliclb = 1 Or update >= 1 Or vd\ClicSelect =1 Or Vd\space = 1
     
     If Vd\space = 1 Or update>1
       Drawcanvas(x,y,0) 
@@ -929,52 +952,13 @@ EndIf
     update = 0
   EndIf
   
-ElseIf EventType() = #PB_EventType_KeyUp 
-  ;{ key up
+Else
   
-  ; Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
-  ; enter 13
-  ; altgr 18
-  ; tab 9
-  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) = #PB_Shortcut_Space 
-    Vd\space= 0                           
-    vd\keypressed = 0                           
-  EndIf                        
-  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)= 16 ; shift 
-    Vd\shift= 0                           
-    vd\keypressed = 0                          
-  EndIf  
-  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)= 17 ; ctrl 
-    Vd\ctrl= 0                           
-    vd\keypressed = 0                          
-  EndIf 
-  ;}
-  
-ElseIf EventType() = #PB_EventType_MouseWheel
-  ;{ zoom
-  delta = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_WheelDelta)
-  If delta =1
-    If VdOptions\Zoom<10
-      VdOptions\Zoom + 1
-    ElseIf VdOptions\Zoom<100
-      VdOptions\Zoom + 10
-    Else
-      VdOptions\Zoom + 20
-    EndIf
-  ElseIf delta = -1
-    If VdOptions\Zoom > 100
-      VdOptions\Zoom -20
-    ElseIf VdOptions\Zoom > 10
-      VdOptions\Zoom -10
-    ElseIf VdOptions\Zoom > 1
-      VdOptions\Zoom -1
-    EndIf
+  If (vd\EditMode = #VD_Editmode_Point And vdOptions\Action = #VD_actionMove) And Vd\space =0 And vd\shift = 0
+    Vd\cliclb = 0
   EndIf
-  Drawcanvas()
-  StatusBarText(0, 0, lang("Zoom")+" "+Str(VdOptions\Zoom)+"%")
-  ;}
-  
-ElseIf EventType() = #PB_EventType_LeftButtonUp
+
+  If EventType() = #PB_EventType_LeftButtonUp
   ;{ left button UP
   
   Vd\move = 0
@@ -1012,13 +996,41 @@ ElseIf EventType() = #PB_EventType_LeftButtonUp
     ;     Vd_SetGadgetOption()
   EndIf
   ;}
+
   
+  ElseIf EventType() = #PB_EventType_MouseWheel
+    ;{ zoom
+  delta = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_WheelDelta)
+  If delta =1
+    If VdOptions\Zoom<10
+      VdOptions\Zoom + 1
+    ElseIf VdOptions\Zoom<100
+      VdOptions\Zoom + 10
+    Else
+      VdOptions\Zoom + 20
+    EndIf
+  ElseIf delta = -1
+    If VdOptions\Zoom > 100
+      VdOptions\Zoom -20
+    ElseIf VdOptions\Zoom > 10
+      VdOptions\Zoom -10
+    ElseIf VdOptions\Zoom > 1
+      VdOptions\Zoom -1
+    EndIf
+  EndIf
+  Drawcanvas()
+  StatusBarText(0, 0, lang("Zoom")+" "+Str(VdOptions\Zoom)+"%")
+  ;}
+  EndIf
+
 EndIf
 
 
+
+
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 127
-; FirstLine = 78
-; Folding = x06-blf2vsn880---2HPtv-g0A9-
+; CursorPosition = 956
+; FirstLine = 132
+; Folding = hfv+wW0XtL86+b---f0xT88PY-d5
 ; EnableXP
 ; DisableDebugger

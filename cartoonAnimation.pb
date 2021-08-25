@@ -1,7 +1,7 @@
 ﻿
 ; XIncludeFile "include\infos.pbi"
 
-#ProgramVersionVD = "0.36.5"
+#ProgramVersionVD = "0.36.8"
 #ProgramNameVD = "Cartoon Animation "
 
 XIncludeFile "include\enumeration.pbi"
@@ -97,9 +97,9 @@ Procedure OpenWinVectorDrawing()
     ;}
     ;}
     ; CreateThread(@VD_CheckForUpdate(),23 ); on vérifie si une nouvelle version existe
-
-    VD_UpdateShapeBankCanvas(1)
     
+    VD_UpdateShapeBankCanvas(1)
+
     FreeImage(0)
     FreeGadget(#G_CanvasIntro)
     CloseWindow(#Win_VD_Intro)
@@ -124,9 +124,8 @@ OpenWinVectorDrawing()
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 99
-; FirstLine = 60
-; Folding = t0
+; CursorPosition = 3
+; Folding = F0
 ; EnableAsm
 ; EnableXP
 ; EnableOnError

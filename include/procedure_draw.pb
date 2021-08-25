@@ -961,7 +961,7 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
       If Selected = 1 And objid = m
         If EventType() = #PB_EventType_LeftButtonDown
           If vd\EditMode <> #VD_Editmode_Point
-          If vdoptions\Action = #VD_actionMove Or vdoptions\action = #VD_actionSelect
+            If vdoptions\Action = #VD_actionMove Or vdoptions\action = #VD_actionSelect
             For j =ArraySize(Obj(m)\Shape()) To 0 Step -1
               If Obj(m)\Shape(j)\Hide = 0
                 VdDrawShape1(m,j)
@@ -1014,7 +1014,7 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
             Next
           EndIf
           EndIf
-       EndIf
+        EndIf
       EndIf
       
       ; then draw
@@ -1168,8 +1168,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 376
-; FirstLine = 104
-; Folding = Ul-v-808-fe4---8-AXwju---PQ+-
+; CursorPosition = 1016
+; FirstLine = 134
+; Folding = Ul-v-80b-fe4---8-AXwj+5-4PQ+-
 ; EnableXP
 ; DisableDebugger

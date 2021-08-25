@@ -289,6 +289,7 @@ Macro VD_PointGetSelected(x1,y1)
   ;With Obj(ObjId)\Shape(ShapeId)
   If vd\EditMode = #VD_Editmode_Point
     PtId = -1
+    ip=-1
     For ip=0 To ArraySize(Obj(ObjId)\Shape(ShapeId)\pt())  
       ;{
       ;                       xa = \pt(ip)\x - c + \FinalX ;+ Obj(ObjId)\x
@@ -315,8 +316,11 @@ Macro VD_PointGetSelected(x1,y1)
       dist.D = Sqr(Pow(xa_1 - X1, 2) + Pow(ya_1 - Y1, 2))
       
       
-      If dist <=10/Z  ; 20/Z  ; <=6 , c*2
+      If dist <=10/Z  Or (x1>=xa_1-5/z And x1<=xa_1+5/Z And y1>=ya_1-5/Z And y1<=ya_1+5/z); 20/Z  ; <=6 , c*2
+      ; If  (x1>=xa_1-5/z And x1<=xa_1+5/Z And y1>=ya_1-5/Z And y1<=ya_1+5/z) ; 20/Z  ; <=6 , c*2
         PtId = ip
+       
+
         Obj(ObjId)\Shape(ShapeId)\pt(ip)\Selected = 1
         ok = 1 
         SetGadgetText(#G_shapePtX,Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\x))
@@ -1198,7 +1202,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
       ProcedureReturn 0
     Else
       
-      If ReadFile(10,file$)
+      If OpenFile(10,file$)
         
         ; Debug"openfile shape : "+file$
         Vd\DocFilename$ = file$
@@ -1325,7 +1329,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 If Obj(ObjId)\Shape(j)\Alpha =0
                   Obj(ObjId)\Shape(j)\Alpha =255
                 EndIf
-                ; Debug ""+Version+" / "+ValD(#ProgramVersionVD)
+                Debug ""+Version+" / "+ValD(#ProgramVersionVD)
               EndIf
               
               ; Style
@@ -1431,7 +1435,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
         ShapeGetProperties()
         VD_Layer_UpdateUI()
         
-        ; Debug "ok fin readfile shape"
+        Debug "ok fin readfile shape"
         CloseFile(10)
         If draw= 1
           Drawcanvas()
@@ -2088,7 +2092,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1443
-; FirstLine = 175
-; Folding = wAAAAAAAgEBtAAAAAAAAAAAAA0qAAEAAAAAAAAAw+DA5ug-RB+
+; CursorPosition = 321
+; FirstLine = 72
+; Folding = 6AQAAAIAwEBtAAAAAAAAAAAAAAAAAAAAAAAAAAA5+DA5vg-ZB+
 ; EnableXP

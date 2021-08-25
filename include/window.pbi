@@ -895,8 +895,8 @@ Procedure WindowGroup()
     x = 10 : y=10 : w=200 : h = winh-100 : h1 = 30 : w1 = 60: w2 =100
     ListViewGadget(#G_win_group_list, x,y,w,h) : x+210
     
-    StringGadget(#G_win_group_NewString, x,y,w2,h1,"") : 
-    ButtonGadget(#G_win_group_NewButton, x+w2+5,y,w1,h1,"+") : y +h1+5
+    AddGadget(#G_win_group_NewString,#Gad_string, x,y,w2,h1,"",0,0,Lang("Set the name for the group")) : 
+    AddGadget(#G_win_group_NewButton,#Gad_Btn, x+w2+5,y,w1,h1,"+",0,0,lang("Add a new group")) : y +h1+5
     AddGadget(#G_win_group_set,#Gad_Btn,x,y,w2,h1,lang("Set"),0,0,lang("Set Group to shapes")) : y +h1+5
     AddGadget(#G_win_group_remove,#Gad_Btn,x,y,w2,h1,lang("Remove"),0,0,lang("Remove the shape for its group")) : y +h1+5
     AddGadget(#G_win_group_DeleteGroup,#Gad_Btn,x,y,w2,h1,lang("Delete"),0,0,lang("Delete selected Group")) : y +h1+5
@@ -1035,8 +1035,8 @@ Procedure WindowIntro()
 EndProcedure
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 646
-; FirstLine = 27
-; Folding = BAYAACAA5-nW-3i
+; CursorPosition = 898
+; FirstLine = 32
+; Folding = BAYAACAAw0nW-3j
 ; EnableXP
 ; DisableDebugger

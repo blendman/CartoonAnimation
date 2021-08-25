@@ -353,7 +353,9 @@ Repeat
             Case #G_shapelist
               If vd\NbShape >=0
                 ShapeId = GetGadgetState(#G_shapelist)
-                Ze_idunik$ = Obj(ObjId)\Shape(ShapeId)\idunik$
+                If ShapeId<= ArraySize(Obj(ObjId)\Shape())
+                  Ze_idunik$ = Obj(ObjId)\Shape(ShapeId)\idunik$
+                endif
                 ShapeFxId = 0
                 For i = 0 To CountGadgetItems(#G_shapelist)-1
                   If GetGadgetItemState(#G_shapelist,i) <> 0
@@ -1244,8 +1246,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 267
-; FirstLine = 62
-; Folding = beACIXa55AAAAA7BAIEAQKA9
+; CursorPosition = 357
+; FirstLine = 142
+; Folding = beACIXa9xBAAAA1DAQIAgUA5
 ; EnableXP
 ; DisableDebugger

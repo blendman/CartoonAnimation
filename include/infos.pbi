@@ -339,7 +339,7 @@ CompilerEndIf
 ; 0.29.1 - bug si clic sur layer, le shapeid n'apparait plus
 ; 0.33.1 - bug export purebasic : si couleur noir c'est invisible
 ; - problème avec la selection (outil move, pas l'outil select des points)
-
+; - problème quand on sélectionne un shape, parfois un autre est sélectionné aussi et bouge en même temps.
 
 ; ok priority :
 ; 0.23 - ajouter une fenêtre d'export, où on peut définir la résolution de l'image en sortie
@@ -369,13 +369,15 @@ CompilerEndIf
 ; 0.35 - when create a line, we should set origin to shape.
 ; 0.36 - pouvoir supprimer les fx
 ; 0.36 - si on utilise pas de fx, simplifier dans drawcanvas()
+; fx : add "actif" in the options for creation
+; - add tooltips for some gadget group window
+
 
 ; ok - ajouter un système de storyboard (voir le fichier cartoon_dev) : see BDcreator
 ; ok - ajouter un système de création de page de BD : see BDcreator
 
 
 ; ok ?? : 
-; - problème quand on sélectionne un shape, parfois un autre est sélectionné aussi et bouge en même temps.
 
 
 ;---------------------------------
@@ -389,7 +391,6 @@ CompilerEndIf
 
 ; Not urgent : 
 ; - modifier/option miror quand on crée des points
-; - ajouter les options de strokepath(roundend...)
 ; - pouvoir updater les folder de shapes (si on fait des modifs ou qu'on ajoute un folder)
 ; - add a gadget zoom (trackbar with 100 % )
 
@@ -404,7 +405,8 @@ CompilerEndIf
 
 ; BUGS :
 ; - bug quand on supprime un point : il faudrait avoir un choix : seulement le point ou le point et les 2 points d'encrage (si courbe)
-; - pouvoir agrandir ou rotationner tous les shapes sélectionnés, mais par rapport à une bounding box
+; - pouvoir agrandir tous les shapes sélectionnés, mais par rapport à une bounding box
+; - pouvoir rotationner tous les shapes sélectionnés, mais par rapport à une bounding box
 ; - bug avec le deparanting : les shapes ne restent pas à leur place si on l'applique.
 ; - bug when lockselection and move (the startX /Y should be recalcultaed each time we clicdown)
 ; - revoir le système de savepreviewimage si on sauve un fichier (car si les shapes ne sont pas dans la vue camera, c'est coupé)
@@ -419,27 +421,42 @@ CompilerEndIf
 ; WIP 0.30 - pouvoir save des preset d'outils (comme la line : avec les options (couleur, style, fx, couleur fx...) 
 ; FX : 
 ; - pouvoir change le depth (position) des fx
-; - ajouter le depth, et actif dans les options de création.
+; - ajouter le depth, dans les options de création.
 ; - pouvoir copier/coller le fx du shapeId à tous les shapes selected
 ; Shape : 
 ; - pouvoir séparer un shape en plusieurs morceaux (en plusieurs shapes ?)
 ; - pouvoir joindre des shapes séparés
-; misc : 
-; WIP - ajouter un editeur de personnage (créer à partir d'une banque facilement : tete, oreille, yeux, bouche, nez, cou, cheveux..)
+; Save/export
 ; - add bg img to save_Doc(), and load only it if doc_open()
 ; - bug exportimage : si la camera est décalée en y et le scale <> 100%
+; - VD_ExportInSVG()
+; - VD_ExportInTyniSVG()
+; misc : 
+; WIP - ajouter un editeur de personnage (créer à partir d'une banque facilement : tete, oreille, yeux, bouche, nez, cou, cheveux..)
 ; - verifier si les idunik des shapes sont bien unik, sinon-> changer l'idunik et changer l'idunik sur les objet enfants
 ; - pouvoir créer des objets à partir de groupe (? ou autre) de shape, qui seraient des images. Si je modifie un shape du groupe, ça update l'image.
+; - scale : add option "keep image proportion"
+; - ajouter les options de strokepath(roundend...)
+; - add options for gradient
+
+
+; 24/08/2021 0.36.8 (51)
+; // Changes
+; // Fixes
+; - add tooltips for some gadgets of group window
 
 
 
-; 23/08/2021 0.36.5 (51)
+; 24/08/2021 0.36.7 (51)
 ; // Changes
 ; - toolbar : after clic on new, open, save -> SetActiveGadget(#G_canvasVector) (to not redo the action with space)
 ; - layer add/delete : after clic on btn ->  SetActiveGadget(#G_canvasVector)
+; - some changes in eventcanvas.pbi to select more easily a point of a shape (only if action=action and editmode = point)
 ; // fixes
 ; - when clic on "view layer", it show/hide the current layer, not the layer on wich we have clicked
 ; - sometimes, VD_UpdateShapeBankCanvas() try to open an inexistant file at start 
+; - sometimes, when try to select a point( in editmode = point), the point wasn't selected and it was the last point which was selected
+; - fixe a bug when select a shapeid > arraysize(obj()\shape() (if we have delete the shapeid before a new selection)
 
 
 ; 23/08/2021 0.36.4 (50)
@@ -1301,7 +1318,7 @@ CompilerEndIf
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
 ; CursorPosition = 441
-; FirstLine = 104
+; FirstLine = 100
 ; Folding = A5
 ; EnableXP
 ; DisableDebugger

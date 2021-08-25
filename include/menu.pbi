@@ -762,6 +762,10 @@ Procedure VD_ExportPbCommand()
   
 EndProcedure
 
+Procedure VD_ExportInSVG()
+  
+EndProcedure
+
 ; export image
 Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$)
   
@@ -1072,8 +1076,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 353
-; FirstLine = 78
-; Folding = AT6uBQAAAAAcg-BAAeAg-
+; CursorPosition = 764
+; FirstLine = 11
+; Folding = ATpsBQAAAAA1A-DAA9AA-
 ; EnableXP
 ; DisableDebugger
