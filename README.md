@@ -22,10 +22,15 @@ Version 0.15
 
 
 A 2D animation creation software
-- vector drawing
+- vector drawing (box, round box, ellipse, curve, line, text...), edit shape
+- vector "FX" for shape (border, shadow...)
+- layers
+- bank of objects
 - image bitmap import
+- export (png, jpg, bmp) and export as SVG.
+
+in a futur version : 
 - Vector & bitmap animation
-- export (png, jpg)
 
 # Community
 
