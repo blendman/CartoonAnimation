@@ -28,7 +28,6 @@ Repeat
     
     If event = #PB_Event_Gadget
       
-      
       If IsGadget(EventGadget)
         result = GadgetType(EventGadget)
         If result = #PB_GadgetType_Spin Or result = #PB_GadgetType_String          
@@ -355,7 +354,7 @@ Repeat
                 ShapeId = GetGadgetState(#G_shapelist)
                 If ShapeId<= ArraySize(Obj(ObjId)\Shape())
                   Ze_idunik$ = Obj(ObjId)\Shape(ShapeId)\idunik$
-                endif
+                EndIf
                 ShapeFxId = 0
                 For i = 0 To CountGadgetItems(#G_shapelist)-1
                   If GetGadgetItemState(#G_shapelist,i) <> 0
@@ -902,6 +901,9 @@ Repeat
         Case #menuVD_ExportPb
           VD_ExportPbCommand()
           
+        Case #menuVD_ExportSVG  
+          VD_ExportInSVG()
+          
         Case #menuVD_ProjProperties
           OpenWindow_Sceneproperties()
           
@@ -1246,8 +1248,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 357
-; FirstLine = 142
-; Folding = beACIXa9xBAAAA1DAQIAgUA5
+; CursorPosition = 905
+; FirstLine = 44
+; Folding = LYACIWa9xBAAAA1DAQJAgUA5
 ; EnableXP
 ; DisableDebugger

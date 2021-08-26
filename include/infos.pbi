@@ -1,11 +1,13 @@
 ﻿
 ;{ infos, bugs, todolist, etc..
+
 ;{ Infos
 ; name : cartoon animation
 ; software : 2D image vector (and later animation)
 ; main developper : blendman
-; last update : 9 July 2021
-; version : 0.19
+; last update : 9 July 2021/25 august 2021
+; version : 0.36.8
+; contributors : GadgetR.pbi by guillot & naheulf, loadSVG : stargate and 
 ;}
 
 ;{ todolist by version
@@ -108,7 +110,7 @@ CompilerEndIf
 ; ok 0.08 - merge objet file : To ADD new object
 ; ok 0.15 - move pts selected (several)
 ; - scale by centre/offset
-; - insert a pt between two points
+; ok - insert a pt between two points
 ; 
 ; ■ UI (toolbar)
 ; ok 0.06 - pan
@@ -125,7 +127,7 @@ CompilerEndIf
 ; ok 0.12 - Export pb command processus
 ; - Import pb command processus (?)
 ; - Import SVG
-; - Export SVG
+; wip - Export SVG
 ; - save images sequence of animation (from start To End frame) in png, jpg
 ; - export animation in AVI (?) 
 ; - export option : size in %
@@ -196,7 +198,7 @@ CompilerEndIf
 ; ok 0.12 - closepath
 ; ok 0.15.5 - convert To Shape (box, ellipse)
 ; - texture
-; - gradient color
+; wip 0.36.6- gradient color
 ; - Global Style/color For shape
 ; - joint 2 shapes in 1 complexe shape
 ; - separate the shape in several shapes
@@ -267,10 +269,10 @@ CompilerEndIf
 
 ;{ bugs 
 
-; - qd on clique sur rien, mais qu'en déplaçant la souris on rencontre un shape, ça le sélectionne et le bouge.
 ; - layer : w & h : not at the good position with view\x - y
 
 ; ok 
+; - qd on clique sur rien, mais qu'en déplaçant la souris on rencontre un shape, ça le sélectionne et le bouge.
 ; 0.15
 ; - bug avec addpt : les nouveaux points sont mis n'importe comment !
 ; - tool line, curve bug with view
@@ -440,8 +442,19 @@ CompilerEndIf
 ; - add options for gradient
 
 
-; 24/08/2021 0.36.8 (51)
+; 24/08/2021 0.37.2 (53)
+; // New
+; - saveSVG : add viewBox (based on document width and height and current zoom)
+; - saveSVG : add polyline (for shape with multi lines)
 ; // Changes
+; - some changes in saveSVG (closepath, space...)
+
+
+; 24/08/2021 0.37 (52)
+; // New
+; - menu file : export in svg
+; - VD_GetFileExists(filename$)
+; - save SVG : box, circle, ellipse, curve, text + fillpath, strokepath + w, h, x, y, stroke size.
 ; // Fixes
 ; - add tooltips for some gadgets of group window
 
@@ -1317,8 +1330,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 441
-; FirstLine = 100
-; Folding = A5
+; CursorPosition = 444
+; FirstLine = 114
+; Folding = h8
 ; EnableXP
 ; DisableDebugger

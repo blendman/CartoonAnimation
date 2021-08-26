@@ -1,7 +1,7 @@
 ﻿
 ; XIncludeFile "include\infos.pbi"
 
-#ProgramVersionVD = "0.36.8"
+#ProgramVersionVD = "0.37.2"
 #ProgramNameVD = "Cartoon Animation "
 
 XIncludeFile "include\enumeration.pbi"
@@ -130,6 +130,6 @@ OpenWinVectorDrawing()
 ; EnableXP
 ; EnableOnError
 ; UseIcon = spriteanimation.ico
-; Executable = _release\x64\cartoon0.18\cartoon0.18.exe
+; Executable = _released\carton0.36.8\cartoon.exe
 ; EnablePurifier
 ; EnableUnicode

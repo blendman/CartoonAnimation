@@ -474,6 +474,7 @@ Enumeration ; menu
   #menuVD_ExportImageObj
   #menuVD_ExportScene
   #menuVD_ExportPb
+  #menuVD_ExportSVG
   #menuVD_ProjProperties
   #menuVD_Preference
   #menuVD_ShapeQuit
@@ -732,6 +733,22 @@ Enumeration ; others
   
   ;}
   
+  ;{ stroke type
+    ; shape typ
+  #ShapeTypBox = 0
+  #ShapeTypCircle
+  #ShapeTypLine
+  #ShapeTypCurve
+  #ShapeTypEllipse
+  #ShapeTypText
+  ; stroketyp
+  #StrokeTypFill = 0
+  #StrokeTypStroke
+  #StrokeTypDash
+  #StrokeTypPoint
+
+  ;}
+  
   ;{ Shape propertie
   #ShapePropertie_Color=0
   #ShapePropertie_ColorTyp
@@ -790,12 +807,13 @@ Enumeration ; others
   #VD_PathShape 
   ;}
   
+  
 EndEnumeration
 
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 170
-; FirstLine = 62
-; Folding = 5sCAwA5
+; CursorPosition = 748
+; FirstLine = 26
+; Folding = wsCAxMw
 ; EnableXP

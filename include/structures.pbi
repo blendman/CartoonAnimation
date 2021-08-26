@@ -467,6 +467,41 @@ Structure sVdOptions
 EndStructure
 Global VdOptions.sVdOptions
 
+;{ export svg
+
+Structure sShapeSVG
+  Startx.w
+  Starty.w
+  x.w
+  y.w
+  w.w
+  h.w
+  text$
+  ; for curve
+  x1.w
+  y1.w
+  x2.w
+  y2.w
+  
+EndStructure
+
+Structure sSVG_line
+  Segment$ ; infos about the shape 
+  shapetyp.a ; 0 = rect,1=circle,2=line,3=curve
+  shape.sShapeSVG
+  Strokecolor.i
+  strokesize.w
+  strokeColorTyp.a ; 0=Color, 1 = gradient linear, 2= gradient circular, 3= texture
+  strokeTyp.a ; 0=fill, 1=stroke, 2= dash, 3=point
+  strokeflag.a
+  strokeAlpha.a
+  close.a
+  List curve.sShapeSVG()
+EndStructure
+
+
+;}
+
 
 Structure sVDCamera Extends sRectangle
   ID.a
@@ -531,7 +566,7 @@ Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 151
-; FirstLine = 36
-; Folding = ACCB-
+; CursorPosition = 497
+; FirstLine = 70
+; Folding = ACAO5
 ; EnableXP

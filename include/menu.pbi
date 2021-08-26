@@ -112,6 +112,7 @@ Procedure VD_CreateTheMenu()
     MenuItem(#menuVD_ExportScene,lang("Export Scene (full image)"))
     MenuBar()
     MenuItem(#menuVD_ExportPb,lang("Export in Purebasic"))
+    MenuItem(#menuVD_ExportSVG,lang("Export in SVG"))
     MenuBar()
     MenuItem(#menuVD_Preference, lang("Preference"))
     MenuBar()
@@ -357,7 +358,19 @@ Procedure VD_LoadOptions()
     
 EndProcedure
 
-
+Procedure VD_GetFileExists(filename$)
+  
+  If FileSize(filename$)<=0
+    ProcedureReturn 0
+  Else
+    If MessageRequester(lang("Info"), lang("The file already exists. Do you want ot overwrite it ?"), #PB_MessageRequester_YesNo) = #PB_MessageRequester_No
+      ProcedureReturn 1
+    Else
+      ProcedureReturn 0
+    EndIf
+  EndIf
+  
+EndProcedure
 
 
 Procedure Doc_New(mode=1,copy=0,draw=1,x=0,y=0)
@@ -762,8 +775,210 @@ Procedure VD_ExportPbCommand()
   
 EndProcedure
 
-Procedure VD_ExportInSVG()
+Procedure VD_ExportInSVG(Title$="",desc$="")
   
+  ; need to create a window for the export for svg.
+  ; To Define : title, desc, w, h, zoom.
+  If ArraySize(obj(ObjId)\Shape()) >=0 And obj(ObjId)\Actif =1
+    
+    file$ = SaveFileRequester(lang("Export in SVG"), VdOptions\PathSave$,"SVG|*.svg",0)
+    
+    If VD_GetFileExists(file$) = 0 And file$ <> #Empty$
+      w = VD_camera(cameraId)\w
+      h = VD_camera(cameraId)\H
+      z.d =  VdOptions\Zoom * 0.01
+
+      date$ = FormatDate("%yyyy/%mm/%dd - %hh:%ii:%ss", Date())
+      ;file$ = "TestSVG"+date$+".svg"
+      
+      ; 
+      If Title$ =#Empty$
+        Title$ = obj(objid)\Nom$
+      EndIf
+      ;       If desc$ =#Empty$
+      ;         desc$ = "An SVG created with the open source 2D vector drawin 'Cartoon' (made in purebasic)."
+      ;       EndIf
+      
+      If CreateFile(0,file$)
+        
+        d$ = Chr(34)
+        
+        ; save infos for svg
+        WriteStringN(0, "<?xml version="+d$+"1.0"+d$+" encoding="+d$+"utf-8"+d$+" ?>")
+        WriteStringN(0, "<!-- Created with Cartoon (and Purebasic) "+date$+" -->")
+        WriteStringN(0, "")
+        text$= "<svg xmlns="+d$+"http://www.w3.org/2000/svg"+d$+" version="+d$+"1.1"+d$+" width="+d$+Str(w)+d$+" height="+d$+Str(h)+d$
+        text$ +" viewBox="+d$+"0 0 "+Str(w/z)+" "+Str(h/z)+d$+" >"
+        WriteStringN(0, text$)
+        WriteStringN(0, "  <title>"+Title$+"</title>")
+        If desc$ <> #Empty$
+          WriteStringN(0, "  <desc>"+desc$+"</desc>")
+        EndIf
+        
+        ; create the list
+        NewList SVGLine.sSVG_line()
+        For i=0 To ArraySize(obj(ObjId)\Shape())
+          With obj(objid)\Shape(i)
+            ; then save the shape
+            AddElement(SVGLine())
+            ; SVGLine()\Segment$ = PathSegments()
+            Select \ShapTyp
+              Case #VD_ShapeShape, #VD_ShapeCurve
+                typ = #ShapeTypCurve
+              Case #VD_ShapeBox
+                typ = #ShapeTypBox
+              Case #VD_ShapeCircle
+                typ = #ShapeTypEllipse
+              Case #VD_ShapeLine
+                typ = #ShapeTypLine
+              Case #VD_ShapeText
+                typ = #ShapeTypText
+            EndSelect
+            
+            SVGLine()\shapetyp = typ 
+            SVGLine()\Strokecolor = \color
+            SVGLine()\strokesize = \w
+            SVGLine()\strokeTyp = \Typ ; stroketyp 
+            SVGLine()\strokeColorTyp = 0    ; for the moment only color (not gradient...)
+            SVGLine()\strokeflag = #PB_Path_RoundEnd
+            SVGLine()\strokeAlpha = \Alpha
+            x = \x
+            y = \y
+            SVGLine()\shape\startx = x ; startx
+            SVGLine()\shape\starty = y ;starty
+            SVGLine()\shape\x = \pt(0)\x + x
+            SVGLine()\shape\y = \pt(0)\y + y
+            SVGLine()\shape\w = \SizeW 
+            SVGLine()\shape\h = \SizeH
+            SVGLine()\shape\text$ = \Text$
+            SVGLine()\close = 1-\open
+            
+            ; for curve and line
+            If  typ = #ShapeTypLine
+               For k=0 To ArraySize(\pt()) 
+                  AddElement(SVGLine()\curve())
+                  SVGLine()\curve()\x = \pt(k)\x + x
+                  SVGLine()\curve()\y = \pt(k)\y + y
+                Next
+            ElseIf  typ = #ShapeTypCurve
+              If ArraySize(\pt())>=2
+                For k=1 To ArraySize(\pt()) Step 3
+                  AddElement(SVGLine()\curve())
+                  SVGLine()\curve()\x = \pt(k)\x + x
+                  SVGLine()\curve()\y = \pt(k)\y + y
+                  SVGLine()\curve()\x1 = \pt(k+1)\x + x
+                  SVGLine()\curve()\y1 = \pt(k+1)\y + y
+                  If k+2< ArraySize(\pt())
+                  SVGLine()\curve()\x2 = \pt(k+2)\x + x
+                  SVGLine()\curve()\y2 = \pt(k+2)\y + y
+                Else
+                  SVGLine()\curve()\x2 = \pt(0)\x + x
+                  SVGLine()\curve()\y2 = \pt(0)\y + y
+                EndIf
+                
+                Next
+              EndIf
+            EndIf
+          EndWith
+        Next
+        
+        
+        ; Here, save the informations about shape, color...
+        ForEach SVGLine()
+          With SVGLine()
+            text$= "  "
+            
+            ; color
+            color$ = d$+"rgb("+Str(Red(\Strokecolor))+","+Str(Green(\Strokecolor))+","+Str(Blue(\Strokecolor))+")"+d$
+            ; fill-opacity="0.5" stroke-opacity="0.8"
+            stroketyp$ = "fill="+color$
+            If \strokeTyp = #StrokeTypStroke And \shapetyp <> #ShapeTypText
+              stroketyp$ = "fill="+d$+"none"+d$+" stroke="+color$+" stroke-width="+d$+Str(\strokesize)+d$+" stroke-opacity="+d$+StrD(\strokeAlpha/255,2)+d$
+              If \strokeflag = #PB_Path_RoundCorner ; or \strokeflag =#PB_Path_RoundEnd
+                stroketyp$ + " stroke-linecap="+d$+ "round"+d$ + " stroke-linejoin="+d$+ "round"+d$
+              ElseIf \strokeflag =#PB_Path_SquareEnd
+                stroketyp$ + " stroke-linecap="+d$+ "square"+d$+ " stroke-linejoin="+d$+ "square"+d$
+              EndIf
+            ElseIf \strokeTyp = #StrokeTypFill
+              stroketyp$ +" fill-opacity="+d$+StrD(\strokeAlpha/255,2)+d$
+              If \shapetyp <> #ShapeTypText
+                If \strokeflag =#PB_Path_RoundEnd      
+                  stroketyp$ + " stroke-linejoin="+d$+ "round"+d$
+                ElseIf \strokeflag =#PB_Path_SquareEnd
+                  stroketyp$ + " stroke-linejoin="+d$+ "square"+d$
+                EndIf
+              EndIf
+            EndIf
+            
+            ; to close the path
+            z$=""+d$+" "
+            If \close = 1
+              z$="Z"+d$+" "
+            EndIf
+            
+            Select \shapetyp
+              Case #ShapeTypBox
+                text$ +"<rect x="+d$+Str(\shape\x)+d$+" y="+d$+Str(\shape\y)+d$+" width="+d$+Str(\shape\w)+d$+" height="+d$+Str(\shape\h)+d$+
+                       " "+stroketyp$+" />"
+                WriteStringN(0, text$)
+                
+              Case #ShapeTypCircle
+                text$ +"<circle cx="+d$+Str(\shape\x)+d$+" cy="+d$+Str(\shape\y)+d$+" r="+d$+Str(\shape\w)+d$+" "+stroketyp$+" />"
+                WriteStringN(0, text$)
+                
+              Case #ShapeTypLine
+                Debug ListSize(\curve())
+                If ListSize(\curve())=0
+                  ; just 1 line
+                  text$ +"<line x1="+d$+Str(\shape\startx)+d$+" x2="+d$+Str(\shape\x)+d$+" y1="+d$+Str(\shape\Starty)+d$+" y2="+d$+Str(\shape\y)
+                Else
+                  ; multiline = polygon :)
+                  point$ = ""
+                  ForEach \curve()
+                    point$ +Str(\curve()\x)+" "+Str(\curve()\y)+" "; +Str(\curve()\x1)+" "+Str(\curve()\y1)+" " 
+                  Next
+                  text$ +"<polyline points="+d$+point$+d$
+                EndIf
+                text$ +" "+stroketyp$+" />"
+                WriteStringN(0, text$)
+                
+              Case #ShapeTypCurve
+                ; <path d="M 10 10 C 20 20, 40 20, 50 10"/>
+                text$ +"<path d="+d$+"M "+Str(\shape\startx)+" "+Str(\shape\Starty)
+                ForEach \curve()
+                  text$ +" C "+Str(\curve()\x)+" "+Str(\curve()\y)+" "+Str(\curve()\x1)+" "+Str(\curve()\y1)+" "+Str(\curve()\x2)+" "+Str(\curve()\y2)
+                Next
+                text$+d$+" "+stroketyp$+" />"
+                WriteStringN(0, text$)
+                
+              Case #ShapeTypText
+                ; <text x="10" y="10">Hello World!</text>
+                text$ +"<text dominant-baseline="+d$+"hanging"+d$+" x="+d$+Str(\shape\startx)+d$+" y="+d$+Str(\shape\starty)+d$+" font-size="+d$+Str(\strokesize)+d$+" "+stroketyp$+" >"+\shape\text$+"</text>"
+                WriteStringN(0, text$)
+                
+              Case #ShapeTypEllipse
+                ; text$ ="  <g transform="+d$+"translate("+Str(\shape\x)+" "+Str(\shape\y)+")"+d$+">"
+                ; WriteStringN(0, text$)
+                text$ +"<ellipse cx="+d$+Str(\shape\x)+d$+" cy="+d$+Str(\shape\y)+d$+" rx="+d$+Str(\shape\w)+d$+" ry="+d$+Str(\shape\h)+d$+" "+stroketyp$+"  />"
+                WriteStringN(0, text$)
+                ; WriteStringN(0, "   </g>") 
+            EndSelect
+          EndWith
+        Next
+        
+        WriteStringN(0, "</svg>")
+        CloseFile(0)
+        
+        FreeList(SVGLine())
+      EndIf
+      
+    EndIf
+    
+  Else
+    MessageRequester(lang("Infos"), lang("You need at least 1 shape to export in svg"))
+  EndIf
+
+
 EndProcedure
 
 ; export image
@@ -1076,8 +1291,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 764
-; FirstLine = 11
-; Folding = ATpsBQAAAAA1A-DAA9AA-
+; CursorPosition = 941
+; FirstLine = 185
+; Folding = ATpsNAWAAAAg----H5fAAgHA5
 ; EnableXP
 ; DisableDebugger
