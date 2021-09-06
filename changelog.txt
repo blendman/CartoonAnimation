@@ -84,7 +84,7 @@ CHANGELOG
 - Structure : shape\group$ : shape can have group (To use it For export image For exemple)
 - menu : #menuVD_ShapeSetGroup + lang() -> open windowgroup()
 - add windowgroup() : List, boutton namegroupe, add, set To group, unset
-- Set group  To selected shapes
+- Set group To selected shapes
 - group : Select shape of the group
 - bank : when on the canvas, we see now the name of the image
 
