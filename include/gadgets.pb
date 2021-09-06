@@ -27,6 +27,7 @@ Procedure AddButonImage(gadg,x,y,w,h,img,flag,tip.s)
     GadgetToolTip(gadg, tip)
   EndIf
 EndProcedure
+
 Procedure AddGadget(id,typ,x,y,w,h,txt$="",min.d=0,max.d=0,tip$="",val.d=-65257,name$=#Empty$)
   
   ; pour ajouter plus facilement un gadget
@@ -177,12 +178,12 @@ Procedure Vd_CreateToolbar()
       x1 + 5 : y1 + 2
       ; over the canvasDrawing
       ; Offset, snap
-      ;         AddGadget(#G_ToolVDOffset, #Gad_Cbbox, x1,y1,w1,h1,"",0,0,"Choose the offset for transformation.") : x1+w1+a+5
+      ;         AddGadget(#G_ToolVDCenter, #Gad_Cbbox, x1,y1,w1,h1,"",0,0,"Choose the offset for transformation.") : x1+w1+a+5
       ;         t$ ="Origin,Cursor,Bounding box,Selected shape"
       ;         For i = 0 To CountString(t$,",")
-      ;           AddGadgetItem(#G_ToolVDOffset,i,StringField(t$,i+1,","))
+      ;           AddGadgetItem(#G_ToolVDCenter,i,StringField(t$,i+1,","))
       ;         Next
-      ;         SetGadgetState(#G_ToolVDOffset,0)
+      ;         SetGadgetState(#G_ToolVDCenter,0)
       
       ;         AddGadget(#G_ToolVDSnap, #Gad_Chkbox, x1,y1,w2,h1,"Snap",0,0,"Set the Snap.",VdOptions\Snap) : x1+w2+a
       ;         AddGadget(#G_ToolVDSnapX, #Gad_Spin, x1,y1,w2,h1,"",1,100000,"Set the Snap X.",VdOptions\SnapX) : x1+w2+a
@@ -447,12 +448,13 @@ Procedure VD_CreateTheGadgets()
     AddGadget(#G_shapePtSoft,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Soft),Lang("Set the point soft")) : x1+h1+a
     AddGadget(#G_shapePtMirored,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Soft),Lang("Set the point mirrored")) : x1+h1+a 
     AddGadget(#G_shapePtUseMirored,#Gad_Cbbox,x1,y1,w7,h1,lang("Move mode"),0,0,Lang("Use the mirrored or smooth move (only available For curve)")) 
-    line$ =lang( "Free,miror,smooth,")
-    For i=0 To 2
-      AddGadgetItem(#G_shapePtUseMirored,i,StringField(line$,i+1,","))
-    Next
-    SetGadgetState(#G_shapePtUseMirored,0)
-    
+;     line$ =lang( "Free,miror,smooth,")
+;     For i=0 To 2
+;       AddGadgetItem(#G_shapePtUseMirored,i,StringField(line$,i+1,","))
+;     Next
+;     SetGadgetState(#G_shapePtUseMirored,0)
+    VD_AddGadgetItem(#G_shapePtUseMirored,lang("Free,miror,smooth,"))
+
     x1+w7+a
     AddGadget(#G_shapeNotRender,#Gad_Chkbox,x1,y1,w7,h1,Lang("Hide"),0,0,Lang("set selected curve (by point) visible Or Not")) :
     y1+h1+a
@@ -549,9 +551,11 @@ Procedure VD_CreateTheGadgets()
     FrameGadget(#PB_Any,5,y1,PanelVDW-15,(a+h1)*10+35,lang("Style"))
     Y1 +20
     AddGadget(#G_shapeFxLineTyp, #Gad_Cbbox, x1,y1,w1,h1,lang("Type"),0,0,lang("Set the type of the Fx.")) : y1+h1+a
-    For i=0 To 3
-      AddGadgetItem(#G_shapeFxLineTyp,i,StringField(line$,i+1,","))
-    Next
+    VD_AddGadgetItem(#G_shapeFxLineTyp,lang( "filled,line,dash,dot,"))
+
+;     For i=0 To 3
+;       AddGadgetItem(#G_shapeFxLineTyp,i,StringField(line$,i+1,","))
+;     Next
     
     AddGadget(#G_shapeFxLineW, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the width of the line Fx."),0, lang("Width")) : y1+h1+a
     AddGadget(#G_shapeFxLineH, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the height of the line Fx (only for dash line)."),0, lang("Height")) : y1+h1+a
@@ -598,12 +602,14 @@ Procedure VD_CreateTheGadgets()
     SetGadgetState(#G_ToolVDEditMode,0)  
     
     ; Offset
-    AddGadget(#G_ToolVDOffset, #Gad_Cbbox, x1,y1,w6,h1,"",0,0,Lang("Choose the offset for transformation.")) : x1+w6+a+5
-    t$ =Lang("Origin,Cursor,Bounding box,Selected shape")
-    For i = 0 To CountString(t$,",")
-      AddGadgetItem(#G_ToolVDOffset,i,StringField(t$,i+1,","))
-    Next
-    SetGadgetState(#G_ToolVDOffset,0)
+    AddGadget(#G_ToolVDCenter, #Gad_Cbbox, x1,y1,w6,h1,"",0,0,Lang("Choose the center for transformation.")) : x1+w6+a+5
+    VD_AddGadgetItem(#G_ToolVDCenter,lang("Bounding box,Origin,"))
+
+    ;t$ =Lang("Bounding box,Origin") ;,Cursor,,Selected shape")
+;     For i = 0 To CountString(t$,",")
+;       AddGadgetItem(#G_ToolVDCenter,i,StringField(t$,i+1,","))
+;     Next
+;     SetGadgetState(#G_ToolVDCenter,0)
     
     ; snap
     AddGadget(#G_ToolVDSnap, #Gad_Chkbox, x1,y1,w7,h1,Lang("Snap"),0,0,Lang("Set the Snap."),VdOptions\Snap) : x1+w7+a
@@ -2022,7 +2028,7 @@ Procedure ShapeGetProperties(state=1)
     
     If shapeId > -1 And ShapeID <= ArraySize(Obj(ObjId)\shape())
       
-      ; disable/enable gadgets if needed
+      ; disable/enable some gadgets if needed (if shape\locked = 1)
       If GadgetsAreDisabled = 1
         If Obj(ObjId)\Shape(ShapeId)\Locked = 0
           ShapeSetGadget(0)
@@ -2033,8 +2039,6 @@ Procedure ShapeGetProperties(state=1)
         EndIf
       EndIf
       GadgetsAreDisabled = Obj(ObjId)\Shape(ShapeId)\Locked
-      
-      
       
       ; Debug "ok !!!"
       ; pour afficher les information du shape en cours
@@ -2053,6 +2057,8 @@ Procedure ShapeGetProperties(state=1)
       ;SetGadgetState(#G_ObjLock,Obj(ObjId)\Locked)
       SetGadgetState(#G_shapeAlpha,Obj(ObjId)\Shape(ShapeId)\Alpha)
       SetGadgetState(#G_shapeTyp,Obj(ObjId)\Shape(ShapeId)\Typ)
+      
+      SetGadgetState(#G_shapelist,ShapeId)
 
       SetGadgetState(#G_shapeLink,Obj(ObjId)\Shape(ShapeId)\Linked)
       SetGadgetState(#G_shapeLock,Obj(ObjId)\Shape(ShapeId)\Locked)
@@ -2185,7 +2191,6 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 930
-; FirstLine = 222
-; Folding = CxobfAAAAPEoHQ1PAAw---BAAAAAAAAAAAAAAAAAAAAAAAHCv0
+; CursorPosition = 30
+; Folding = CJobfAGAAIEyRm1BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAw9DA+
 ; EnableXP

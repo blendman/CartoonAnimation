@@ -286,6 +286,8 @@ Structure sVd
   
   Selection.sRectangle2
   
+  BBox.sRectangle
+  BBoxcenter.SPointBase
   
   PathId.a
   SceneID.w
@@ -454,12 +456,14 @@ Structure sVdOptions
   SnapX.w
   SnapY.w
   
-  Offset.a ; type d'offset
+  CenterTransformation.a
   
   GridW.w
   GridH.w
   ShowGrid.a
   ShowOrigin.a
+  ShowBoxselect.a
+  
   ; paths
   PathOpen$
   PathSave$
@@ -566,7 +570,7 @@ Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 497
-; FirstLine = 70
-; Folding = ACAO5
+; CursorPosition = 463
+; FirstLine = 159
+; Folding = kCAN5
 ; EnableXP

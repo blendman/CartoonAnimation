@@ -90,8 +90,8 @@ Repeat
               min(VdOptions\SnapY,1)
               DrawCanvas()
               
-            Case #G_ToolVDOffset
-              VdOptions\Offset = GetGadgetState(#G_ToolVDOffset)
+            Case #G_ToolVDCenter
+              VdOptions\CenterTransformation = GetGadgetState(#G_ToolVDCenter)
               ;}
               
               ;{ * panel Left
@@ -352,23 +352,26 @@ Repeat
             Case #G_shapelist
               If vd\NbShape >=0
                 ShapeId = GetGadgetState(#G_shapelist)
-                If ShapeId<= ArraySize(Obj(ObjId)\Shape())
-                  Ze_idunik$ = Obj(ObjId)\Shape(ShapeId)\idunik$
-                EndIf
-                ShapeFxId = 0
-                For i = 0 To CountGadgetItems(#G_shapelist)-1
-                  If GetGadgetItemState(#G_shapelist,i) <> 0
-                    Obj(ObjId)\Shape(i)\Selected = 1
-                    Debug "select "+i
-                  Else
-                    Obj(ObjId)\Shape(i)\Selected = 0
-                  EndIf 
-                Next
-                ;If EventType() = #PB_EventType_LeftDoubleClick
-                ;Obj(ObjId)\Shape(ShapeId)\Nom$ = 
-                Drawcanvas()
-                If shapeId >-1
-                  ShapeGetProperties()                       
+                If shapeID >-1
+                  If ShapeId<= ArraySize(Obj(ObjId)\Shape()) 
+                    Ze_idunik$ = Obj(ObjId)\Shape(ShapeId)\idunik$
+                  EndIf
+                  ShapeFxId = 0
+                  For i = 0 To CountGadgetItems(#G_shapelist)-1
+                    If GetGadgetItemState(#G_shapelist,i) <> 0
+                      Obj(ObjId)\Shape(i)\Selected = 1
+                      Debug "select "+i
+                    Else
+                      Obj(ObjId)\Shape(i)\Selected = 0
+                    EndIf 
+                  Next
+                  ;If EventType() = #PB_EventType_LeftDoubleClick
+                  ;Obj(ObjId)\Shape(ShapeId)\Nom$ = 
+                  Drawcanvas()
+                  If shapeId >-1
+                    ShapeGetProperties()  ; in gadget.pbi                     
+                  EndIf
+                  SetActiveGadget(#G_canvasVector)
                 EndIf
               EndIf
               
@@ -1247,9 +1250,9 @@ EndIf
 
 VD_SaveOptions()
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 905
-; FirstLine = 44
-; Folding = LYACIWa9xBAAAA1DAQJAgUA5
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 371
+; FirstLine = 98
+; Folding = LeBCAWa9jHAAAAoHAgAAAtAw
 ; EnableXP
 ; DisableDebugger

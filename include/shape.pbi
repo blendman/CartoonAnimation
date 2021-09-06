@@ -859,24 +859,31 @@ Procedure GetShapeStartTransformation(action=0,x=0,y=0)
         
         If \Selected = 1 Or ki = ShapeId 
           ; Debug "ok scale on garde start"
+          
+          ; we should keep the start point for each point of the curve/line
           For k = 0 To ArraySize(\pt())
             \pt(k)\startX = \pt(k)\x
             \pt(k)\startY = \pt(k)\y                                               
           Next 
           
-          Select \ShapTyp
-              
-            Case #VD_ShapeBox,#VD_ShapeCircle,#VD_ShapeBoxRnd,#VD_ShapeImage,#VD_ShapeText  
-              
-              \startX = X 
-              \startY = y 
-              \startW = \SizeW
-              \startH = \SizeH
-              
-            Default 
-              \startX = x + \size
-              
-          EndSelect
+          ; keep the "start" position and size, for each shape()
+          \startX = \X 
+          \startY = \y 
+          \startW = \SizeW
+          \startH = \SizeH
+          ;                \sx= \x
+          ;                \sy= \y
+          ;                \sw = \w
+          ;                \sh = \h
+          
+          ;           Select \ShapTyp
+          ;             Case #VD_ShapeCurve, #VD_ShapeLine
+          ;               ; we should keep the start point for each point of the curve/line
+          ;               For k=0 To ArraySize(\pt())
+          ;                 \pt(k)\startX = \pt(k)\x 
+          ;                 \pt(k)\startY = \pt(k)\y 
+          ;               Next
+          ;           EndSelect
           
         EndIf
         
@@ -1202,7 +1209,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
       ProcedureReturn 0
     Else
       
-      If OpenFile(10,file$)
+      If ReadFile(10,file$)
         
         ; Debug"openfile shape : "+file$
         Vd\DocFilename$ = file$
@@ -1413,6 +1420,10 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 \Fx(k)\SizeW    = Val(StringField(line$,u,",")) : u+1
                 \Fx(k)\SizeH    = Val(StringField(line$,u,",")) : u+1
                 \Fx(k)\Actif    = Val(StringField(line$,u,",")) : u+1
+                If \fx(k)\actif
+                  \UseFx =1
+                EndIf
+                
               EndWith
               UpdateListShapeFX()
               
@@ -1705,6 +1716,14 @@ Procedure Shape_Mirror(horizontal=1, vertical=0)
   DrawCanvas()
   
 EndProcedure
+Procedure Shape_SetTrasnformation(action,ratio.d)
+  
+  
+  
+  
+EndProcedure
+
+
 
 
 ; Shape propertie
@@ -2092,7 +2111,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 321
-; FirstLine = 72
-; Folding = 6AQAAAIAwEBtAAAAAAAAAAAAAAAAAAAAAAAAAAA5+DA5vg-ZB+
+; CursorPosition = 885
+; FirstLine = 30
+; Folding = AAAAAAAAAAAAAA5P5-BAAAAAA6GAAA5AAAAQAAAAAAAAAAAAA9
 ; EnableXP

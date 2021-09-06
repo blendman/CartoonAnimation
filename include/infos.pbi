@@ -373,6 +373,8 @@ CompilerEndIf
 ; 0.36 - si on utilise pas de fx, simplifier dans drawcanvas()
 ; fx : add "actif" in the options for creation
 ; - add tooltips for some gadget group window
+; 0.37.3 - scale : add option "keep image proportion"
+; 0.38 - pouvoir agrandir tous les shapes sélectionnés, mais par rapport à une bounding box (le centre du shapeid par ex)
 
 
 ; ok - ajouter un système de storyboard (voir le fichier cartoon_dev) : see BDcreator
@@ -407,8 +409,6 @@ CompilerEndIf
 
 ; BUGS :
 ; - bug quand on supprime un point : il faudrait avoir un choix : seulement le point ou le point et les 2 points d'encrage (si courbe)
-; - pouvoir agrandir tous les shapes sélectionnés, mais par rapport à une bounding box
-; - pouvoir rotationner tous les shapes sélectionnés, mais par rapport à une bounding box
 ; - bug avec le deparanting : les shapes ne restent pas à leur place si on l'applique.
 ; - bug when lockselection and move (the startX /Y should be recalcultaed each time we clicdown)
 ; - revoir le système de savepreviewimage si on sauve un fichier (car si les shapes ne sont pas dans la vue camera, c'est coupé)
@@ -437,12 +437,36 @@ CompilerEndIf
 ; WIP - ajouter un editeur de personnage (créer à partir d'une banque facilement : tete, oreille, yeux, bouche, nez, cou, cheveux..)
 ; - verifier si les idunik des shapes sont bien unik, sinon-> changer l'idunik et changer l'idunik sur les objet enfants
 ; - pouvoir créer des objets à partir de groupe (? ou autre) de shape, qui seraient des images. Si je modifie un shape du groupe, ça update l'image.
-; - scale : add option "keep image proportion"
 ; - ajouter les options de strokepath(roundend...)
 ; - add options for gradient
+; - pouvoir rotationner tous les shapes sélectionnés, mais par rapport à une bounding box (le centre du shapeid par ex)
 
 
-; 24/08/2021 0.37.2 (53)
+; 01/09/2021 0.38 (55)
+; // New
+; - Add transform scale with boundingbox mode (selection or single shape selected)
+; // changes
+; - change transform scale : with origin (selection or single shape selected)
+
+
+; 30/08/2021 0.37.5 (54)
+; // changes
+; - when select a shape (by clic) -> update the gadget #G_shapelist
+; - #G_shapelist : after select a shape -> setactivegadget(canvasmain)
+
+
+; 27/08/2021 0.37.4 (53)
+; // changes
+; - change transform scale (for just 1 shape, not selection)
+; - transform scale  : by default, it's bounding box scale.
+; - transformation center : boundingbox, origin.
+; // fixes
+; - Fx : style cbbox hasn't the correct words.
+; - Doc_Open() don't set "On" the fx with the "new simplification".
+; - #G_shapelist : if we deselect the shapeId, shapeid=-1 -> crash
+
+
+; 26/08/2021 0.37.2 (53)
 ; // New
 ; - saveSVG : add viewBox (based on document width and height and current zoom)
 ; - saveSVG : add polyline (for shape with multi lines)
@@ -450,14 +474,13 @@ CompilerEndIf
 ; - some changes in saveSVG (closepath, space...)
 
 
-; 24/08/2021 0.37 (52)
+; 25/08/2021 0.37 (52)
 ; // New
 ; - menu file : export in svg
 ; - VD_GetFileExists(filename$)
 ; - save SVG : box, circle, ellipse, curve, text + fillpath, strokepath + w, h, x, y, stroke size.
 ; // Fixes
 ; - add tooltips for some gadgets of group window
-
 
 
 ; 24/08/2021 0.36.7 (51)
@@ -1330,8 +1353,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 444
-; FirstLine = 114
+; CursorPosition = 448
+; FirstLine = 126
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger

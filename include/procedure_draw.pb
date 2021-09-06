@@ -253,7 +253,7 @@ Procedure VdDrawShape1(vo,j)
         Select \ShapTyp
                 
           Case #VD_ShapeShape
-            MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+            ; MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
             For i =0 To ArraySize(\pt()) Step 3
               u = 1+i
               If u > ArraySize(\pt())
@@ -478,7 +478,7 @@ Procedure VDDrawUtil()
     ; - taille de la "camera" ou export (x,y,w,h)
   
   a = 3 ; taille point tillé, et des points centraux
-  b = 2 ; centre du shape
+  b = 5 ; centre du shape
   c = 2
   d = 2 ;  center du point
   
@@ -723,7 +723,7 @@ Procedure VDDrawUtil()
       ; puis, j'affiche des points tillés autour du shape selectionné
       If VdOptions\ShowSelection
         
-        ; pour les shapes sélectionnés qui ne sont pas shapeID (le dernier selectionné)
+        ; draw the boundingbox for each 
         For kk = 0 To ArraySize(Obj(ObjId)\Shape())
           
           With Obj(ObjId)\Shape(kk)
@@ -774,18 +774,99 @@ Procedure VDDrawUtil()
                   
               EndSelect
               
-              AddPathBox(PathBoundsX(),PathBoundsY(),PathBoundsWidth(),PathBoundsHeight())
+              pbx = PathBoundsX()
+              pby = PathBoundsY()
+              pbw = PathBoundsWidth()
+              pbh = PathBoundsHeight()
+;               
+;               ; calcul the boundingbox of selection
+;               If vd\bbox\x>pbx -vx
+;                 vd\bbox\x=pbx -vx
+;               EndIf 
+;               If vd\bbox\y>pby-vy
+;                 vd\bbox\y=pby-vy
+;               EndIf
+;               If vd\bbox\w<vd\bbox\x+pbw
+;                 vd\bbox\w=vd\bbox\x+pbw
+;               EndIf 
+;               If vd\bbox\h<vd\bbox\y+pbh
+;                 vd\bbox\h=vd\bbox\y+pbh
+;               EndIf
+              
+              AddPathBox(pbx,pby,pbw,pbh)
               VectorSourceColor(RGBA(15,15,15,255)) 
-              ;DashPath(0.5/Z1,5/Z1)
               DashPath(0.5,5)
             EndIf
             
           EndWith                
           
         Next
-        ;VectorSourceColor(RGBA(15,15,15,255)) 
-        ;DashPath(0.5/Z1,5/Z1)
-      
+        
+        
+         ;{ draw the boundingbox for selection 
+        For kk = 0 To ArraySize(Obj(ObjId)\Shape())
+          With Obj(ObjId)\Shape(kk)
+            If \hide = 0 And \Selected = 1   ;And kk<> shapeId
+              
+              px = 0
+              py = 0
+              
+              ShapeSetParentingPosition(ObjId,kk)
+              
+              vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
+              vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
+              
+              MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+              Select \ShapTyp
+                  
+                Case #VD_ShapeShape, #VD_ShapeCurve                               
+                  For i =0 To ArraySize(\pt()) Step 3
+                    
+                    u = 1+i
+                    If u > ArraySize(\pt())
+                      u =0
+                    EndIf
+                    v = u+1
+                    If v > ArraySize(\pt())
+                      v =0
+                    EndIf
+                    w = v+1              
+                    If w > ArraySize(\pt())
+                      w=0
+                    EndIf
+                    AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
+                  Next
+                  
+                Case #VD_ShapeText
+                  sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+                  sizeH = VectorParagraphHeight(\text$, \d,\h)
+                  AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
+                  
+                Case #VD_ShapeImage 
+                  AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
+                  
+                Default
+                  VdDrawShape1(ObjId, kk)
+                  
+              EndSelect
+            EndIf
+          EndWith                
+        Next
+        
+        ; then draw the bounding box for selection
+        vd\bbox\x = PathBoundsX()
+        vd\bbox\y = PathBoundsY()
+        vd\bbox\w = PathBoundsWidth()
+        vd\bbox\h = PathBoundsHeight()
+        
+        ;If VdOptions\ShowBoxselect
+          AddPathBox( vd\bbox\x, vd\bbox\y,vd\bbox\w,vd\bbox\h)
+          VectorSourceColor(RGBA(255,215,15,255)) 
+          DashPath(0.8,5)
+        ;EndIf
+        
+        ;}
+        
         px = 0
         py = 0
         ; puis, on dessine le contour en point tillés
@@ -844,11 +925,10 @@ Procedure VDDrawUtil()
             MovePathCursor(vx,vy)
             ;AddPathCircle(\Cx,\cy,b/Z1,0,360,#PB_Path_Relative)
             AddPathCircle(\Cx,\cy,b,0,360,#PB_Path_Relative)
-            VectorSourceColor(RGBA(255,0,216,255))
+            VectorSourceColor(RGBA(255,0,216,200))
             FillPath()
           EndWith
         EndIf     
-        
         
       EndIf
       
@@ -908,6 +988,7 @@ Procedure VDDrawUtil()
   
   
   If vd\Selection\x<> vd\Selection\w And vd\Selection\y <> vd\Selection\h
+    ; draw the slection rectangle
     AddPathBox(vd\Selection\x+ VD\ViewX, vd\Selection\y+ VD\ViewY, vd\Selection\w, vd\Selection\h)
     VectorSourceColor(RGBA(255,0,0,255))
     DashPath(0.5/Z1,6/Z1)
@@ -1168,8 +1249,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1016
-; FirstLine = 134
-; Folding = Ul-v-80b-fe4---8-AXwj+5-4PQ+-
+; CursorPosition = 255
+; FirstLine = 31
+; Folding = Wl-v---b-fe4---8fDZvgewP---By--
 ; EnableXP
 ; DisableDebugger

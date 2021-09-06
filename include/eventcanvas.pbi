@@ -1,23 +1,33 @@
 ﻿
 ; key down
-If EventType() = #PB_EventType_KeyDown ; Or EventType() = #PB_EventType_Focus          
+If EventType() = #PB_EventType_KeyDown ; Or EventType() = #PB_EventType_Focus 
+ ; Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
   If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Modifiers) & #PB_Canvas_Shift                            
     vd\Shift = 1                          
   EndIf  
-  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Modifiers) & #PB_Canvas_Control                         
-    vd\ctrl = 1                          
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) = 17  ; Or  GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Modifiers)  & #PB_Canvas_Control                        
+    vd\ctrl = 1 
+    ; Debug "ok ctrl!!!!!"
+  EndIf 
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) = 18                       
+    vd\alt = 1 
+   ; Debug "ok alt"
   EndIf                        
-  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) & #PB_Shortcut_Space                         
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) = #PB_Shortcut_Space                         
     Vd\Space = 1                            
   EndIf
   
 ElseIf EventType() = #PB_EventType_KeyUp 
    ;{ key up
   
-  ; Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
+   Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
   ; enter 13
   ; altgr 18
   ; tab 9
+  If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)= 18                      
+    vd\alt = 0  
+    vd\keypressed = 0   
+  EndIf
   If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key) = #PB_Shortcut_Space 
     Vd\space= 0                           
     vd\keypressed = 0                           
@@ -27,7 +37,7 @@ ElseIf EventType() = #PB_EventType_KeyUp
     vd\keypressed = 0                          
   EndIf  
   If GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)= 17 ; ctrl 
-    Vd\ctrl= 0                           
+    Vd\ctrl= 0  
     vd\keypressed = 0                          
   EndIf 
   ;}
@@ -53,8 +63,8 @@ If EventType() = #PB_EventType_LeftButtonDown Or
     ; update coordonnate of the object
     ;VD_ShapeCoord(ObjId)
     
-    x5 = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_MouseX);/z                          
-    y5 = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_MouseY);/z
+    x5 = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_MouseX)                        
+    y5 = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_MouseY)
     
     x = (ConvertCoordinateX(x5,y5,#PB_Coordinate_Device, #PB_Coordinate_User)/Z) 
     y = (ConvertCoordinateY(x5,y5,#PB_Coordinate_Device, #PB_Coordinate_User)/z) 
@@ -105,6 +115,9 @@ If EventType() = #PB_EventType_LeftButtonDown Or
             Vd\spaceY = Y2 - VD\ViewY
             Vd\move = 0
             start_Rot = 0
+            
+            startX = x1
+            starty = y1
             
             ;{ on déslectionne tout (shapes et pts)
             If vdOptions\Action = #VD_actionMOve And vd\EditMode = #VD_Editmode_Shape
@@ -209,8 +222,8 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                   GetShapeStartTransformation(1,x,y)
                   
                 ElseIf  vdOptions\Action = #VD_actionScale 
-                  GetShapeStartTransformation(0,x,y)
-                  
+                   GetShapeStartTransformation(0,x,y)
+
                 Else
                   
                   ;{ on fait une action sur les points du shape selectionné (bouger ou supprimer un point)                                                             
@@ -234,7 +247,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                         Next
                       EndWith
                     EndIf
-                     Debug "ok cherche point"
+                     ; Debug "ok cherche point"
                     VD_PointGetSelected(x1,y1) ; macros in shape.pbi
                   EndIf
                   
@@ -664,6 +677,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                 EndIf
                 
                 For ki = 0 To ArraySize(Obj(ObjId)\Shape())
+                  
                   With Obj(ObjId)\Shape(ki) 
                     If \Locked = 0 And \hide=0
                       
@@ -696,71 +710,90 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                             
                           Case #VD_actionScale
                             ;{ action scale
-                            
-                            Select \ShapTyp
-                                
-                              Case #VD_ShapeShape, #VD_ShapeCurve, #VD_ShapeLine
-                                ;{ scale les points
-                               
                                 If start_Rot = 0
                                   start_Rot = 1
                                   GetShapeStartTransformation(0,x,y)
                                   ; ajouter la position du centre de rotation (pt(0) ou autre)
+                                  
+                                  ; center position for transformation with boundingbox
+                                  centerX.d = vd\bbox\x ;+20 ;+vd\bbox\w/2 ; 10
+                                  centerY.d = vd\bbox\y ;+20 ;+vd\bbox\h/2 ; 10
+                                  ;                                   If shapeID >-1 And shapeID<=ArraySize(Obj(ObjId)\Shape())
+                                  ;                                       centerX.d =  Obj(ObjId)\Shape(shapeiD)\cx ;+ Obj(ObjId)\Shape(shapeiD)\x
+                                  ;                                       centerY.d =  Obj(ObjId)\Shape(shapeiD)\cy ;+ Obj(ObjId)\Shape(shapeiD)\y
+                                  ;                                   Else
+                                  ;                                     For kki = 0 To ArraySize(Obj(ObjId)\Shape())
+                                  ;                                       If Obj(ObjId)\Shape(kki)\Selected
+                                  ;                                           centerX.d = Obj(ObjId)\Shape(kki)\cx ;+ Obj(ObjId)\Shape(kki)\x
+                                  ;                                           centerY.d = Obj(ObjId)\Shape(kki)\cy ;+ Obj(ObjId)\Shape(kki)\y
+                                  ;                                         Break
+                                  ;                                       EndIf
+                                  ;                                     Next
+                                  ;                                   EndIf
+                                  startx = x1
+                                  starty = y1
+                                  ; use an arbitrary width and height (w=10, h=10), to help to calcul the ratio to use it on the shapes.
+                                  nw.d = 10
+                                  nh.d = 10
+                                  sw.f = nw
+                                  sh.f = nh
+                                  nw = sw +(x1-startx)*0.1
+                                  ratio.d = nw/ sw
+                                  size.d = ratio
+                                  
                                 EndIf
                                 
-                                n =0
-                                ;\Size = (x-\pt(n)\startX)*0.01 
-                                \Size = (x-\startX)*0.01                                                                   
+                                ; we calcul the ratio with the new width nw and old with sw
+                                nw = sw +(x1-startx)*0.1
+                                ratio.d = nw/ sw
+                                ;Debug Str(x)+"/"+Str(startx)
+                                ;Debug ratio
                                 
-                                ;Debug ""+\size+"/"+size
-                                For k = 0 To ArraySize(\pt())                                                   
-                                  \pt(k)\x = \pt(k)\startX * (1+\size) -\pt(n)\startX * (\size)
-                                  \pt(k)\y = \pt(k)\startY * (1+\size) -\pt(n)\startY * (\size)
-                                Next
+                                ;{ set shape scale
+                                ; calcul the new size for the shape 
+                                newW = \startw * ratio
+                                newH = \starth * ratio
+                                If vd\ctrl
+                                  If vd\Alt =0
+                                    newH = newW
+                                  Else
+                                    newH = \startH +(y1-starty)*0.1
+                                  EndIf
+                                EndIf
+                                \SizeW = newW
+                                \SizeH = newH
                                 
+                                ; then move the position if center of transformation = boundingbox
+                                If vdoptions\CenterTransformation = 0
+                                  ; if the center of transformation = boundingbox
+                                  ; need to calcul the new position because we want to keep the same space between all shape, so we have to update it.
+                                  \x = centerX+(\startx -centerX)*ratio 
+                                  \y = centerY+(\starty -centerY)*ratio
+                                  
+                                  Select \ShapTyp
+                                      
+                                    Case #VD_ShapeShape, #VD_ShapeCurve, #VD_ShapeLine
+                                      ; only for curve and line, need to calcul the position of each points of shape()\pt().
+                                      For k=0 To ArraySize(\pt())
+                                        \pt(k)\x = ( \pt(k)\startx)*ratio ; centerX+( \pt(k)\startx -centerX)*ratio 
+                                        \pt(k)\y = ( \pt(k)\starty)*ratio ; centerY+( \pt(k)\starty -centerY)*ratio 
+                                      Next
+                                  EndSelect
+                                Else
+                                   ; if the center of transformation = origin
+                                  Select \ShapTyp
+                                      
+                                    Case #VD_ShapeShape, #VD_ShapeCurve, #VD_ShapeLine
+                                      ; only for curve and line, need to calcul the position of each points of shape()\pt().
+                                      s.d = ratio -size
+                                      For k=0 To ArraySize(\pt())
+                                        \pt(k)\x = \pt(k)\startX * (1+s) ;-\X * (s)
+                                        \pt(k)\y = \pt(k)\startY * (1+s) ;-\Y * (s)
+                                      Next
+                                  EndSelect
+                                EndIf
                                 ;}
                                 
-                              Case #VD_ShapeBox, #VD_ShapeBoxRnd, #VD_ShapeCircle,#VD_ShapeImage,#VD_ShapeText
-                                If vd\shift = 0
-                                  newx = x -\x 
-                                  newy = y -\y 
-                                  Obj(ObjId)\Shape(ki)\SizeW = newx
-                                  If vd\ctrl
-                                    newy = newx
-                                  EndIf
-                                  Obj(ObjId)\Shape(ki)\SizeH = newy ;Abs(y - \StartY)
-                                Else
-                                  If ki = shapeID
-                                    newx = (Abs(X - \startX))/\startW
-                                    newy = (Abs(y - \startY))/\startH
-                                    Obj(ObjId)\Shape(ki)\SizeW = \startW * newx
-                                    If vd\ctrl
-                                      newy = newx
-                                    EndIf
-                                    Obj(ObjId)\Shape(ki)\SizeH = \startH * newy 
-                                  Else
-                                    Obj(ObjId)\Shape(ki)\SizeW = \startW * newx 
-                                    ;Obj(ObjId)\Shape(ki)\
-                                    If vd\ctrl
-                                      newy = newx
-                                    EndIf
-                                    Obj(ObjId)\Shape(ki)\SizeH = \startH * newy
-                                  EndIf
-                                  ;Abs(y - \StartY)
-                                  ; min(Obj(ObjId)\Shape(ki)\SizeW,1)
-                                  ; min(Obj(ObjId)\Shape(ki)\SizeH,1)
-                                  
-                                  ;\StartW  = \SizeW
-                                  ;\startH  = \SizeH
-                                  
-                                  ;                               Debug StrD(newx)+"/"+StrD(newY)
-                                  ;                               Debug StrD(\SizeW)+"/"+StrD(\SizeH)
-                                  
-                                EndIf
-                                
-                              Default
-                                
-                            EndSelect
                             ;}
                             
                           Case #VD_actionRot
@@ -1029,8 +1062,8 @@ EndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 956
-; FirstLine = 132
-; Folding = hfv+wW0XtL86+b---f0xT88PY-d5
+; CursorPosition = 790
+; FirstLine = 247
+; Folding = h-06Lanf2usn8j0---2nv-4-p04h
 ; EnableXP
 ; DisableDebugger

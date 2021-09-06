@@ -448,6 +448,7 @@ Procedure UnPreMultiplyAlpha(image)
   
   ProcedureReturn image
 EndProcedure
+
 ;}
 
 
@@ -585,8 +586,9 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 495
-; Folding = AA8AOwPQZA5
+; CursorPosition = 451
+; FirstLine = 9
+; Folding = BA8AkwPQZA5
 ; EnableXP
 ; EnableOnError
 ; DisableDebugger

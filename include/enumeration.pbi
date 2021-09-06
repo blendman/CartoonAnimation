@@ -39,7 +39,7 @@ Enumeration ; Gadgets
   #G_CanvasPathVDShape
   
   #G_CanvasOptionVD
-  #G_ToolVDOffset
+  #G_ToolVDCenter
   #G_ToolVDSnap
   #G_ToolVDSnapX
   #G_ToolVDSnapY
@@ -812,8 +812,8 @@ EndEnumeration
 
 
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 748
-; FirstLine = 26
-; Folding = wsCAxMw
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 41
+; FirstLine = 9
+; Folding = 5sCARMw
 ; EnableXP
