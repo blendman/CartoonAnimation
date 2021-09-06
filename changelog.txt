@@ -1,11 +1,57 @@
 CHANGELOG
 
-24/08/2021 0.36.5
+01/09/2021 0.38
+// New
+- Add transform scale With boundingbox mode (selection Or single shape selected)
+// changes
+- change transform scale : With origin (selection Or single shape selected)
+
+
+30/08/2021 0.37.5
+// changes
+- when Select a shape (by clic) -> update the gadget #G_shapelist
+- #G_shapelist : after Select a shape -> SetActiveGadget(canvasmain)
+
+
+27/08/2021 0.37.4
+// changes
+- change transform scale (For just 1 shape, Not selection)
+- transform scale  : by Default, it's bounding box scale.
+- transformation center : boundingbox, origin.
+// fixes
+- Fx : style cbbox hasn't the correct words.
+- Doc_Open() don't set "On" the fx with the "new simplification".
+- #G_shapelist : If we deselect the shapeId, shapeid=-1 -> crash
+
+
+26/08/2021 0.37.2
+// New
+- saveSVG : add viewBox (based on document width And height And current zoom)
+- saveSVG : add polyline (For shape With multi lines)
+// Changes
+- some changes in saveSVG (closepath, space...)
+
+
+25/08/2021 0.37
+// New
+- menu file : export in svg
+- VD_GetFileExists(filename$)
+- save SVG : box, circle, ellipse, curve, text + fillpath, strokepath + w, h, x, y, stroke size.
+// Fixes
+- add tooltips For some gadgets of group window
+
+
+24/08/2021 0.36.7
 // Changes
 - toolbar : after clic on new, open, save -> SetActiveGadget(#G_canvasVector) (To Not redo the action With space)
 - layer add/delete : after clic on btn ->  SetActiveGadget(#G_canvasVector)
+- some changes in eventcanvas.pbi To Select more easily a point of a shape (only If action=action And editmode = point)
 // fixes
 - when clic on "view layer", it show/hide the current layer, Not the layer on wich we have clicked
+- sometimes, VD_UpdateShapeBankCanvas() try To open an inexistant file at start 
+- sometimes, when try To Select a Point( in editmode = point), the point wasn't selected and it was the last point which was selected
+- fixe a bug when Select a shapeid > ArraySize(obj()\shape() (If we have delete the shapeid before a new selection)
+
 
 23/08/2021 0.36.4
 // New
