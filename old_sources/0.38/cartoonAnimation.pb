@@ -1,7 +1,7 @@
 ﻿
 ; XIncludeFile "include\infos.pbi"
 
-#ProgramVersionVD = "0.41.6"
+#ProgramVersionVD = "0.38"
 #ProgramNameVD = "Cartoon Animation "
 
 XIncludeFile "include\enumeration.pbi"
@@ -10,7 +10,7 @@ XIncludeFile "include\structures.pbi" ; structure & variables global
 
 XIncludeFile "include\lang.pbi" ; for langage localisation
 
-XIncludeFile "include\init.pbi" ; init encoder/decoder
+XIncludeFile "include\init.pbi" ; init image encoder/decoder
 
 XIncludeFile "include\macros.pbi" 
 
@@ -131,6 +131,5 @@ OpenWinVectorDrawing()
 ; EnableOnError
 ; UseIcon = spriteanimation.ico
 ; Executable = _released\carton0.36.8\cartoon.exe
-; DisableDebugger
 ; EnablePurifier
 ; EnableUnicode

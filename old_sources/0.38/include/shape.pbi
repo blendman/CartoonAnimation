@@ -155,34 +155,15 @@ Procedure Vd_DeletePoint(i)
           EndIf
         EndIf
         ; delete the point for the other shape type (line)
-        If ArraySize(\pt()) >0
-          DeleteArrayElement(\pt,i)
-          
-          ; change the next point
-          If i <=ArraySize(\pt()) 
-            \pt(i)\center = 0
-          EndIf
-          ; je dois vérifier les broken points
-          Shape_CheckBrokenPoint()
-          ; et update le canvas
-          DrawCanvas()
+        DeleteArrayElement(\pt,i)
+        DrawCanvas()
+        ; change the next point
+        If i <=ArraySize(\pt())
+          \pt(i)\center = 0
         EndIf
       EndWith
     EndIf
   EndIf
-EndProcedure
-
-Procedure VD_ResetAllPoints()
-  ; to reset all point of a  shape
-  If shapeId >-1
-    With Obj(ObjId)\Shape(ShapeId) 
-      For k=0 To ArraySize(\pt())
-        \pt(k)\center = 0
-        \pt(k)\broken = 0 ; ??
-      Next
-    EndWith
-  EndIf
-  
 EndProcedure
 
 Procedure Vd_SetPoint(param=0,draw=1)
@@ -259,17 +240,16 @@ Procedure Vd_SetPoint(param=0,draw=1)
 EndProcedure  
 
 Procedure VD_MovePoint(i,x1,y1)
-  
   With obj(objID)\shape(ShapeId)
     
-    sx0 = \pt(i)\x + \x - Obj(ObjId)\x
-    sy0 = \pt(i)\y + \y - Obj(ObjId)\y
+    sx0 = \pt(i)\x + \x ;+ Obj(ObjId)\x
+    sy0 = \pt(i)\y + \y ;+ Obj(ObjId)\y
     
     \pt(i)\startX = \pt(i)\x ;- x1 
     \pt(i)\startY = \pt(i)\y ;- y1
     
-    \pt(i)\x = x1 -\x  - Obj(ObjId)\x
-    \pt(i)\y = y1 -\y  - Obj(ObjId)\y
+    \pt(i)\x = x1 -\x ; - Obj(ObjId)\x
+    \pt(i)\y = y1 -\y ; - Obj(ObjId)\y
     SetGadgetText(#G_shapePtX,Str(\pt(i)\x))
     SetGadgetText(#G_shapePtY,Str(\pt(i)\y))
     ; move the tangent points
@@ -285,10 +265,10 @@ Procedure VD_MovePoint(i,x1,y1)
        j=ip
     
        
-       sx1 = \pt(u)\x + \x - Obj(ObjId)\x
-       sy1 = \pt(u)\y + \y - Obj(ObjId)\y
-       sx2 = \pt(v)\x + \x - Obj(ObjId)\x
-       sy2 = \pt(v)\y + \y - Obj(ObjId)\y
+       sx1 = \pt(u)\x + \x ;+ Obj(ObjId)\x
+       sy1 = \pt(u)\y + \y ;+ Obj(ObjId)\y
+       sx2 = \pt(v)\x + \x ;+ Obj(ObjId)\x
+       sy2 = \pt(v)\y + \y ;+ Obj(ObjId)\y
       
       
       \pt(u)\x = sx1+(\pt(i)\x-sx0)
@@ -326,8 +306,8 @@ Macro VD_PointGetSelected(x1,y1)
       ;                          Sqr(Pow(\pt(ip)\x-x1,2)+Pow(\pt(ip)\y-y1,2))<=c*2    ; <=6
       ;}
       ;If (x1>=xa And x1<=wa And y1>=ya And y1<=ha) Or 
-      xa_1 =  Obj(ObjId)\Shape(ShapeId)\pt(ip)\x+ Obj(ObjId)\Shape(ShapeId)\X + Obj(ObjId)\x
-      ya_1 =  Obj(ObjId)\Shape(ShapeId)\pt(ip)\y+ Obj(ObjId)\Shape(ShapeId)\Y + Obj(ObjId)\y
+      xa_1 =  Obj(ObjId)\Shape(ShapeId)\pt(ip)\x+ Obj(ObjId)\Shape(ShapeId)\X
+      ya_1 =  Obj(ObjId)\Shape(ShapeId)\pt(ip)\y+ Obj(ObjId)\Shape(ShapeId)\Y
       
       ;dist.d = point_distance(x1,y1,xa_1,ya_1)
       
@@ -345,13 +325,9 @@ Macro VD_PointGetSelected(x1,y1)
         ok = 1 
         SetGadgetText(#G_shapePtX,Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\x))
         SetGadgetText(#G_shapePtY,Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\y))
-        SetGadgetState(#G_shapeNotRender,Obj(ObjId)\Shape(ShapeId)\pt(ptId)\hide)
         ; ShapeGetProperties()
         Obj(ObjId)\Shape(ShapeId)\startY = y1                                                      
         Obj(ObjId)\Shape(ShapeId)\startX = x1
-        
-        Debug "point: "+Str(ip) + " /broken : "+Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\broken)+" / center : "+Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\Center)
-        
         Select vdOptions\Action
             
           Case #VD_actionMove 
@@ -373,8 +349,7 @@ Macro VD_PointGetSelected(x1,y1)
                 v =j-1
                 If v <0
                   v =ArraySize(Obj(ObjId)\Shape(ShapeId)\pt())
-                EndIf  
-                
+                EndIf                                                
                 sx1 = Obj(ObjId)\Shape(ShapeId)\pt(u)\x + Obj(ObjId)\Shape(ShapeId)\x ;+ Obj(ObjId)\x
                 sy1 = Obj(ObjId)\Shape(ShapeId)\pt(u)\y + Obj(ObjId)\Shape(ShapeId)\y ;+ Obj(ObjId)\y
                 sx2 = Obj(ObjId)\Shape(ShapeId)\pt(v)\x + Obj(ObjId)\Shape(ShapeId)\x ;+ Obj(ObjId)\x
@@ -488,8 +463,7 @@ Procedure VD_Addpoint(Mode=0)
     ElseIf mode = 1
       
     EndIf
-    ; ensuite, je dois véirfier les broken point (pour les différentes parties du shapes
-    Shape_CheckBrokenPoint()
+    
   EndIf
   
 EndProcedure
@@ -641,9 +615,6 @@ Procedure Shape_Add(x,y)
         ;}
       EndIf
       
-      x = x - obj(objid)\x
-      y = y - obj(objid)\y
-      
       ; on crée le shape
       vd\NbShape =1
       ObjId = n    
@@ -660,14 +631,14 @@ Procedure Shape_Add(x,y)
       
       If vdOptions\Action = #VD_actionAddLine 
         ReDim Obj(n)\Shape(m)\pt.sPoint(0)
-        Obj(n)\Shape(m)\pt(0)\x = x 
-        Obj(n)\Shape(m)\pt(0)\y = y 
+        Obj(n)\Shape(m)\pt(0)\x = x
+        Obj(n)\Shape(m)\pt(0)\y = y
         Obj(n)\Shape(m)\pt(0)\Center = 1
         Obj(n)\Shape(m)\Typ = 1
       ElseIf vdOptions\Action = #VD_actionAddCurve
         ReDim Obj(n)\Shape(m)\pt.sPoint(2)
         For i = 0 To 2                
-          Obj(n)\Shape(m)\pt(i)\x = x+i*5-10 
+          Obj(n)\Shape(m)\pt(i)\x = x+i*5-10
           Obj(n)\Shape(m)\pt(i)\y = y+i*5-10
         Next
         PtId = 1
@@ -694,8 +665,6 @@ Procedure Shape_Add(x,y)
         \Shape(m)\ColGrad(0) = RGBA(Red(c),Green(c),Blue(c),vdoptions\ToolOptions\Alpha)
         \Shape(m)\pt(0)\x = x
         \Shape(m)\pt(0)\y = y
-        \Shape(m)\pt(0)\MaxPt = ArraySize(\Shape(m)\pt())
-        \Shape(m)\pt(0)\broken = 1
         \Shape(m)\ShapTyp = vdOptions\Action - #VD_actionAddShape
         \Shape(m)\Selected = 1
         
@@ -838,8 +807,6 @@ Procedure Shape_Delete()
     
     EndIf
   EndIf
-  
- 
   
   ;If ArraySize(Obj(ObjId)\Shape()) >=0 And Obj(ObjId)\Actif <> 0
     ShapeGetProperties()  
@@ -997,198 +964,64 @@ EndProcedure
 
 
 ; Convert
-Procedure VD_ConvertShape(to_Pt=1, typ=0)
-  ; typ = 0 convert to shapecomplex (=curve)
-  ; typ = 1 convert to line
-  ; typ = 2 convert to curve
-  
-  ; pour convertir un shape vers des points ou vers une forme prédéfinies (elipse, rectangle...)
-  If shapeId > -1
+Procedure VD_ConvertShape(to_Pt=1)
     
-    With obj(ObjId)\Shape(ShapeId)
-      ok =1
-      If typ = 1 ; to line
-        If \shaptyp <> #VD_ShapeBox
-          MessageRequester(lang("Info"), lang("For the moment, You can only convert box to line"))
-          ok = 0
-        EndIf
-        
-      ElseIf typ = 0 ; to shape complexe.
-        
-      ElseIf typ = 2 ; to curve
-        
-      EndIf
-      
-      If ok = 1
-        
-        If To_Pt =1 ; convert ellipse to curve or box to line
-          
-          Select \ShapTyp
-              
-            Case #VD_ShapeLine
-              If typ<> 1
-                \ShapTyp = #VD_ShapeCurve
-                n = ArraySize(\pt()) * 3 +2
-                Dim TempPt.sPoint(0)
-                CopyArray(\pt(), TempPt())
-                ReDim \pt.sPoint(n)
-                VD_ResetAllPoints()
-                For k=0 To ArraySize(\pt()) Step 3
-                  u = k/3
-                  \pt(k) = TempPt(u)
-                  \pt(k+1) = TempPt(u)
-                  If k >0
-                    \pt(k-1) = TempPt(u)
-                  ElseIf k >= ArraySize(\pt())-2
-                    ; if last point, we set it to TemPt(u)
-                     \pt(k) = TempPt(u)
-                  EndIf
-                Next
-                FreeArray(TempPt())
-              EndIf
-              
-            Case #VD_ShapeCircle 
-              ;{ 
-              \ShapTyp = #VD_ShapeCurve
-              ReDim \pt.sPoint(5)
-              \pt(0)\x = 0
-              \pt(0)\y = -\SizeH 
-              \pt(1)\x = -1.325* \SizeW
-              \pt(1)\y = -\SizeH 
-              \pt(2)\x = -1.325* \SizeW
-              \pt(2)\y = \SizeH
-              
-              \pt(3)\x = 0
-              \pt(3)\y = \SizeH                          
-              \pt(4)\x = 1.325* \SizeW
-              \pt(4)\y = \SizeH
-              \pt(5)\x = 1.325* \SizeW
-              \pt(5)\y = -\SizeH 
-              ;}
-              
-            Case #VD_ShapeBox
-              ;{ 
-              If typ = 1
-                \ShapTyp = #VD_ShapeLine
-                ReDim \pt.sPoint(3)
-                \pt(0)\x = 0
-                \pt(0)\y = 0
-                \pt(1)\x = \SizeW 
-                \pt(1)\y = 0
-                \pt(2)\x = \SizeW 
-                \pt(2)\y = \SizeH
-                \pt(3)\x = 0 
-                \pt(3)\y = \SizeH
-              Else
-                \ShapTyp = #VD_ShapeCurve
-                ReDim \pt.sPoint(11)
-                ; reset all point
-                VD_ResetAllPoints()
+    ; pour convertir un shape vers des points ou vers une forme prédéfinies (elipse, rectangle...)
+    
+    If shapeId > -1
+        With obj(ObjId)\Shape(ShapeId)
+            If To_Pt =1 ; on convertit en curve/pt
                 
-                \pt(0)\x = 0
-                \pt(0)\y = 0
-                \pt(0)\Center = 1
-                \pt(3)\x = \SizeW 
-                \pt(3)\y = 0
-                \pt(3)\Center = 1
-                \pt(6)\x = \SizeW ; \pt(6)\x
-                \pt(6)\y = \SizeH
-                \pt(6)\Center = 1
-                \pt(9)\x = 0 ; \pt(9)\x
-                \pt(9)\y = \SizeH
-                \pt(9)\Center = 1
+                Select \ShapTyp
+                        
+                      Case #VD_ShapeCircle 
+                         \ShapTyp = #VD_ShapeShape 
+                          ReDim \pt.sPoint(5)
+                          \pt(0)\x = 0
+                          \pt(0)\y = -\SizeH 
+                          \pt(1)\x = -1.325* \SizeW
+                          \pt(1)\y = -\SizeH 
+                          \pt(2)\x = -1.325* \SizeW
+                          \pt(2)\y = \SizeH
+                          
+                          \pt(3)\x = 0
+                          \pt(3)\y = \SizeH                          
+                          \pt(4)\x = 1.325* \SizeW
+                          \pt(4)\y = \SizeH
+                          \pt(5)\x = 1.325* \SizeW
+                          \pt(5)\y = -\SizeH 
+                          
+                          
+                      Case #VD_ShapeBox
+                         \ShapTyp = #VD_ShapeShape
+                         ReDim \pt.sPoint(11)
+                         \pt(0)\x = 0
+                         \pt(0)\y = 0
+                         \pt(3)\x = \SizeW
+                         \pt(3)\y = 0
+                         \pt(6)\x = \SizeW
+                         \pt(6)\y = \SizeH
+                         \pt(9)\x = 0
+                         \pt(9)\y = \SizeH
+                         
+                         ; puis, je mets tous les points en hard
+                          PtId = 0 : Vd_SetPoint(0,0)
+                          PtId = 3 : Vd_SetPoint(0,0) 
+                          PtId = 6 : Vd_SetPoint(0,0)
+                          PtId = 9 : Vd_SetPoint(0,0)
+                          
+                EndSelect
+                                
+            Else
                 
-                ; puis, je mets tous les points en hard
-                PtId = 0 : Vd_SetPoint(0,0)
-                PtId = 3 : Vd_SetPoint(0,0) 
-                PtId = 6 : Vd_SetPoint(0,0)
-                PtId = 9 : Vd_SetPoint(0,0)
-              EndIf
-              ;}
-              
-          EndSelect
-          
-        Else
-          
-        EndIf
-        
-      EndIf
-    EndWith
-    
-    Shape_CheckBrokenPoint()
-    
-  EndIf
-  
-  Drawcanvas()
-EndProcedure
-Procedure VD_ShapeMerge()
-  
-  ; to add shapes to another shape
-  ; it merge all points for the selected shape to the current Shape (shapeID)
-  
-  If shapeID>-1
-    For i= 0 To ArraySize(obj(ObjId)\Shape())
-      If i<> shapeId 
-        If obj(objid)\Shape(i)\Selected
-          
-          With obj(objid)\Shape(shapeId)
-            
-            ; on vérifie le nombre max de point pour la Première partie (donc le pt 0)
-            ; si c'est la première fois qu'on merge, on va ajouter le nombre de point du tableau avant le merge
-            ; car on en aura besoin
-            If \pt(0)\broken = 0
-              \pt(0)\broken = 1
-              \pt(0)\MaxPt = ArraySize(\pt())
             EndIf
-            n0 = ArraySize(\pt())
-            
-            ; on ajoute le nombre de point du shape qu'on merge
-            ; ça c'est le prochain point "broken", pour le movepathcursor
-            n1 = ArraySize(\pt())+1
-            ; ça c'est le nouveau nombre de point de ce shape (on merge 2 shape, donc additionne le nb de point de chacun +1)
-            n2 = ArraySize(\pt())+1+ArraySize(obj(objid)\Shape(i)\pt())
-            ReDim obj(objid)\Shape(shapeId)\pt(n2)
-            
-            ; on ajoute le point "broken", pour savoir où on va mettre le "movepathcursor"
-            \pt(n1)\broken = 1
-            \pt(n1)\x = obj(objid)\Shape(i)\X - obj(objid)\Shape(shapeID)\X
-            \pt(n1)\y = obj(objid)\Shape(i)\y - obj(objid)\Shape(shapeID)\Y
-            ; on doit aussi indiqué le nouveau nombre de points du tableau (car ce sera pour la prochaine "partie"
-            ; si on merge encore un autre shape
-            \pt(n1)\MaxPt = n2
-            
-            ; puis on ajoute les points
-            For k=0 To ArraySize(obj(objid)\Shape(i)\pt())
-              ; on modifie certains paramètres des point qu'on ajouté.
-              n = n1+k
-              \pt(n) = obj(objid)\Shape(i)\pt(k)
-              ;\pt(n)\center = 0
-              \pt(n)\x = obj(objid)\Shape(i)\pt(k)\x + obj(objid)\Shape(i)\X - obj(objid)\Shape(shapeID)\X
-              \pt(n)\y = obj(objid)\Shape(i)\pt(k)\y + obj(objid)\Shape(i)\y - obj(objid)\Shape(shapeID)\y
-            Next
-            
-            
-;             For k=0 To ArraySize(obj(objid)\Shape(i)\pt()) Step 3
-;               ; on definit les centres
-;               n = n1+k
-;               \pt(n)\Center = 1
-;             Next
-            
-            ; puis, je vérifie les points par partie
-            Shape_CheckBrokenPoint()
-            
-          EndWith
-        EndIf
-      EndIf
-    Next
-  EndIf
-  
-   ; update
-  ShapeGetProperties()
-  DrawCanvas()
-  
-  
+        EndWith
+    EndIf
+    
+    Drawcanvas()
+    
 EndProcedure
+
 
 
 
@@ -1286,18 +1119,12 @@ Procedure Shape_Save(file$ = #Empty$,autosave=0, selection=0)
             txt$= "gen,"+" "+d$+StrD(ValD(#ProgramVersionVD),4)+d$+FormatDate("%yyyy%mm%dd%hh%ii%ss", Date())+d$
             WriteStringN(0,txt$)
             
-            ; camera
-            txt$ = VD_GetCameratext(CameraId)
-            WriteStringN(0,txt$)
-          
             For m=0 To ArraySize(Obj())
               
               If selection =0 Or m=ObjId
                 With Obj(m)
                   
                   txt$= "obj,"+\Nom$+d$+\x+d$+\y+d$+\w+d$+\h+d$+\Depth+d$+\Hide+d$+\Locked+d$+\Alpha+d$+\Bm+d$                
-                  txt$ +\Clip+d$+\ClipW+d$+\ClipH+d$+\ClipHide+d$+\ClipColor+d$+\ClipAlpha+d$
-                  txt$ +\ClipBorder+d$+\ClipBorderAlpha+d$+\ClipBorderColor+d$+\ClipBorderStroke+d$          
                   WriteStringN(0,txt$)
                   
                   For j =0 To ArraySize(\Shape())
@@ -1333,8 +1160,7 @@ Procedure Shape_Save(file$ = #Empty$,autosave=0, selection=0)
                       
                       ; puis, on sauve les points
                       For i = 0 To ArraySize(\Shape(j)\pt())
-                        txt$ = "pt,"+Str(i)+d$+Str(\Shape(j)\pt(i)\x)+d$+Str(\Shape(j)\pt(i)\y)+d$
-                        txt$+Str(\Shape(j)\pt(i)\broken)+d$+Str(\Shape(j)\pt(i)\MaxPt)+d$+Str(\Shape(j)\pt(i)\center)+d$+Str(\Shape(j)\pt(i)\hide)+d$
+                        txt$ = "pt,"+Str(i)+","+Str(\Shape(j)\pt(i)\x)+","+Str(\Shape(j)\pt(i)\y)+","
                         WriteStringN(0,txt$)
                       Next
                     EndIf
@@ -1360,8 +1186,9 @@ Procedure Shape_Save(file$ = #Empty$,autosave=0, selection=0)
     EndIf
     
 EndProcedure
+
 Procedure Shape_Load(merge=0, file$ ="",draw=1)
-  Shared posX, posY, openmenu
+  Shared posX, posY
   
   ; pour ouvrir un shape
   If file$ = ""
@@ -1415,11 +1242,11 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
               Version.d = ValD(StringField(line$,3,","))
               ; Debug ""+ValD(#ProgramVersionVD)
               If version < 0.14
-                If Obj(ObjId)\nom$ ="" 
+                If Obj(k)\nom$ ="" 
                   If nom$ <> ""
-                    Obj(ObjId)\nom$ =nom$
+                    Obj(k)\nom$ =nom$
                   Else
-                    Obj(ObjId)\nom$ ="Object"+Str(k)
+                    Obj(k)\nom$ ="Object"+Str(k)
                   EndIf                                
                 EndIf
                 If Obj(ObjId)\h <= 0
@@ -1434,28 +1261,6 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                   Obj(ObjId)\w = 100 
                 EndIf
               EndIf
-              
-            Case "camera"
-              NBcamera = -1
-              Global Dim VD_camera.sVDCamera(0)
-              ; 
-              u = 2
-              ID    = Val(StringField(line$,u,",")) : u+1
-              name$    = StringField(line$,u,",") : u+1
-              VdOptions\CameraX   = Val(StringField(line$,u,",")) : u+1
-              VdOptions\CameraY   = Val(StringField(line$,u,",")) : u+1
-              VdOptions\CameraW   = Val(StringField(line$,u,",")) : u+1
-              VdOptions\CameraH   = Val(StringField(line$,u,",")) : u+1
-              scale   = Val(StringField(line$,u,",")) : u+1
-              zoom.d   = ValD(StringField(line$,u,",")) : u+1
-              optionoutput   = Val(StringField(line$,u,",")) : u+1
-              crop.Srectangle
-              crop\x   = Val(StringField(line$,u,",")) : u+1
-              crop\y   = Val(StringField(line$,u,",")) : u+1
-              crop\w   = Val(StringField(line$,u,",")) : u+1
-              crop\h   = Val(StringField(line$,u,",")) : u+1
-              VD_CameraAdd(name$,VdOptions\CameraX,VdOptions\CameraY,VdOptions\CameraW,VdOptions\CameraH,scale,zoom)
-                
               
             Case "obj"
               If Vd\NbShape >=1 And merge <> 2 And nbObj >-1 ; Obj(ObjId)\Actif = 0
@@ -1505,29 +1310,12 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                   EndIf
                 EndIf
                 nbShape = 0
-                
-                ; clip 
-                 Obj(k)\Clip   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipW   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipH   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipHide   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipColor   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipAlpha   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipBorder   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipBorderAlpha   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipBorderColor   = Val(StringField(line$,u,",")) : u+1
-                 Obj(k)\ClipBorderStroke   = Val(StringField(line$,u,",")) : u+1
-                 If Obj(k)\ClipW=0 Or Obj(k)\ClipH=0
-                   VD_Layer_ResetClipping(k)
-                 EndIf
-
               Else
                 k=ObjId
                 nbShape = ArraySize(Obj(ObjId)\Shape())+1
               EndIf                   
               
             Case "shape" 
-              ;{ 
               j = Val(StringField(line$,2,",")) + nbShape
               If j > ArraySize(Obj(ObjId)\Shape())
                 ReDim Obj(ObjId)\Shape.sShape(j)
@@ -1608,7 +1396,6 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
               
               Obj(ObjId)\Actif = 1
               i=0
-              ;}
               
             Case "shapefx"
               k = Val(StringField(line$,2,","))
@@ -1640,43 +1427,21 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
               EndWith
               UpdateListShapeFX()
               
-            Case "pt"
-              u = 3
+            Case "pt" 
               i = Val(StringField(line$,2,","))
               If i > ArraySize(Obj(ObjId)\Shape(j)\pt())
                 ReDim Obj(ObjId)\Shape(j)\pt.sPoint(i)
               EndIf
-              With  Obj(ObjId)\Shape(j)\pt(i)
-                \x = Val(StringField(line$,u,",")) : u+1
-                \y = Val(StringField(line$,u,",")) : u+1
-                \broken = Val(StringField(line$,u,",")) : u+1
-                \MaxPt = Val(StringField(line$,u,",")) : u+1
-                \Center = Val(StringField(line$,u,",")) : u+1
-                \hide = Val(StringField(line$,u,",")) : u+1
-              EndWith
+              Obj(ObjId)\Shape(j)\pt(i)\x = Val(StringField(line$,3,","))
+              Obj(ObjId)\Shape(j)\pt(i)\y = Val(StringField(line$,4,","))
               
           EndSelect           
           
         Wend
         
-        ; on doit vérifie si on les points "broken et \maxpt, pour les shapes en plusieurs parties
-        For i=0 To ArraySize(Obj())
-          For j= 0 To ArraySize(obj(i)\shape())
-            With obj(i)\Shape(j)
-              If \pt(0)\broken = 0
-                \pt(0)\broken = 1
-                \pt(0)\MaxPt = ArraySize(\pt())
-              EndIf
-            EndWith
-          Next
-        Next
+        SetWindowTitle(#Win_VD_main,#ProgramNameVD+#ProgramVersionVD+#ProgramBitVD+" - "+GetFilePart(file$))
+        VdOptions\PathOpen$ = file$
         
-        If openmenu = 1
-          Debug "ok"
-          SetWindowTitle(#Win_VD_main,#ProgramNameVD+#ProgramVersionVD+#ProgramBitVD+" - "+GetFilePart(file$))
-          VdOptions\PathOpen$ = file$
-        EndIf
-      
         Vd\NbShape = 1
         ShapeGetProperties()
         VD_Layer_UpdateUI()
@@ -1690,51 +1455,23 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
       EndIf
       
     EndIf
-    
-    VD_Layer_UpdateUI(1)
-    UpdateListShape()
-    ShapeId = 0
-    
   EndIf
-  
   ;Debug "3-arraysize : "+Str(ArraySize(Obj()) )
+  UpdateListShape()
+  ShapeId = 0
   
   ; reset the position :
   posX = 0
   posY = 0
-  openmenu = 0
-  
   ProcedureReturn 1
 EndProcedure
 
 
 ; add point
- Procedure Shape_CheckBrokenPoint()
-  
-  If shapeId>-1
-     ; je dois vérifier les pt()\broken et pt()\maxpt
-    With obj(objId)\Shape(ShapeId)
-      For i=0 To ArraySize(\pt())
-        If \pt(i)\broken = 1
-          oldId = i
-          maxpt = i-1
-          If i >0 And oldid >i
-            \pt(oldId)\MaxPt = maxpt
-          EndIf
-        ElseIf i=ArraySize(\pt())
-          \pt(oldId)\MaxPt = i
-        EndIf
-      Next
-    EndWith
-  EndIf
-  
-EndProcedure
 Procedure Shape_AddPoint(x1,y1,mode=0)
-  
   ; mode = 0 : add a point at the end of the curve
   ; mode = 1 : add a point between the nearest point and its neighbour
-  ; mode = 2 : add a point at the end of the curve, but with the "pencil mode", so need to calcule the angle to place correctly the anchor of the new point.
-  
+  ; mode = 2 : add a  point at the of the curve, but with the "pencil mode", so need to calcule the angle to place correctly the anchor of the new point.
   If ShapeId>-1
     
     If mode = 0
@@ -1768,8 +1505,8 @@ Procedure Shape_AddPoint(x1,y1,mode=0)
         ; A revoir <----------- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ; NOTE : ici, je devrais vérifier la tangeante des points précédents 
         ; pour placer en X/Y en fonction de cette tangeante.
-        x4 = x1 -\x - obj(objId)\x
-        y4 = y1 -\y - obj(objId)\y
+        x4 = x1-\x
+        y4 = y1-\y
         
         \pt(u)\x = x4+20
         \pt(u)\y = y4 
@@ -1815,13 +1552,13 @@ Procedure Shape_AddPoint(x1,y1,mode=0)
         
         ; notre point Id
         xO =\pt(id)\x+\x
-        yO =\pt(id)\y+\y
+        yO =\pt(id)\x+\x
         ; le précédent
         xA =\pt(u)\x+\x
-        yA =\pt(u)\y+\y
+        yA =\pt(u)\y+\x
         ; le suivant
         xb =\pt(v)\x+\x
-        yb =\pt(v)\y+\y
+        yb =\pt(v)\y+\x
         ; the midle
         md_x1 = (xa+xO)/2
         md_y1 = (ya+yO)/2
@@ -1864,8 +1601,8 @@ Procedure Shape_AddPoint(x1,y1,mode=0)
         ;       Next
         
         ; puis je crée les points en n-1, n (point centre) et n+1
-        \pt(n)\x = x1-\x - obj(objId)\x
-        \pt(n)\y = y1-\y - obj(objId)\y
+        \pt(n)\x = x1-\x
+        \pt(n)\y = y1-\x
         \pt(n)\Center = 1
         PtId = n
         ; et les ancres
@@ -1910,8 +1647,8 @@ Procedure Shape_AddPoint(x1,y1,mode=0)
         ; A revoir <----------- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ; NOTE : ici, je devrais vérifier la tangeante des points précédents 
         ; pour placer en X/Y en fonction de cette tangeante.
-        x4 = x1 -\x - obj(objId)\x
-        y4 = y1 -\y - obj(objId)\y
+        x4 = x1-\x
+        y4 = y1-\y
         
         ;       x5 = x4
         ;       Y5 = y4 
@@ -1941,18 +1678,16 @@ Procedure Shape_AddPoint(x1,y1,mode=0)
         \pt(w)\y = y6
       EndWith
       
+      
     EndIf
     vd\AddObjet=2
-    ; je dois vérifier les pt()\broken et pt()\maxpt
-   Shape_CheckBrokenPoint()
-    
   EndIf
 
 EndProcedure
 
 
 ; transform shape
-Procedure Shape_Mirror(horizontal=1,vertical=0,cx=0,cy=0)
+Procedure Shape_Mirror(horizontal=1, vertical=0)
   ; mirror a shape
   If horizontal Or vertical
     
@@ -1981,7 +1716,7 @@ Procedure Shape_Mirror(horizontal=1,vertical=0,cx=0,cy=0)
   DrawCanvas()
   
 EndProcedure
-Procedure Shape_SetTransformation(action,ratio.d)
+Procedure Shape_SetTrasnformation(action,ratio.d)
   
   
   
@@ -2321,7 +2056,7 @@ EndProcedure
 
 
 
-; other : selection
+; other
 Procedure MouseOnShape(m,i,x,y)
   Protected w, h
   
@@ -2343,28 +2078,22 @@ Procedure MouseOnShape(m,i,x,y)
   EndIf
   EndWith
 EndProcedure
+
 Procedure Shape_GetRectangleSelection()
-  
-  vx = Vd\viewX
-  vy = Vd\viewY
   
   With obj(ObjId)
     For i= 0 To ArraySize(\shape())
       If \Shape(i)\Hide = 0
-        x = vd\Selection\x +vx
-        y = vd\Selection\y +vy
+        x = vd\Selection\x
+        y = vd\Selection\y
         w = vd\Selection\w
         h = vd\Selection\h
-        x1 = \Shape(i)\boundx 
-        y1 = \Shape(i)\boundy 
-        w1 = \Shape(i)\boundw 
-        h1 = \Shape(i)\boundh 
-        x2 = \Shape(i)\X +\x
-        y2 = \shape(i)\y +\y
-        w2 = \Shape(i)\SizeW
-        h2 = \Shape(i)\SizeH
+        x1 = \Shape(i)\X +\x
+        y1 = \shape(i)\y +\y
+        w1 = \Shape(i)\SizeW
+        h1 = \Shape(i)\SizeH
         
-        If  (x<=x1 And x+w>= x1+w1 And y<=y1  And y+h>=h1+y1) Or (x<=x2 And x+w>= x2+w2 And y<=y2  And y+h>=h2+y2)
+        If  x<=x1 And x+w>= x1+w1 And y<=y1  And y+h>=h1+y1
           \Shape(i)\Selected = 1
           If shapeid = -1
             shapeId = i
@@ -2382,7 +2111,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1674
-; FirstLine = 244
-; Folding = AAwHGA5EAQk5PAAAAAAAAA+DAA7fKneQIAgQ-GCAAAAAAAAAAAAAAA50
+; CursorPosition = 885
+; FirstLine = 30
+; Folding = AAAAAAAAAAAAAA5P5-BAAAAAA6GAAA5AAAAQAAAAAAAAAAAAA9
 ; EnableXP

@@ -631,9 +631,8 @@ Procedure VD_CreateTheGadgets()
     SetGadgetColor2(#G_panelVD_R)
     
     ;{ Objet
-    x1 = 10 : y1 = 10 : w7 = 60 : x3 = 0
+    x1 = 10 : y1 = 10 : w7 = 60
     AddGadgetItem(#G_panelVD_R,-1,lang("Layer"))
-    
     
     ; AddGadget(#G_ObjCreate, #Gad_Chkbox, x1,y1,w6+35,h1,"Create new object.",0,0,"Create a new object when you add a new shape, box, circle, line...") : y1+h1+a
     
@@ -643,36 +642,15 @@ Procedure VD_CreateTheGadgets()
     
     ; AddGadget(#G_ObjDepth, #Gad_Spin, x1,y1,w6,h1,"Depth",-10000,10000,"Change the depth of the objet.") : y1+h1+a
     ; AddGadget(#G_ObjName, #Gad_String, x1,y1,w6,h1,"Name ",0,0,"Change the name of the objet.") : y1+h1+a
+    x1 =5 
+    If FrameGadget(#PB_Any, x3,y1,PanelLayerW-x1*2,h1*6,lang("Properties")) : EndIf
+    y1 +15 : x1 +10
+    AddGadget(#G_ObjX, #Gad_Spin, x1,y1,w6,h1,"X ",-10000,10000,lang("Change the X of the objet.")) : y1+h1+a
+    AddGadget(#G_ObjY, #Gad_Spin, x1,y1,w6,h1,"Y ",-10000,10000,lang("Change the Y of the objet.")) : y1+h1+a
+    AddGadget(#G_ObjW, #Gad_Spin, x1,y1,w6,h1,"W ",0,100000,lang("Change the width of the objet.")) : y1+h1+a
+    AddGadget(#G_ObjH, #Gad_Spin, x1,y1,w6,h1,"H ",0,100000,lang("Change the height of the objet.")) : y1+h1+a
     
     
-    w10 = PanelLayerW-x1*2
-    If ScrollAreaGadget(#G_ObjSAClip,0,y1,w10,Hg-y1-70,w10-25,Hg+1000)
-      y1 = 10 : x1=0                 
-      If FrameGadget(#PB_Any, x3,y1,PanelLayerW-x1*2,h1*5,lang("Properties")) : EndIf
-      y1 +15 : x1 +10
-      AddGadget(#G_ObjX, #Gad_Spin, x1,y1,w6,h1,"X ",-10000,10000,lang("Change the X of the objet.")) : y1+h1+a
-      AddGadget(#G_ObjY, #Gad_Spin, x1,y1,w6,h1,"Y ",-10000,10000,lang("Change the Y of the objet.")) : y1+h1+a
-      AddGadget(#G_ObjW, #Gad_Spin, x1,y1,w6,h1,"W ",0,100000,lang("Change the width of the objet.")) : y1+h1+a
-      AddGadget(#G_ObjH, #Gad_Spin, x1,y1,w6,h1,"H ",0,100000,lang("Change the height of the objet.")) : y1+h1+a
-      y1+10
-      
-      x1 =5 
-      If FrameGadget(#PB_Any, x3,y1,PanelLayerW-x1*2,h1*11,lang("Clip")) : EndIf
-      y1 +15 : x1 +10
-      AddGadget(#G_ObjClip, #Gad_Chkbox,x1,y1,w6,h1,lang("Clip"),0, 0, lang("Use the Layer As clipping."),0,lang("Clip")) : y1+h1+a
-      AddGadget(#G_ObjClipW, #Gad_Spin, x1,y1,w6,h1,LAng("ClipW"),0,100000,lang("Change the Width of clipping-box of the layer.")) : y1+h1+a
-      AddGadget(#G_ObjClipH, #Gad_Spin, x1,y1,w6,h1,lang("ClipH"),0,100000,lang("Change the height of clipping-box of the layer.")) : y1+h1+a
-      AddGadget(#G_ObjClipHide, #Gad_Chkbox, x1,y1,w6,h1,lang("Hide"),0,100000,lang("Hide the box of clipping for the layer."),0,lang("Hide")) : y1+h1+a
-      AddGadget(#G_ObjClipAlpha, #Gad_Spin, x1,y1,w6,h1,lang("Alpha"),0,255,lang("Set the alpha of the clipping-box.")) : y1+h1+a
-      AddGadget(#G_ObjClipColor, #Gad_Btn, x1,y1,w6,h1,lang("Color"),0,100000,lang("Set the color of the clipping-box."),0,lang("Color")) : y1+h1+a
-      AddGadget(#G_ObjClipBorder, #Gad_Chkbox, x1,y1,w6,h1,lang("Border"),0,100000,lang("Use a border for the clipping-box."),0,lang("Border")) : y1+h1+a
-      AddGadget(#G_ObjClipBorderAlpha, #Gad_Spin, x1,y1,w6,h1,lang("Border Alpha"),0,255,lang("Set the border alpha for the clipping-box.")) : y1+h1+a
-      AddGadget(#G_ObjClipBorderColor, #Gad_Btn, x1,y1,w6,h1,lang("Border Color"),0,255,lang("Set the border Color for the clipping-box."),0,lang("Border Color")) : y1+h1+a
-      AddGadget(#G_ObjClipBorderStroke, #Gad_Spin, x1,y1,w6,h1,lang("Border Stroke"),0,10000,lang("Set the border stroke size for the clipping-box.")) : y1+h1+a
-      
-      CloseGadgetList()
-    EndIf
-  
     ;}
     
     ;{ options (background, imagebg, camera)
@@ -771,8 +749,6 @@ Procedure UpdateListBank(updatefolder=0, ShapeFolder$=#Empty$)
   
   ; pour mettre à jour la liste des shape qu'on peut ajouter (elle se trouve dans le dossier "data\shape")
   
-  
-  
   If updateFolder=1
     
     ; on vérifie  dans le dossier principal
@@ -867,11 +843,7 @@ Procedure VD_UpdateShapeBankCanvas(createImage=0, updatefolder=1)
   
   
   If createimage >= 1
-    
-    WindowInfos_Create(lang("Please wait..."),lang("Update the images For the bank shape."))
-    
-    
-    ;{ on va crée les miniatures des images s'il en manque ou si on a ajouté de nouveaux dossier
+    ;{ on crée les miniatures des images s'il en manque ou si on a ajouté de nouveaux dossier
     ; d'abord, on compte le nombre de dossier à étudier
     ;If createimage = 1
       Folder$ =  GetCurrentDirectory()+"data\shapes\"
@@ -904,8 +876,6 @@ Procedure VD_UpdateShapeBankCanvas(createImage=0, updatefolder=1)
               Wend
               FinishDirectory(1)
             EndIf
-            
-            WindowInfos_Update(lang("Update the Images for the bank : ")+ShapeFolder$)
             
             ; ensuite, on créé les images du folder et du sous-folder s'il existe.
             For subfold=0 To ArraySize(name$())
@@ -990,13 +960,9 @@ Procedure VD_UpdateShapeBankCanvas(createImage=0, updatefolder=1)
       FinishDirectory(0)
     EndIf 
     
-   
-    
     ; puis on libére les array
     FreeArray(tmpimg$())
     FreeArray(tmpimg$())
-    
-    WindowInfos_Close()
     
     ;}
   Else
@@ -1122,15 +1088,6 @@ Procedure VD_CreateGadgetsBankShape(y1=0)
     EndIf
     ; EnableGadgetDrop(#G_shapeCanvasBank, #PB_Drop_Image|#PB_Drop_Private)
     CloseGadgetList()
-  EndIf
-  
-  
-  name$ = GetGadgetItemText(#G_shapeListAdd,0)
-  If GetExtensionPart(name$) = #Empty$
-    ; VD_UpdateShapeBankCanvas()
-  Else
-    vd\BankHasSubfolder =0
-    Vd\ShapeFileName$ = name$
   EndIf
   
 EndProcedure
@@ -2069,34 +2026,6 @@ Procedure ShapeGetProperties(state=1)
   
   If ObjId <=ArraySize(Obj()) 
     
-          ; Debug "ok !!!"
-      ; pour afficher les information du shape en cours
-      ;SetGadgetState(#G_ObjDepth,Obj(ObjId)\Depth)
-      ;SetGadgetText(#G_ObjName,Obj(ObjId)\Nom$)
-      
-      
-      SetGadgetState(#G_ObjAlpha,Obj(ObjId)\Alpha)
-      SetGadgetState(#G_ObjLock,Obj(ObjId)\Locked)
-      
-      SetGadgetState(#G_ObjClip,Obj(ObjId)\clip)
-      SetGadgetState(#G_ObjClipW,Obj(ObjId)\ClipW)
-      SetGadgetState(#G_ObjClipH,Obj(ObjId)\ClipH)
-      SetGadgetState(#G_ObjClipAlpha,Obj(ObjId)\ClipAlpha)
-      SetGadgetState(#G_ObjClipBorder,Obj(ObjId)\ClipBorder)
-      SetGadgetState(#G_ObjClipHide,Obj(ObjId)\ClipHide)
-      SetGadgetState(#G_ObjClipBorderAlpha,Obj(ObjId)\ClipBorderAlpha)
-        SetGadgetState(#G_ObjClipBorderStroke,Obj(ObjId)\ClipBorderStroke)
-      
-      ; SetGadgetState(#G_ObjHide,Obj(ObjId)\Locked)
-      SetGadgetState(#G_ObjX,Obj(ObjId)\X)
-      SetGadgetState(#G_ObjY,Obj(ObjId)\Y)
-      SetGadgetState(#G_ObjH,Obj(ObjId)\H)
-      SetGadgetState(#G_ObjW,Obj(ObjId)\W)
-      ;SetGadgetState(#G_ObjHide,Obj(ObjId)\Hide)
-      ;SetGadgetState(#G_ObjLock,Obj(ObjId)\Locked)
-
-    
-    
     If shapeId > -1 And ShapeID <= ArraySize(Obj(ObjId)\shape())
       
       ; disable/enable some gadgets if needed (if shape\locked = 1)
@@ -2111,9 +2040,21 @@ Procedure ShapeGetProperties(state=1)
       EndIf
       GadgetsAreDisabled = Obj(ObjId)\Shape(ShapeId)\Locked
       
+      ; Debug "ok !!!"
+      ; pour afficher les information du shape en cours
+      ;SetGadgetState(#G_ObjDepth,Obj(ObjId)\Depth)
+      ;SetGadgetText(#G_ObjName,Obj(ObjId)\Nom$)
       
       
-      
+      SetGadgetState(#G_ObjAlpha,Obj(ObjId)\Alpha)
+      SetGadgetState(#G_ObjLock,Obj(ObjId)\Locked)
+      ; SetGadgetState(#G_ObjHide,Obj(ObjId)\Locked)
+      SetGadgetState(#G_ObjX,Obj(ObjId)\X)
+      SetGadgetState(#G_ObjY,Obj(ObjId)\Y)
+      SetGadgetState(#G_ObjH,Obj(ObjId)\H)
+      SetGadgetState(#G_ObjW,Obj(ObjId)\W)
+      ;SetGadgetState(#G_ObjHide,Obj(ObjId)\Hide)
+      ;SetGadgetState(#G_ObjLock,Obj(ObjId)\Locked)
       SetGadgetState(#G_shapeAlpha,Obj(ObjId)\Shape(ShapeId)\Alpha)
       SetGadgetState(#G_shapeTyp,Obj(ObjId)\Shape(ShapeId)\Typ)
       
@@ -2165,7 +2106,6 @@ Procedure ShapeGetProperties(state=1)
       If PtId > -1 And PtId <= ArraySize(Obj(ObjId)\shape(ShapeId)\pt())
         SetGadgetState(#G_shapePtX,Obj(ObjId)\Shape(ShapeId)\pt(ptId)\x)
         SetGadgetState(#G_shapePtY,Obj(ObjId)\Shape(ShapeId)\pt(ptId)\y)
-        SetGadgetState(#G_shapeNotRender,Obj(ObjId)\Shape(ShapeId)\pt(ptId)\hide)
       EndIf
       
       ; puis, on met à jour les effets de style (FX)
@@ -2251,7 +2191,6 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 2081
-; FirstLine = 58
-; Folding = CAobfAGAAIYhBkfH5Bgfu-AAERAAAwBAAAAAAAAAAAAAAAnPAw
+; CursorPosition = 30
+; Folding = CJobfAGAAIEyRm1BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAw9DA+
 ; EnableXP

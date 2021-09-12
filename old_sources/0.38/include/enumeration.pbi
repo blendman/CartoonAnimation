@@ -24,7 +24,6 @@ Enumeration ; window
   #Win_VD_CharacterEditor
   #Win_VD_BGproperties
   #Win_VD_Groups
-  #Win_VD_InfosForwainting
   
 EndEnumeration
 
@@ -288,22 +287,9 @@ Enumeration ; Gadgets
   #G_ObjBm
   #G_ObjAlpha
   
-  #G_ObjSAClip
-  #G_ObjClip
-  #G_ObjClipW
-  #G_ObjClipH
-  #G_ObjClipColor
-  #G_ObjClipAlpha
-  #G_ObjClipHide
-  #G_ObjClipBorder
-  #G_ObjClipBorderColor
-  #G_ObjClipBorderAlpha
-  #G_ObjClipBorderStroke
-  
   #G_ObjFirst ; non utilisé, mais nécessaire
   
   ;}
-  
   ; options
   #G_Vd_OptBGCheck
   #G_Vd_OptBGColor
@@ -330,12 +316,7 @@ Enumeration ; Gadgets
   ; for all window
   #G_Win_BtnOk
   #G_Win_BtnCancel
-  
-  ;{ window info for waiting
-  ; used for example when export is long or other things to load
-  #G_CanvasWinInfos
-  ;}
-  
+   
   ;{ window update
     #G_VD_UpdateBtnOk
    #G_VD_UpdateBtnCancel
@@ -344,8 +325,6 @@ Enumeration ; Gadgets
   
   ;{ window Scene properties
   #G_winScProp_cameraId
-  #G_winScProp_cameraAdd
-  #G_winScProp_cameraSave
   #G_winScProp_cameraName
   #G_winScProp_cameraW
   #G_winScProp_cameraH
@@ -493,7 +472,6 @@ Enumeration ; menu
   #menuVD_ShapeSaveAs
   #menuVD_ShapeSaveselected 
   #menuVD_ExportImageObj
-  #menuVD_ExportImageSelected
   #menuVD_ExportScene
   #menuVD_ExportPb
   #menuVD_ExportSVG
@@ -552,8 +530,6 @@ Enumeration ; menu
   #menuVD_ShowAncreSelected
   #menuVD_ShowOnlySelected
   
-  #menuVD_ShowBoundingboxSelection
-  #menuVD_ShowBoundingboxShape
   #menuVD_ShowSelection
   #menuVD_ViewReset
   #menuVD_ViewCenter
@@ -563,7 +539,6 @@ Enumeration ; menu
   #menuVD_ShowOrigin
   ;}
   
-  ;{ autre menu 
   ; tool
   #menuVD_EditPoint
   #menuVD_PointMirored
@@ -583,7 +558,6 @@ Enumeration ; menu
   #menuVD_Help
   #menuVD_HelpHtml
   #menuVD_Wiki
-  ;}
   
   
   ; pop up
@@ -639,7 +613,6 @@ Enumeration ; image & Id of array of images
   #ico_Export
   #ico_Ok
   #ico_Prop
-  #ico_Image
   
   #Img_Last ; always last, to set the last image #constant
   
@@ -705,10 +678,6 @@ Enumeration ; image & Id of array of images
 EndEnumeration
 
 Enumeration ; others
-  
-  ;{ fonts
-  #FontArial20Bold = 10
-  ;}
   
   ;{ action VD
   #VD_actionMove =0
@@ -843,8 +812,8 @@ EndEnumeration
 
 
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 555
-; FirstLine = 19
-; Folding = wgKBJFA+
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 41
+; FirstLine = 9
+; Folding = 5sCARMw
 ; EnableXP

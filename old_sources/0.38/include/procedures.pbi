@@ -248,11 +248,8 @@ Procedure InitImages()
     ImgLayer(#ivd_layerup)      = LoadImage(#PB_Any,"data\editor\up.png")
     ImgLayer(#ivd_layerdown)    = LoadImage(#PB_Any,"data\editor\down.png")
     
-    If LoadImage(#ico_Image,"data\editor\image.png") : EndIf
-    
     
     If LoadFont(0,"arial",30) : EndIf
-    If LoadFont(#FontArial20Bold,"arial",20,#PB_Font_Bold) : EndIf
    
 EndProcedure
 
@@ -482,7 +479,7 @@ XIncludeFile "gadgets.pb"
 XIncludeFile "procedure_draw.pb"
 
 ;{ Scene, camera
-Procedure VD_CameraAdd(name$,x,y,w,h,scale,zoom.d)
+Procedure VD_CameraADd(name$,x,y,w,h,scale,zoom.d)
   NBcamera+1
   i = NBcamera
   ReDim VD_camera.sVDCamera(i)
@@ -588,10 +585,10 @@ EndProcedure
 ;}
 
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 484
-; FirstLine = 95
-; Folding = BA8A+C-Al6g-
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 451
+; FirstLine = 9
+; Folding = BA8AkwPQZA5
 ; EnableXP
 ; EnableOnError
 ; DisableDebugger

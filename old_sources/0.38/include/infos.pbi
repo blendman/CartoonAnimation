@@ -326,7 +326,6 @@ CompilerEndIf
 ;{ changes
 
 ; BUG OK : 
-;{
 ; - quand on change le depth, il faut actualiser le shapeId (avec l'idunik), car le shape qui a le shapeid change (car on fait un tri en fonction de la nouvelle pos\depth)
 ; pouvoir agrandir tous les shapes ou l'objet par rapport à un centre ou une boundingbox
 ; - ajouter le unpremultiply en sortie d'image.
@@ -372,21 +371,17 @@ CompilerEndIf
 ; 0.35 - when create a line, we should set origin to shape.
 ; 0.36 - pouvoir supprimer les fx
 ; 0.36 - si on utilise pas de fx, simplifier dans drawcanvas()
-; - fx : add "actif" in the options for creation
+; fx : add "actif" in the options for creation
 ; - add tooltips for some gadget group window
-; 0.37 - VD_ExportInSVG()
 ; 0.37.3 - scale : add option "keep image proportion"
 ; 0.38 - pouvoir agrandir tous les shapes sélectionnés, mais par rapport à une bounding box (le centre du shapeid par ex)
-; ok 0.39 - pouvoir joindre (merge) des shapes séparés
-; - parfois, on ne peut pas supprimer un shape avec "del", mais ça fonctionne avec le bouton "-" du panneau "bank"
-; - clic to select shape doesn't use the obj()\w,h,x,y parameters.e
-; - bug avec merge 2 shapes (draw selection border).
+
 
 ; ok - ajouter un système de storyboard (voir le fichier cartoon_dev) : see BDcreator
 ; ok - ajouter un système de création de page de BD : see BDcreator
 
+
 ; ok ?? : 
-;}
 
 
 ;---------------------------------
@@ -396,6 +391,7 @@ CompilerEndIf
 
 ; En réflexion : 
 ; bof : - ajouter un gadgets pour passer d'un point à un autre
+
 
 ; Not urgent : 
 ; - modifier/option miror quand on crée des points
@@ -419,10 +415,11 @@ CompilerEndIf
 ; wip - fixe the bug setorigin with parenting
 ; - bug export purebasic : ne prend pas les fx en compte
 ; - bug scale : n'est pas en fonction du centre mais en 0,0
+; - parfois, on ne peut pas supprimer un shape avec "del", mais ça fonctionne avec le bouton "-" du panneau "bank"
 
 ;******** priority
 ; ok a integrer - simplifier des points d'un path (supprimer les points trop prêt et si angle<20 de différence)
-; WIP - add shape\finalX,Y for selection and other thing which use shape\X,Y
+; WIP - add shape\finalX,Y for selection and or other thing which use shape\X,Y
 ; WIP 0.30 - pouvoir save des preset d'outils (comme la line : avec les options (couleur, style, fx, couleur fx...) 
 ; FX : 
 ; - pouvoir change le depth (position) des fx
@@ -430,10 +427,12 @@ CompilerEndIf
 ; - pouvoir copier/coller le fx du shapeId à tous les shapes selected
 ; Shape : 
 ; - pouvoir séparer un shape en plusieurs morceaux (en plusieurs shapes ?)
-; - pouvoir continuer un shape (line, box, etc...), donc ajouter des points
+; - pouvoir joindre des shapes séparés
 ; Save/export
 ; - add bg img to save_Doc(), and load only it if doc_open()
 ; - bug exportimage : si la camera est décalée en y et le scale <> 100%
+; - VD_ExportInSVG()
+; - VD_ExportInTyniSVG()
 ; misc : 
 ; WIP - ajouter un editeur de personnage (créer à partir d'une banque facilement : tete, oreille, yeux, bouche, nez, cou, cheveux..)
 ; - verifier si les idunik des shapes sont bien unik, sinon-> changer l'idunik et changer l'idunik sur les objet enfants
@@ -441,122 +440,6 @@ CompilerEndIf
 ; - ajouter les options de strokepath(roundend...)
 ; - add options for gradient
 ; - pouvoir rotationner tous les shapes sélectionnés, mais par rapport à une bounding box (le centre du shapeid par ex)
-; - tool miror avec boundingbox
-
-; - text : ajouter les gadgets pour text width, height, font size...
-; - bug avec tool selection
-; - supprimer les raccourcis ctrl=X/ctrl+V si on est sur un gadget autre que canvasmain.
-; - ajouter un fonction de verification des shapes (ex: si curve et que 1 seul pt : erreur) 
-; - BUG : modifier procedure_draw et event_canvas.pb, pour bien positionner les ancres et les centres, 
-; car les derniers de chaque courbe ne rennent pas le bon point final en compte.
-
-
-; 12/09/2021 0.41.7 (62)
-; // Fixes
-; - procedure_draw : fixe selection border bug with curves shape (if \open or not...)
-
-
-; 11/09/2021 0.41.6 (61)
-; // New
-; - menu view : showboundingboxselection, showshapebbox
-; - procedure_draw.pb : add show boudingbox (select and shape) only if vd_options\showboxselect and vd_options\showshapeboundingbox
-; // Fixes
-; - when add a object with bank, the option\pathopen and windowtitle should not be changed
-; - when add an "object" with bank, if we don't clic on the image to select the object, we have an error message.
-; - procedure_draw : fixe the selection border with shape with broken points
-
-
-; 10/09/2021 0.41.4 (60)
-; // New
-; - Doc_Open() : add obj\clip,ClipW,ClipH,clipborder,bordercolor\alpha,color\alpha,hide
-; - Doc_Open() : add camera parameters loading
-; // fixes
-; - OpenWindow_Sceneproperties() : when change camera id, -> gadgets should be updated
-; - Doc_save() : obj\shape\pt\broken, mdpt, werent' saved.
-; - merga_shape : the merged shade wasn't at the good place.
-
-
-; 09/09/2021 0.41 (59)
-; // New
-; - Scene_Export() : add the layers clipping
-; - Doc_save() : add  camera parameters
-; - Doc_save() : add obj\clip,ClipW,ClipH,color\alpha,hide,clipborder,bordercolor\alpha,
-; - OpenWindow_Sceneproperties() : add butons : + and save
-; - OpenWindow_Sceneproperties() : add camera preset to the array Vd_camera()
-; - VD_ExportPresetCamera() to export camera as camera preset
-; - if clic on gadget layer clipColor or clipBorderColor, it open a colorequester to change the color
-; // Fixes
-; - mode edition point (line,box) : Select & move a point should use -obj(objid)\x,y
-; - mode edition point (curve) : Select & move a point and the other point (anchor, tangeant..) should use -obj(objid)\x,y
-; - Shape_AddPoint() : fixe some bug when create a point with mode =1 (create to nearest point)
-; - vdOptions\Action = #VD_actionAddLine + ctrl : should use -obj(objid)\x,y
-; - vdOptions\Action = #VD_actionAddLine without ctrl (create line): should use -obj(objid)\x,y
-; - shape_Add() (create (ellipse, box, image, line, curve)) : should use x = x -obj(objid)\x & y =y-bj(objid)\y
-; - line free Create/addpoint : should use -obj(objid)\x,y
-; - Curve free Create/addpoint : should use -obj(objid)\x,y
-; - curve (bezier) addpoint : should use -obj(objid)\x,y
-; - create some shapes (box, ellipse) should use -obj(objid)\x,y when mousemove to set its size.
-
-
-; 08/09/2021 0.40.5 (58)
-; // New
-; - Add windowInfos_Create(), windowInfos_update(), windowInfos_Close() : to add a window for waiting when chargement or saving too long.
-; - add font arialbold20
-; - VD_CreateTheGadgets() (Panel layer) : add gadgets for clipping (clipborder, bordercolor\alpha, and color\alpha,hide)
-; - structure sObj : add clip,ClipW,ClipH,clipborder,bordercolor\alpha,color\alpha,hide. Change SizeW\H to ClipW\H
-; - enumeration : add for layer clip gadgets
-; - add folder : presets\camera to add camera presets
-; // Changes
-; - UpdateListBank() : Add windowInfos_Create(), windowInfos_update(), windowInfos_Close()
-; - VD_layerAdd() : add obj\clipborder,bordercolor\alpha,color\alpha,hide
-; - ShapeGetProperties() : update new gadgets for layer
-; - VD_DrawScene() : when use layer-clipping, we have to use +obj()\x,y to get selecting shape.
-; // fixes
-; - some little fixes
-; - clic to select shape doesn't use the obj()\w,h,x,y parameters.
-
-
-; 07/09/2021 0.40 (57)
-; // New
-; - add DrawObjClipping(m) in drawcanvas() and add clipping
-; - VD_CreateTheGadgets() (panel layer) : add gagdet Clip, sizeW, SizeH
-; - Scene_Export() : add argument selected, to export selected only
-; - menu File : add export image (selected shapes)
-; - VD_layerAdd() : add obj\clip, clipW, clipH
-; // Changes
-; - VD_DrawScene() : - obj()\x,y to select-shape algorithme (isinsidepath...)
-; - ShapeGetProperties() : update new gadgets for layer
-; - ShapeGetProperties() : update new gadgets for layer
-; // Fixes
-; - when create a layer, its name is "objet" not "layer"
-; - Doc_open() : the gadget layer arent update.
-; - Scene_Export() : add VD_ShapeCoord() for each object rendered, to use the obj()\x,y,w,h
-; - Scene_Export() : save in jpg was saved in png.
-; - when use tool selection +shift, we can't add a shape to current selection
-; - clic on layer didn't always update the layer parameters if there is no shape selected
-; - draw_util() didn't use  VD_ShapeCoord(ObjId), so the selection was decaled form its shape
-; - fixe a bug in Vd_DeletePoint(i) : delete point only if arraysize(\pt())>0
-; - fixe a bug in Shape_CheckBrokenPoint()
-
-
-; 06/09/2021 0.39 (56)
-; // New
-; - Shape_CheckBrokenPoint() to check the \broken point and \maxpt
-; - VD_ShapeMerge() : to merge several shape to the main shape
-; - VD_ResetAllPoints() to reset all points of a shape (\center, \broken...).
-; - convert : rectangle to line
-; - convert : rectangle to curve
-; - convert : line to curve
-; // Changes
-; - now selection tool use the boundingbox of shape (not the center)
-; - Shape_Add(x,y) : add shape()\pt(0)\broken=1, \pt(0)\maxpt = arraysize(\pt())
-; - lots of changes in procedure_draw.pb to display shape with several part (Case #VD_ShapeShape,#VD_ShapeCurve)
-; - changes in shape_load() to add \broken and \maxpt when shape()\pt() didn't have it
-; - shape_delete() : add Shape_CheckBrokenPoint()
-; - shape_addpoint() : add Shape_CheckBrokenPoint()
-; - shape_addpoint to line : add Shape_CheckBrokenPoint()
-; // Fixes
-; - gadget Point hide wasn't updated when select a point (mode editpoint)
 
 
 ; 01/09/2021 0.38 (55)
@@ -1454,7 +1337,7 @@ CompilerEndIf
 ; - past
 ; - past to current shape
 ; // Fixes
-; -  system de point revu
+;-  system de point revu
 
 
 ; [25/03/2016] (0.01) (17h-18h) (1)
@@ -1470,8 +1353,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 455
-; FirstLine = 130
+; CursorPosition = 448
+; FirstLine = 126
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger

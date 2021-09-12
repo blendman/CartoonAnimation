@@ -1,27 +1,5 @@
 ﻿
-
-
-
-
-; Layer
-; Procedure Vd_Layer_Add(new= 1)
-;   
-; EndProcedure  
-
-
 ; objet
-Procedure VD_Layer_ResetClipping(n)
-  With Obj(n)
-    \ClipW = 1075
-    \ClipH = 983
-    \ClipAlpha = 255
-    \ClipColor = RGB(255,255,255)
-    \ClipBorder = 0
-    \ClipBorderAlpha = 255
-    \ClipBorderStroke = 10
-    \ClipBorderColor = 0
-  EndWith
-EndProcedure
 Procedure Vd_LayerAdd(new= 1)
   
   ; pour ajouter un objet (layer)
@@ -43,11 +21,7 @@ Procedure Vd_LayerAdd(new= 1)
     \Depth = n
     \w = 100
     \h = 100
-    \x = 0
-    \y = 0
-    \Nom$ = "Layer"+Str(n)
-    ; clip
-   VD_Layer_ResetClipping(n)
+    \Nom$ = "Object"+Str(n)
   EndWith
   
   ObjId = n
@@ -115,7 +89,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 49
-; FirstLine = 19
-; Folding = -7-
+; CursorPosition = 14
+; FirstLine = 2
+; Folding = n--
 ; EnableXP

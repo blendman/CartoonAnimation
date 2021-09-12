@@ -47,7 +47,7 @@ Structure sPoint Extends sPointBase
   hide.a ; to know if the curve is rendered
   hideFX.a ; to know if FX curve is rendered
   broken.a ; to know if a shape is made with several parts, if yes, so the points is broken and i had movepathcursor()
-  MaxPt.w ; to know the max of point has the part of the shape (if shape is composed to several broken curves)
+
 EndStructure
 
 Structure sRectangle
@@ -196,12 +196,6 @@ Structure sShape
   Cx.w
   Cy.w
   
-  ;bound
-  boundx.w
-  boundy.w
-  boundw.w
-  boundh.w
-  
   ; color, alpha
   ;  if shape is filled
   Color.i
@@ -250,21 +244,8 @@ Structure sObj Extends sRectangle
   Locked.a
   Actif.a
   
-;   MeshId.i
-;   ParentId.i
-  
-  ; to use clippath with the layer
-  Clip.a
-  ClipW.W
-  ClipH.W
-  ClipBorder.a
-  ClipBorderAlpha.a
-  ClipBorderColor.i
-  ClipBorderStroke.w
-  ClipColor.i
-  ClipAlpha.a
-  ClipHide.a
-
+  MeshId.i
+  ParentId.i
   ; informations internes
   Array Shape.sShape(0) 
   ; Animations
@@ -292,23 +273,6 @@ OldShapeId =-1
 
 ; to copy an object
 Global CopyObj.sObj
-
-
-Structure sObjLayer
-  Hide.a
-  IdUnik$
-  selected.a
-  x.w
-  y.w
-EndStructure
-Structure sLayer
-  Name$
-  Array Obj.sObjLayer(0)
-  NbObj.w
-EndStructure
-Global Dim Layer.sLayer(0)
-Global NbLayer.w
-
 
 ; programm
 Structure sVd
@@ -430,8 +394,6 @@ Structure sVdOptions
   ShowAncreSelected.a
   ShowOnlySel.a
   ShowSelection.a
-  ShowShapeBoundingBox.a
-  ShowBoxselect.a
   ShowCameraBorder.a
   ShowCameraCache.a
   ShowCameraSafe.a
@@ -500,6 +462,7 @@ Structure sVdOptions
   GridH.w
   ShowGrid.a
   ShowOrigin.a
+  ShowBoxselect.a
   
   ; paths
   PathOpen$
@@ -566,7 +529,7 @@ Structure sKeySc
   
 EndStructure
 
-Structure sLayerAnim 
+Structure sLayer 
   
   ObjId.w ; l'objet auquel il fait référence
   Name$
@@ -590,7 +553,7 @@ EndStructure
 
 Structure sScene
   
-  Array Layer.sLayerAnim(0)
+  Array Layer.sLayer(0)
   
   FrameStart.w
   FrameEnd.w
@@ -607,7 +570,7 @@ Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 301
-; FirstLine = 42
-; Folding = AAYwy
+; CursorPosition = 463
+; FirstLine = 159
+; Folding = kCAN5
 ; EnableXP

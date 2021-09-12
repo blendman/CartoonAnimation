@@ -32,16 +32,13 @@ Declare VD_EventBangkGadget()
 Declare ShapeGetProperties(state=1)
 Declare Shape_SelectAll(Selection=1)
 Declare VD_Shape_ChangeImage()
-Declare VD_ConvertShape(to_Pt=1, typ=0)
+Declare VD_ConvertShape(to_Pt=1)
 Declare Shape_Delete()
+Declare Vd_SetPoint(param=0,draw=1)
 Declare Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
 Declare Shape_SetFXpropertie(propertie=#ShapePropertie_Color,mode=0,value=-1,i=-1)
-Declare Shape_SetOrigin(Mode=0,x=0,y=0,update=1)
 Declare MouseOnShape(m,i,x,y)
-
-; Shape point edit
-Declare Shape_CheckBrokenPoint()
-Declare Vd_SetPoint(param=0,draw=1)
+Declare Shape_SetOrigin(Mode=0,x=0,y=0,update=1)
 
 ; draw
 Declare ShapeDrawFx(Obj,Shape,fx)
@@ -51,8 +48,6 @@ Declare VDDrawShapeColor(vo,j)
 Declare Grid3D()
 Declare VDDrawUtil()
 Declare DrawCanvas(x=0,y=0,Selected=0,gad=#G_canvasVector)
-Declare VD_ShapeCoord(i,camw.d=1,camh.d=1)
-Declare DrawObjClipping(m)
 
 ; ui, update
 Declare UpdateListShape()
@@ -75,21 +70,17 @@ Declare AddPathRoundBox(x, y, w, h, r)
 Declare Shape_Save(file$ = "",autosave=0, selection=0)
 Declare Shape_Load(merge=0, file$ ="",draw=1)
 
-; Manu (files)
+; files
 Declare VD_OpenTheHelp(html=0)
-Declare Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
+Declare Scene_Export(scene=0,forbankimg=0,file$=#Empty$)
 Declare Doc_New(eraseall=1,copy=0,draw=1,x=0,y=0)
-Declare WindowInfos_Create(maininfo$,info$)
-Declare WindowInfos_Update(info$)
-Declare WindowInfos_Close()
-Declare.s VD_GetCameratext(i)
 
 ; window
 Declare OpenWinVectorDrawing()
 
 
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 84
-; FirstLine = 64
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 40
+; FirstLine = 24
 ; EnableXP

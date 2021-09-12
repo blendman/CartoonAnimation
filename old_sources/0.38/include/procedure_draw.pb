@@ -10,16 +10,16 @@ Macro ShapeSetParentingPosition(i,j)
     Obj(vo)\Shape(j)\Parent\y = py
   EndIf
   Obj(vo)\Shape(j)\FinalX = Obj(vo)\Shape(j)\x +px
-  Obj(vo)\Shape(j)\FinalY = Obj(vo)\Shape(j)\y +py
+  Obj(vo)\Shape(j)\FinalX = Obj(vo)\Shape(j)\y +py
 EndMacro
 
 
-; *** draw
+; draw
 Procedure VD_ResetCoord()
   Shared ExportImage
  
   ResetCoordinates()
- 
+  
   If ExportImage = 0
      z.d = VdOptions\Zoom * 0.01
     ScaleCoordinates(z,z)
@@ -27,13 +27,14 @@ Procedure VD_ResetCoord()
     ScaleCoordinates(VD_camera(cameraId)\scale*0.01,VD_camera(cameraId)\scale*0.01)
   EndIf
 EndProcedure
-Procedure VD_ShapeCoord(i,camw.d=1,camh.d=1)
+
+Procedure VD_ShapeCoord(i)
   
   z.d = VdOptions\Zoom * 0.01
   
   With Obj(i)
     
-    ScaleCoordinates(\w*0.01*camw,\h*0.01*camh)
+    ScaleCoordinates(\w*0.01,\h*0.01)
     RotateCoordinates(\RotX,\RotY,\Rot)
     TranslateCoordinates(\x,\y)
     
@@ -41,7 +42,6 @@ Procedure VD_ShapeCoord(i,camw.d=1,camh.d=1)
     
 EndProcedure
 
-; shape fx
 Procedure ShapeDrawFx(Obj,Shape,fx)
    
     a = Obj
@@ -202,6 +202,7 @@ Procedure ShapeDrawFx(Obj,Shape,fx)
     ;ResetCoordinates()
    
 EndProcedure
+
 Procedure VDDrawFx(vo,j,dessus=0)
   
   ; Pour dessiner les fx
@@ -225,7 +226,8 @@ Procedure VDDrawFx(vo,j,dessus=0)
   
 EndProcedure
 
-; shape
+
+
 Procedure VdDrawShape1(vo,j)
     
     ; pour dessiner le chemin , avant les opérations de remplissage 
@@ -250,105 +252,52 @@ Procedure VdDrawShape1(vo,j)
         
         Select \ShapTyp
                 
-          Case #VD_ShapeShape,#VD_ShapeCurve
-            ;{
-            ; nextend, c'est le point pour fermer la curve,
-            ; nextend=0 si on a une seule partie pour la courbe.
-            ; mais si on plusieurs curves jointes (plueirus morceaux), 
-            ; on doit à chaque nouveau morceau changer ce point qui ferme le morceau en court
-            ; (sinon, ils sont tous attachés)
-            ; le point pour changer la courbe devient alors le i-1,
-            ; car la courbe démarre sur i+1 (u=i+1), car le point 0 ferme la courbe de base
-            ; (si elle est en 1 seul morceau).
-            nextEnd = 0
-;             If \pt(0)\MaxPt>ArraySize(\pt())
-;               \pt(0)\MaxPt = ArraySize(\pt())
-;             EndIf
-            maxpt = \pt(0)\MaxPt
-            For i =1 To ArraySize(\pt())-1 Step 3
-              
-              ; on vérifie si on a une partie nouvelle
-              ; si oui, on doit mettre un movepathcursor, sauf pour le 0 vu qu'on l'a déjà mis
-              If \pt(i-1)\broken=1 And i>1
-                MovePathCursor(\pt(i-1)\x+vx,\pt(i-1)\y+vy)
-                nextEnd = i-1
-                ; Debug "on a trouvé un point broken "+Str(i-1)
+          Case #VD_ShapeShape
+            ; MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+            For i =0 To ArraySize(\pt()) Step 3
+              u = 1+i
+              If u > ArraySize(\pt())
+                u =0
               EndIf
-              ; puis, on définit les 3 points de la curve
+              v = u+1
+              If v > ArraySize(\pt())
+                v =0
+              EndIf
+              w = v+1              
+              If w > ArraySize(\pt())
+                w=0
+              EndIf
+              If \pt(i)\hide=0   
+                AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
+              Else
+                MovePathCursor(\pt(w)\x+vx,\pt(w)\y+vy)
+              EndIf
+              
+            Next
+            
+         
+          Case #VD_ShapeCurve
+            For i =1 To ArraySize(\pt())-1 Step 3
               u = i
               v = i+1
-              w = i+2 
-              
-              ; on vérifie si on ne dépasse le nombre max de point de cette partie du shape.
-              If w > maxPt
-                w = nextEnd
+              w = i+2
+              If w > ArraySize(\pt())
+                w =0
                 If \Open
                   Break
                 EndIf
-              EndIf
-              ; ON affiche, sauf pour les traits invisibles
-              If \pt(w)\hide=0   
+              EndIf 
+              If \pt(w)\hide =0 
                 AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
               Else
                 MovePathCursor(\pt(w)\x+vx,\pt(w)\y+vy)
                 breakdown = 1
               EndIf
-              ; ensuite, je vérifie si on va avoir un point "broken"
-              ; si oui, je change le nombre max de pt qu'a cette partie du shape.
-              If i+3<= ArraySize(\pt()) 
-                If \pt(i+2)\broken 
-;                   If \pt(i+2)\maxpt > ArraySize(\pt()) 
-;                     \pt(i+2)\maxpt = ArraySize(\pt()) 
-;                   EndIf
-                  maxpt = \pt(i+2)\maxpt
-                EndIf
-              EndIf
-              
-;               ; enfin, si on a un chemin fermé, on le ferme
-;               If \pt(i-1)\broken=1 And \open=0 And breakdown = 0
-;                 ClosePath()
-;               EndIf
             Next
-            If \open=0 And breakdown = 0
+            If \open=0 And  breakdown = 0
               ClosePath()
             EndIf
-            
-            ;{ old shapecurve
-;           Case #VD_ShapeCurve
-;             ; pour nextend, voir au dessus.
-;             nextEnd=0
-;             For i =1 To ArraySize(\pt())-1 Step 3
-;               If \pt(i-1)\broken=1 And i>0
-;                 MovePathCursor(\pt(i-1)\x+vx,\pt(i-1)\y+vy)
-;                 nextEnd = i
-;               EndIf
-;               u = i
-;               v = i+1
-;               w = i+2
-;               If w > ArraySize(\pt())
-;                 w =nextEnd
-;                 If \Open
-;                   Break
-;                 EndIf
-;               EndIf 
-;               If \pt(w)\hide =0 
-;                 AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
-;               ElseIf \pt(w)\broken=0
-;                 MovePathCursor(\pt(w)\x+vx,\pt(w)\y+vy)
-;                 breakdown = 1
-;               EndIf
-;                
-;               If \pt(i)\broken=1 And \open=0 And breakdown = 0
-;                 ClosePath()
-;               EndIf
-;             Next
-;               If \open=0 And breakdown = 0
-;                 ClosePath()
-;               EndIf
-;}                 
-            
-            ;}
-            
+                
           Case #VD_ShapeLine
             For i =1 To ArraySize(\pt()) 
               AddPathLine(\pt(i)\x+vx,\pt(i)\y+vy)
@@ -386,7 +335,7 @@ Procedure VdDrawShape1(vo,j)
             MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
             VectorSourceColor(RGBA(Red(\color),Green(\color),Blue(\color),\Alpha))
             VectorFont(FontID(\Font), \SizeW)
-            DrawVectorParagraph(\text$,\d,\h  ,#PB_VectorParagraph_Center)
+            DrawVectorParagraph(\text$,\d,\h,#PB_VectorParagraph_Center)
                   
             
         EndSelect
@@ -399,6 +348,7 @@ Procedure VdDrawShape1(vo,j)
     
     
 EndProcedure
+
 Procedure VDDrawShapeColor(vo,j)
   
   ; pour remplir le chemin, avec le style souhaité : filled, line, dash, dot
@@ -478,7 +428,6 @@ Procedure VDDrawShapeColor(vo,j)
   
 EndProcedure
 
-; util
 Procedure Grid3D()
   
 ;   Z.d = VdOptions\Zoom * 0.01
@@ -501,6 +450,7 @@ Procedure Grid3D()
 ;   StrokePath(1)        
 ;     
 EndProcedure
+
 Procedure VDDrawBG(depth=0)
   
   vx = Vd\viewX
@@ -519,42 +469,6 @@ Procedure VDDrawBG(depth=0)
     EndIf
   EndIf
 EndProcedure
-
-Procedure DrawShapeCurve(obj,shape,vx,vy)
-  ; Static nextEnd, Static 
-  
-  With obj(Obj)\Shape(Shape)
-    nextEnd = 0
-    maxpt = \pt(0)\MaxPt
-    For i =1 To ArraySize(\pt()) Step 3
-      If \pt(i-1)\broken=1 And i>1
-        MovePathCursor(\pt(i-1)\x+vx, \pt(i-1)\y+vy)
-        nextEnd = i-1
-      EndIf
-      u = i
-      v = u+1
-      w = v+1              
-      If w > maxpt
-        w = nextEnd
-        If \Open
-          ClosePath()
-          Break
-        EndIf
-      EndIf
-      AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
-      If i+3<= ArraySize(\pt()) 
-        If \pt(i+2)\broken 
-          maxpt = \pt(i+2)\maxpt
-        EndIf
-      EndIf
-    Next
-    If \open=0 And breakdown = 0
-      ClosePath()
-    EndIf
-  EndWith
-
-EndProcedure
-
 Procedure VDDrawUtil()
     
     ; draw UTILES : 
@@ -586,8 +500,6 @@ Procedure VDDrawUtil()
   If  vd\NbShape >=1
     If Obj(ObjId)\Hide = 0
       ; VD_ShapeCoord(ObjId)
-      
-      VD_ShapeCoord(ObjId)
       
       ; on doit mettre la view
 ;       vx = vd\ViewX
@@ -811,11 +723,16 @@ Procedure VDDrawUtil()
       ; puis, j'affiche des points tillés autour du shape selectionné
       If VdOptions\ShowSelection
         
-        ; draw the boundingbox for each shapes
+        ; draw the boundingbox for each 
         For kk = 0 To ArraySize(Obj(ObjId)\Shape())
-            With Obj(ObjId)\Shape(kk)
+          
+          With Obj(ObjId)\Shape(kk)
             px = 0
             py = 0
+;             If \Parent\id >0 And \parent\id-1 <> kk
+;               px = Obj(ObjId)\Shape(\Parent\id-1)\X - Obj(ObjId)\Shape(kk)\Parent\startx
+;               pY = Obj(ObjId)\Shape(\Parent\id-1)\Y - Obj(ObjId)\Shape(kk)\Parent\starty
+;             EndIf
             ShapeSetParentingPosition(ObjId,kk)
             
             vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
@@ -827,7 +744,22 @@ Procedure VDDrawUtil()
               Select \ShapTyp
                   
                 Case #VD_ShapeShape, #VD_ShapeCurve                               
-                  DrawShapeCurve(ObjID,kk,vx,vy)
+                  For i =0 To ArraySize(\pt()) Step 3
+                    
+                    u = 1+i
+                    If u > ArraySize(\pt())
+                      u =0
+                    EndIf
+                    v = u+1
+                    If v > ArraySize(\pt())
+                      v =0
+                    EndIf
+                    w = v+1              
+                    If w > ArraySize(\pt())
+                      w=0
+                    EndIf
+                    AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
+                  Next
                   
                 Case #VD_ShapeText
                   sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
@@ -842,124 +774,140 @@ Procedure VDDrawUtil()
                   
               EndSelect
               
-              \boundx = PathBoundsX()
-              \boundy = PathBoundsY()
-              \boundw = PathBoundsWidth()
-              \boundh = PathBoundsHeight()
+              pbx = PathBoundsX()
+              pby = PathBoundsY()
+              pbw = PathBoundsWidth()
+              pbh = PathBoundsHeight()
+;               
+;               ; calcul the boundingbox of selection
+;               If vd\bbox\x>pbx -vx
+;                 vd\bbox\x=pbx -vx
+;               EndIf 
+;               If vd\bbox\y>pby-vy
+;                 vd\bbox\y=pby-vy
+;               EndIf
+;               If vd\bbox\w<vd\bbox\x+pbw
+;                 vd\bbox\w=vd\bbox\x+pbw
+;               EndIf 
+;               If vd\bbox\h<vd\bbox\y+pbh
+;                 vd\bbox\h=vd\bbox\y+pbh
+;               EndIf
               
-              ;               ; calcul the boundingbox of selection
-              ;               If vd\bbox\x>pbx -vx
-              ;                 vd\bbox\x=pbx -vx
-              ;               EndIf 
-              ;               If vd\bbox\y>pby-vy
-              ;                 vd\bbox\y=pby-vy
-              ;               EndIf
-              ;               If vd\bbox\w<vd\bbox\x+pbw
-              ;                 vd\bbox\w=vd\bbox\x+pbw
-              ;               EndIf 
-              ;               If vd\bbox\h<vd\bbox\y+pbh
-              ;                 vd\bbox\h=vd\bbox\y+pbh
-              ;               EndIf
-              If VdOptions\ShowShapeBoundingBox
-                AddPathBox(\boundx,\boundy,\boundw,\boundh)
-              EndIf
-              
+              AddPathBox(pbx,pby,pbw,pbh)
               VectorSourceColor(RGBA(15,15,15,255)) 
               DashPath(0.5,5)
             EndIf
             
           EndWith                
-         Next
-         
-       EndIf
+          
+        Next
         
-      ;{ draw the boundingbox for selection 
-        If VdOptions\ShowBoxselect
-          
-          For kk = 0 To ArraySize(Obj(ObjId)\Shape())
-            With Obj(ObjId)\Shape(kk)
-              If \hide = 0 And \Selected = 1   ;And kk<> shapeId
-                
-                px = 0
-                py = 0
-                
-                ShapeSetParentingPosition(ObjId,kk)
-                
-                vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
-                vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
-                
-                MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
-                Select \ShapTyp
+        
+         ;{ draw the boundingbox for selection 
+        For kk = 0 To ArraySize(Obj(ObjId)\Shape())
+          With Obj(ObjId)\Shape(kk)
+            If \hide = 0 And \Selected = 1   ;And kk<> shapeId
+              
+              px = 0
+              py = 0
+              
+              ShapeSetParentingPosition(ObjId,kk)
+              
+              vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
+              vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
+              
+              MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+              Select \ShapTyp
+                  
+                Case #VD_ShapeShape, #VD_ShapeCurve                               
+                  For i =0 To ArraySize(\pt()) Step 3
                     
-                  Case #VD_ShapeShape, #VD_ShapeCurve                               
-                    For i =0 To ArraySize(\pt()) Step 3
-                      
-                      u = 1+i
-                      If u > ArraySize(\pt())
-                        u =0
-                      EndIf
-                      v = u+1
-                      If v > ArraySize(\pt())
-                        v =0
-                      EndIf
-                      w = v+1              
-                      If w > ArraySize(\pt())
-                        w=0
-                      EndIf
-                      AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
-                    Next
-                    
-                  Case #VD_ShapeText
-                    sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
-                    sizeH = VectorParagraphHeight(\text$, \d,\h)
-                    AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
-                    
-                  Case #VD_ShapeImage 
-                    AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
-                    
-                  Default
-                    VdDrawShape1(ObjId, kk)
-                    
-                EndSelect
-              EndIf
-            EndWith                
-          Next
-          
-          ; then draw the bounding box for selection
-          vd\bbox\x = PathBoundsX()
-          vd\bbox\y = PathBoundsY()
-          vd\bbox\w = PathBoundsWidth()
-          vd\bbox\h = PathBoundsHeight()
-          
-          
+                    u = 1+i
+                    If u > ArraySize(\pt())
+                      u =0
+                    EndIf
+                    v = u+1
+                    If v > ArraySize(\pt())
+                      v =0
+                    EndIf
+                    w = v+1              
+                    If w > ArraySize(\pt())
+                      w=0
+                    EndIf
+                    AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
+                  Next
+                  
+                Case #VD_ShapeText
+                  sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+                  sizeH = VectorParagraphHeight(\text$, \d,\h)
+                  AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
+                  
+                Case #VD_ShapeImage 
+                  AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
+                  
+                Default
+                  VdDrawShape1(ObjId, kk)
+                  
+              EndSelect
+            EndIf
+          EndWith                
+        Next
+        
+        ; then draw the bounding box for selection
+        vd\bbox\x = PathBoundsX()
+        vd\bbox\y = PathBoundsY()
+        vd\bbox\w = PathBoundsWidth()
+        vd\bbox\h = PathBoundsHeight()
+        
+        ;If VdOptions\ShowBoxselect
           AddPathBox( vd\bbox\x, vd\bbox\y,vd\bbox\w,vd\bbox\h)
           VectorSourceColor(RGBA(255,215,15,255)) 
           DashPath(0.8,5)
-        EndIf
+        ;EndIf
+        
         ;}
         
-      
-       ; puis, on dessine le contour en point tillés
         px = 0
         py = 0
+        ; puis, on dessine le contour en point tillés
         If shapeId > -1
           With Obj(ObjId)\Shape(shapeId)
             
+;             If \Parent\id >0 And \parent\id-1 <> ShapeId
+;               px = Obj(ObjId)\Shape(\Parent\id-1)\X - Obj(ObjId)\Shape(ShapeId)\Parent\startx
+;               pY = Obj(ObjId)\Shape(\Parent\id-1)\Y - Obj(ObjId)\Shape(ShapeId)\Parent\starty
+;             EndIf
             ShapeSetParentingPosition(ObjId,shapeId)
             
             vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
             vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
             
             MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
-           
+            
             Select \ShapTyp
                 
-              Case #VD_ShapeShape, #VD_ShapeCurve  
-                DrawShapeCurve(ObjID,shapeId,vx,vy)
+              Case #VD_ShapeShape, #VD_ShapeCurve                               
+                For i =0 To ArraySize(\pt()) Step 3
+                  
+                  u = 1+i
+                  If u > ArraySize(\pt())
+                    u =0
+                  EndIf
+                  v = u+1
+                  If v > ArraySize(\pt())
+                    v =0
+                  EndIf
+                  w = v+1              
+                  If w > ArraySize(\pt())
+                    w=0
+                  EndIf
+                  
+                  AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
+                Next
                 
               Case #VD_ShapeText
-                sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
-                sizeH = VectorParagraphHeight(\text$, \d,200000)
+                 sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+                  sizeH = VectorParagraphHeight(\text$, \d,\h)
                 AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
                 
               Case #VD_ShapeImage 
@@ -970,10 +918,12 @@ Procedure VDDrawUtil()
                 
             EndSelect
             VectorSourceColor(RGBA(60,30,40,255)) 
+            ;DashPath(1/Z1,5/Z1)
             DashPath(1,5)
             
             ; le centre du shape en bleu
             MovePathCursor(vx,vy)
+            ;AddPathCircle(\Cx,\cy,b/Z1,0,360,#PB_Path_Relative)
             AddPathCircle(\Cx,\cy,b,0,360,#PB_Path_Relative)
             VectorSourceColor(RGBA(255,0,216,200))
             FillPath()
@@ -982,8 +932,8 @@ Procedure VDDrawUtil()
         
       EndIf
       
+    EndIf
   EndIf
-  
   
   
   ;{ other utilities to show
@@ -1079,36 +1029,6 @@ Procedure VDDrawOrigin()
   EndIf
 
 EndProcedure
-
-
-Procedure DrawObjClipping(m)
-  
-  ;  To use clippath, With the layer parameters (clippath will be a box)
-  vx = vd\ViewX
-  vy = vd\ViewY
-  
-  If obj(m)\clip
-    With obj(m)
-      ; draw a box or border 
-      AddPathBox(vx,vy,\clipW,\clipH)
-      If \ClipHide = 0
-        VectorSourceColor(RGBA(Red(\ClipColor),Green(\ClipColor),Blue(\ClipColor),\ClipAlpha))
-        If \ClipBorder = 1
-          FillPath(#PB_Path_Preserve)
-        Else
-          FillPath()
-        EndIf
-      EndIf
-      If \ClipBorder = 1
-       VectorSourceColor(RGBA(Red(\ClipBorderColor),Green(\ClipBorderColor),Blue(\ClipBorderColor),\ClipBorderAlpha))
-       StrokePath(\ClipBorderStroke)
-     EndIf
-     ; then clip
-      AddPathBox(vx,vy,\clipW,\clipH)
-      ClipPath()
-    EndWith
-  EndIf
-EndProcedure
 Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
   
   ; puis, on affiche les objets (et les shapes qui les composent)
@@ -1116,24 +1036,21 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
     
     If Obj(m)\Hide = 0
       
-      VD_ResetCoord()
-      ; VD_ShapeCoord(m)
+      VD_ShapeCoord(m)
       
       ; for selection
       If Selected = 1 And objid = m
-        If EventType() = #PB_EventType_LeftButtonDown 
+        If EventType() = #PB_EventType_LeftButtonDown
           If vd\EditMode <> #VD_Editmode_Point
             If vdoptions\Action = #VD_actionMove Or vdoptions\action = #VD_actionSelect
             For j =ArraySize(Obj(m)\Shape()) To 0 Step -1
               If Obj(m)\Shape(j)\Hide = 0
                 VdDrawShape1(m,j)
-               
+                
                 If Vd\space = 0  And Vd\LockSelection =0
                   With Obj(m)\Shape(j)
-                    x1 = x - Obj(m)\x
-                    y1 = Y - Obj(m)\Y
                     
-                    If (\ShapTyp = #VD_ShapeText Or \ShapTyp = #VD_ShapeImage) And MouseOnShape(m,j,x1,y1) 
+                    If (\ShapTyp = #VD_ShapeText Or \ShapTyp = #VD_ShapeImage) And MouseOnShape(m,j,x,y) 
                       mouseOn_shape = 1
                       Debug "ok mouse on shape"
                     EndIf
@@ -1146,7 +1063,7 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
                       EndIf
                     EndIf
                     If vd\ClicSelect =1  
-                      If (IsInsidePath(x1, y1) Or IsInsideStroke(x1, y1, \w) Or mouseOn_shape = 1) And Vd\move = 0   
+                      If (IsInsidePath(x, y) Or IsInsideStroke(x, y, \w) Or mouseOn_shape = 1) And Vd\move = 0   
                         vd\ClicSelect=0
                         Vd\TestShapeOk = -1  
                         ;\selected= 1
@@ -1157,11 +1074,11 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
                           ShapeGetProperties()  
                           Select vdOptions\Action 
                             Case #VD_actionMove
-                              \startY = y1 - \Y                                                               
-                              \startX = x1 - \X
+                              \startY = y - \Y                                                               
+                              \startX = x - \X
                             Case #VD_actionScale
-                              \startX = x1 -\SizeW
-                              \startY = y1 +\SizeH
+                              \startX = x -\SizeW
+                              \startY = y +\SizeH
                           EndSelect
                         Else
                           If shapeId = j
@@ -1181,29 +1098,13 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
         EndIf
       EndIf
       
-;       ;VD_ResetCoord()
-;       ; just to see the problem
-;       For j =ArraySize(Obj(m)\Shape()) To 0 Step -1
-;         If Obj(m)\Shape(j)\Hide = 0
-;           VdDrawShape1(m,j)
-;         EndIf
-;       Next
-;       VectorSourceColor(RGBA(255,100,100,250))
-;       StrokePath(50)
-;       
-       
-      VD_ShapeCoord(m)
-      
       ; then draw
       BeginVectorLayer(Obj(m)\Alpha)
-      DrawObjClipping(m)
-      
       For j =0 To ArraySize(Obj(m)\Shape())
        ; If VdOptions\ShowOnlySel = 0 Or j = ShapeId Or playanim=1 Or selected =1
           
-        If Obj(m)\Shape(j)\Hide = 0
-          
-          ; si clippath
+          If Obj(m)\Shape(j)\Hide = 0
+            ; si clippath
             ; SaveVectorState()
             ; VdDrawShape1(m,j)
             ; ClipPath()    
@@ -1227,7 +1128,6 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
           
         ; EndIf
       Next
-      
       EndVectorLayer()
       
     EndIf
@@ -1284,7 +1184,7 @@ Procedure DrawCanvas(x=0,y=0,Selected=0, gad=#G_canvasVector)
         VDDrawBG()
         ;}
         
-        ; draw th line of origin (0,0)
+              
         VDDrawOrigin()
 
         ;zoom
@@ -1328,7 +1228,7 @@ Procedure DrawCanvas(x=0,y=0,Selected=0, gad=#G_canvasVector)
                     Next
                   EndIf
                 ElseIf vd\TestShapeOk = 0
-                  If vdOptions\Action = #VD_actionSelect And vd\Shift = 0
+                  If vdOptions\Action = #VD_actionSelect
                     Shape_SelectAll(0)
                   EndIf
                 EndIf
@@ -1349,8 +1249,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 539
-; FirstLine = 21
-; Folding = Ul-vv+fY-f+-89-ff-x9f4D7b--4FQ+-
+; CursorPosition = 255
+; FirstLine = 31
+; Folding = Wl-v---b-fe4---8fDZvgewP---By--
 ; EnableXP
 ; DisableDebugger

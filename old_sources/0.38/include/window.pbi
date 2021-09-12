@@ -12,82 +12,24 @@ Procedure Addbuttons(win)
 EndProcedure
 
 ; Window scene properties
-Procedure VD_Camera_SetGadgetPropertie()
-  With VD_camera(cameraId)
-    SetGadgetText(#G_winScProp_Pourcentage, Str(\scale))
-    SetGadgetText(#G_winScProp_cameraH, Str(\h))
-    SetGadgetText(#G_winScProp_cameraW, Str(\w))
-    SetGadgetText(#G_winScProp_cameraX, Str(\x))
-    SetGadgetText(#G_winScProp_cameraY, Str(\Y))
-    SetGadgetText(#G_winScProp_cameraName, \name$)
-    
-    finalW = \W * \scale * 0.01
-    finalH = \H * \scale * 0.01
-    If finalW <= 8096 And FinalH <= 8096
-      SetGadgetText(#G_winScProp_outputW, Str(finalW))
-      SetGadgetText(#G_winScProp_outputH, Str(finalH))
-    EndIf
-                
-  EndWith
-EndProcedure
 Procedure OpenWindow_Sceneproperties()
   
-  Protected x,y,w,h
   ;   VdOptions\CameraW = Val(InputRequester("Change","Change the width of rendering (camera))",Str(VdOptions\CameraW)))
   ;   VdOptions\CameraH = Val(InputRequester("Change","Change the height of rendering (camera))",Str(VdOptions\CameraH)))
   winW = 800
   WinH = 500
   If OpenWindow(#Win_VD_Sceneproperties,0,0,Winw,winH,lang("Scene Properties"),#PB_Window_SystemMenu|#PB_Window_ScreenCentered|#PB_Window_SizeGadget,WindowID(#Win_VD_main))
     WindowBounds(#Win_VD_Sceneproperties, 400, 500, winW, WinH) 
-    
-    ;{ check camera presets
-    NBcamera = -1
-    Global Dim VD_camera.sVDCamera(0)
-    VD_CameraAdd(Lang("Camera Default"),0,0,VdOptions\CameraW,VdOptions\CameraH,100,1)
-    ; check presets camera in folder
-    folder$ = "data\presets\camera\"
-    If ExamineDirectory(0,folder$,"*.txt")
-      While NextDirectoryEntry(0)
-        If DirectoryEntryType(0) = #PB_DirectoryEntry_File
-          If DirectoryEntrySize(0)>0 And DirectoryEntryName(0)<>""
-            If ReadFile(0,folder$+DirectoryEntryName(0))
-              line$ = ReadString(0)
-              d$ = ","
-              index$ = StringField(line$,1,d$)
-              If index$ ="camera"
-                u=2
-                id = Val(StringField(line$,u,d$)) : u+1
-                name$ = StringField(line$,u,d$) : u+1
-                x = Val(StringField(line$,u,d$)) : u+1
-                y = Val(StringField(line$,u,d$)) : u+1
-                w = Val(StringField(line$,u,d$)) : u+1
-                h = Val(StringField(line$,u,d$)) : u+1
-                scale = Val(StringField(line$,u,d$)) : u+1
-                zoom.d = ValD(StringField(line$,u,d$)) : u+1
-                VD_CameraADd(name$,x,y,w,h,scale,zoom)
-              EndIf
-              CloseFile(0)
-            EndIf
-          EndIf
-        EndIf
-      Wend
-      FinishDirectory(0)
-    EndIf
-    ;}
-    
+
     ; create the gadgets
     x=10 : y=10 : w=120 : h=25 : a=4
-    If FrameGadget(#PB_Any, x,y,250,(h+a)*9+35,lang("Camera"))
+    If FrameGadget(#PB_Any, x,y,250,(h+a)*7+35,lang("Camera"))
       y+25 : x=20
-      AddGadget(#G_winScProp_cameraId,#Gad_Cbbox,x,y,w,h,"",0,0,lang("Select the camera"),cameraId,lang("Camera")+" :")  : y+h+a
-      
+      AddGadget(#G_winScProp_cameraId,#Gad_Cbbox,x,y,w,h,"",0,0,lang("Select the camera"),cameraId,lang("Camera")+" :") : y+h+a
       For i=0 To ArraySize(VD_camera())
         AddGadgetItem(#G_winScProp_cameraId,i,VD_camera(i)\name$)
       Next
       SetGadgetState(#G_winScProp_cameraId, cameraId)
-      
-      AddGadget(#G_winScProp_cameraAdd,#Gad_Btn,x,y,w,h,"+",0,0,lang("Add a new camera preset"),-65257,Lang("Add")) : y+h+a
-      AddGadget(#G_winScProp_cameraSave,#Gad_Btn,x,y,w,h,lang("Save"),0,0,lang("Save the camera as preset"),-65257,Lang("Save")) : y+h+15
       
       AddGadget(#G_winScProp_cameraName,#Gad_String,x,y,w,h,VD_camera(cameraId)\name$,0,0,lang("Name of the current camera for output"),-65257,Lang("Name")) : y+h+a
       AddGadget(#G_winScProp_cameraX,#Gad_String,x,y,w,h,"",1,0,lang("X Position of the image output"),VD_camera(cameraId)\x,Lang("X")) : y+h+a
@@ -114,19 +56,8 @@ Procedure OpenWindow_Sceneproperties()
     ;   #G_winScProp_cameracropH
     ;   #G_winScProp_FormatOutput
     ;   #G_winScProp_FormatOption
-    
-    
     ; Add 2 buttons
     Addbuttons(#Win_VD_Sceneproperties)
-    
-    ; define some variable
-    x=VD_camera(cameraId)\x
-    y=VD_camera(cameraId)\y
-    w=VD_camera(cameraId)\w
-    h=VD_camera(cameraId)\h
-    name$=VD_camera(cameraId)\name$
-    scale=VD_camera(cameraId)\scale
-    zoom.d=VD_camera(cameraId)\zoom
     
     Repeat
       
@@ -138,15 +69,8 @@ Procedure OpenWindow_Sceneproperties()
           gad = 0
           Select EventGadget
               
-            Case #G_winScProp_cameraAdd
-              VD_CameraAdd(name$,x,y,w,h,scale,zoom)
-              
-            Case #G_winScProp_cameraSave
-              VD_ExportPresetCamera()
-              
             Case #G_winScProp_cameraId
               cameraId = GetGadgetState(#G_winScProp_cameraId)
-              VD_Camera_SetGadgetPropertie()
               
             Case #G_winScProp_Pourcentage
               scale = Val(GetGadgetText(#G_winScProp_Pourcentage))
@@ -1111,7 +1035,8 @@ Procedure WindowIntro()
 EndProcedure
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 20
-; Folding = +--HAAAAAAAAAAAA9
+; CursorPosition = 898
+; FirstLine = 32
+; Folding = BAYAACAAw0nW-3j
 ; EnableXP
 ; DisableDebugger

@@ -59,7 +59,7 @@ Repeat
               SetActiveGadget(#G_canvasVector)
               
             Case #G_ToolVDOpen
-              Doc_Open()
+              Shape_Load()
               SetActiveGadget(#G_canvasVector)
               
             Case #G_ToolVDSAve 
@@ -289,36 +289,6 @@ Repeat
                   VD_UpdateCanvasPath()
                 EndIf
               EndIf
-              
-            Case #G_ObjClipColor, #G_ObjClipBorderColor
-              color = ColorRequester(obj(obji)\ClipColor)
-              If color >-1
-                If eventgadget= #G_ObjClipColor
-                  obj(obji)\ClipColor= color
-                ElseIf eventgadget = #G_ObjClipBorderColor
-                  obj(obji)\ClipBorderColor = color
-                EndIf
-              EndIf
-              SetActiveGadget(#G_canvasVector)
-              Drawcanvas()
-               
-            Case #G_ObjClip,#G_ObjClipHide,#G_ObjClipBorder
-              Obj(objid)\Clip = GetGadgetState(#G_ObjClip)
-              Obj(objid)\ClipHide = GetGadgetState(#G_ObjClipHide)
-              Obj(objid)\ClipBorder = GetGadgetState(#G_ObjClipBorder)
-              SetActiveGadget(#G_canvasVector)
-              Drawcanvas()
-              
-            Case #G_ObjClip To #G_ObjClipBorderStroke
-              Obj(objid)\Clip = GetGadgetState(#G_ObjClip)
-              Obj(objid)\ClipW= GetGadgetState(#G_ObjClipW)
-              Obj(objid)\ClipH = GetGadgetState(#G_ObjClipH)
-              Obj(objid)\ClipHide = GetGadgetState(#G_ObjClipHide)
-              Obj(objid)\ClipAlpha = GetGadgetState(#G_ObjClipAlpha)
-              Obj(objid)\ClipBorder = GetGadgetState(#G_ObjClipBorder)
-              Obj(objid)\ClipBorderAlpha = GetGadgetState(#G_ObjClipBorderAlpha)
-              Obj(objid)\ClipBorderStroke = GetGadgetState(#G_ObjClipBorderStroke)
-              Drawcanvas()
               
             Case #G_ObjDel 
               DeleteArrayElement(Obj,ObjId)
@@ -907,7 +877,7 @@ Repeat
           
           ;{ files
         Case #menuVD_ShapeOpen
-          Doc_Open()
+          Shape_Load()
           
         Case #menuVD_ShapeSaveAs 
           Shape_Save()
@@ -930,10 +900,7 @@ Repeat
           
         Case #menuVD_ExportImageObj
           Scene_Export()
-          
-        Case #menuVD_ExportImageSelected
-          Scene_Export(0,0,"",1)
-          
+             
         Case #menuVD_ExportPb
           VD_ExportPbCommand()
           
@@ -1024,12 +991,6 @@ Repeat
           
         Case #menuVD_ShowSelection
           Vd_ShowMenu(#menuVD_ShowSelection,VdOptions\ShowSelection)
-          
-        Case #menuVD_ShowBoundingboxShape
-          Vd_ShowMenu(#menuVD_ShowBoundingboxShape,VdOptions\ShowShapeBoundingBox)
-          
-        Case #menuVD_ShowBoundingboxSelection
-          Vd_ShowMenu(#menuVD_ShowBoundingboxSelection,VdOptions\ShowBoxselect)
           
         Case #menuVD_ShowAncreSelected
           Vd_ShowMenu(#menuVD_ShowAncreSelected,VdOptions\ShowAncreSelected)
@@ -1231,24 +1192,10 @@ Repeat
             Drawcanvas()
           EndIf
           
-        Case #menuVD_ConvertToCurve
-          VD_ConvertShape(1,2)
-          
-        Case #menuVD_ConvertToline
-          VD_ConvertShape(1,1)
-          
         Case #menuVD_ConvertToShape
           VD_ConvertShape()
           
-        Case #menuVD_SeparateShape
-          If shapeID >-1
-            For ip=0 To ArraySize(obj(ObjId)\Shape(ShapeID)\pt())
-              Debug "point: "+Str(ip) + " /broken : "+Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\broken)+" / center : "+Str(Obj(ObjId)\Shape(ShapeId)\pt(ip)\Center)
-            Next
-          EndIf
-        
-        Case #menuVD_JointShape
-          VD_ShapeMerge()
+          ; Case #menuVD_JointShape
           
         Case #menuVD_AddPtAtMiddle
           VD_Addpoint(0)
@@ -1303,9 +1250,9 @@ EndIf
 
 VD_SaveOptions()
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 61
-; FirstLine = 25
-; Folding = LeBPAWaxPeAAAAAeAAAAAwCM9
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 371
+; FirstLine = 98
+; Folding = LeBCAWa9jHAAAAoHAgAAAtAw
 ; EnableXP
 ; DisableDebugger

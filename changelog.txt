@@ -1,5 +1,108 @@
 CHANGELOG
 
+11/09/2021 0.41.6
+// New
+- menu view : showboundingboxselection, showshapebbox
+- procedure_draw.pb : add show boudingbox (Select And shape) only If vd_options\showboxselect And vd_options\showshapeboundingbox
+// Fixes
+- when add an object With bank (on the canvas), the VD_options\pathopen And windowtitle should Not be changed
+- when add an "object" With bank (on the canvas), If we don't clic on the image to select the object, we have an error message.
+- procedure_draw : fixe the selection border With shape With broken points
+
+
+10/09/2021 0.41.4
+// New
+- Doc_Open() : add obj\clip,ClipW,ClipH,clipborder,bordercolor\alpha,color\alpha,hide
+- Doc_Open() : add camera parameters loading
+// fixes
+- OpenWindow_Sceneproperties() : when change camera id, -> gadgets should be updated
+- Doc_save() : obj\shape\pt\broken, mdpt, werent' saved.
+- Merge_shape : the merged shape wasn't at the good place.
+
+
+09/09/2021 0.41
+// New
+- Scene_Export() : add the layers clipping
+- Doc_save() : add  camera parameters
+- Doc_save() : add obj\clip,ClipW,ClipH,color\alpha,hide,clipborder,bordercolor\alpha,
+- OpenWindow_Sceneproperties() : add butons : + And save
+- OpenWindow_Sceneproperties() : add camera preset To the Array Vd_camera()
+- VD_ExportPresetCamera() To export camera As camera preset
+- If clic on gadget layer clipColor Or clipBorderColor, it open a colorequester To change the color
+// Fixes
+- mode edition Point (line,box) : Select & move a point should use -obj(objid)\x,y
+- mode edition Point (curve) : Select & move a point And the other Point (anchor, tangeant..) should use -obj(objid)\x,y
+- Shape_AddPoint() : fixe some bug when create a point With mode =1 (create To nearest point)
+- vdOptions\Action = #VD_actionAddLine + ctrl : should use -obj(objid)\x,y
+- vdOptions\Action = #VD_actionAddLine without ctrl (create line): should use -obj(objid)\x,y
+- shape_Add() (create (ellipse, box, image, line, curve)) : should use x = x -obj(objid)\x & y =y-bj(objid)\y
+- line free Create/addpoint : should use -obj(objid)\x,y
+- Curve free Create/addpoint : should use -obj(objid)\x,y
+- curve (bezier) addpoint : should use -obj(objid)\x,y
+- create some shapes (box, ellipse) should use -obj(objid)\x,y when mousemove To set its size.
+
+
+08/09/2021 0.40.5
+// New
+- Add windowInfos_Create(), windowInfos_update(), windowInfos_Close() : To add a window For waiting when chargement Or saving too long.
+- add font arialbold20
+- VD_CreateTheGadgets() (Panel layer) : add gadgets For clipping (clipborder, bordercolor\alpha, And color\alpha,hide)
+- Structure sObj : add clip,ClipW,ClipH,clipborder,bordercolor\alpha,color\alpha,hide. Change SizeW\H To ClipW\H
+- Enumeration : add For layer clip gadgets
+- add folder : presets\camera To add camera presets
+// Changes
+- UpdateListBank() : Add windowInfos_Create(), windowInfos_update(), windowInfos_Close()
+- VD_layerAdd() : add obj\clipborder,bordercolor\alpha,color\alpha,hide
+- ShapeGetProperties() : update new gadgets For layer
+- VD_DrawScene() : when use layer-clipping, we have To use +obj()\x,y To get selecting shape.
+// fixes
+- some little fixes
+- clic To Select shape doesn't use the obj()\w,h,x,y parameters.
+
+
+07/09/2021 0.40
+// New
+- add DrawObjClipping(m) in drawcanvas() And add clipping
+- VD_CreateTheGadgets() (panel layer) : add gagdet Clip, sizeW, SizeH
+- Scene_Export() : add argument selected, To export selected only
+- menu File : add export image (selected shapes)
+- VD_layerAdd() : add obj\clip, clipW, clipH
+// Changes
+- VD_DrawScene() : - obj()\x,y To Select-shape algorithme (isinsidepath...)
+- ShapeGetProperties() : update new gadgets For layer
+- ShapeGetProperties() : update new gadgets For layer
+// Fixes
+- when create a layer, its name is "objet" Not "layer"
+- Doc_open() : the gadget layer arent update.
+- Scene_Export() : add VD_ShapeCoord() For each object rendered, To use the obj()\x,y,w,h
+- Scene_Export() : save in jpg was saved in png.
+- when use tool selection +shift, we can't add a shape to current selection
+- clic on layer didn't always update the layer parameters if there is no shape selected
+- draw_util() didn't use  VD_ShapeCoord(ObjId), so the selection was decaled form its shape
+- fixe a bug in Vd_DeletePoint(i) : delete point only If ArraySize(\pt())>0
+- fixe a bug in Shape_CheckBrokenPoint()
+
+
+06/09/2021 0.39
+// New
+- Shape_CheckBrokenPoint() To check the \broken point And \maxpt
+- VD_ShapeMerge() : To merge several shape To the main shape
+- VD_ResetAllPoints() To reset all points of a shape (\center, \broken...).
+- convert : rectangle To line
+- convert : rectangle To curve
+- convert : line To curve
+// Changes
+- now selection tool use the boundingbox of shape (Not the center)
+- Shape_Add(x,y) : add shape()\pt(0)\broken=1, \pt(0)\maxpt = ArraySize(\pt())
+- lots of changes in procedure_draw.pb To display shape With several part (Case #VD_ShapeShape,#VD_ShapeCurve)
+- changes in shape_load() To add \broken And \maxpt when shape()\pt() didn't have it
+- shape_delete() : add Shape_CheckBrokenPoint()
+- shape_addpoint() : add Shape_CheckBrokenPoint()
+- shape_addpoint To line : add Shape_CheckBrokenPoint()
+// Fixes
+- gadget Point hide wasn't updated when select a point (mode editpoint)
+
+
 01/09/2021 0.38
 // New
 - Add transform scale With boundingbox mode (selection Or single shape selected)

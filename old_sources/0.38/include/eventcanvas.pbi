@@ -20,7 +20,7 @@ If EventType() = #PB_EventType_KeyDown ; Or EventType() = #PB_EventType_Focus
 ElseIf EventType() = #PB_EventType_KeyUp 
    ;{ key up
   
-   ; Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
+   Debug "key "+GetGadgetAttribute(#G_canvasVector, #PB_Canvas_Key)
   ; enter 13
   ; altgr 18
   ; tab 9
@@ -160,10 +160,9 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                       With Obj(ObjId)\Shape(ShapeId)
                         n = ArraySize(\pt())+1
                         ReDim \pt.sPoint(n)                                               
-                        \pt(n)\x = x1 -\x - obj(objId)\x
-                        \pt(n)\y = y1 -\y - obj(objId)\y 
+                        \pt(n)\x = x1 -\x
+                        \pt(n)\y = y1 -\y 
                       EndWith
-                      Shape_CheckBrokenPoint()
                       vd\AddObjet=2
                     EndIf
                   EndIf
@@ -199,12 +198,11 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                         With Obj(ObjId)\Shape(ShapeId)
                           n = ArraySize(\pt())+1
                           ReDim \pt.sPoint(n)                                               
-                          \pt(n)\x = x1 - obj(objId)\x 
-                          \pt(n)\y = y1 - obj(objId)\y  
+                          \pt(n)\x = x1
+                          \pt(n)\y = y1  
                           If vd\ctrl = 0
                             Vd\move = 3
                           EndIf
-                          Shape_CheckBrokenPoint()
                         EndWith
                         
                     EndSelect
@@ -347,8 +345,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                 If ShapeId>-1
                   With Obj(ObjId)\Shape(ShapeId)
                     n = ArraySize(\pt())
-                    x1 = x1 - obj(objId)\x 
-                    y1 = y1  - obj(objId)\y
+                    
                     If vdOptions\ToolOptions\distance >0
                       dist.d = point_distance(x1,y1,\pt(n)\x,\pt(n)\y)
                       angle.d= GetAngle(x1,y1,\pt(n)\x,\pt(n)\y)
@@ -356,7 +353,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                         n = ArraySize(\pt())+1
                         ReDim \pt.sPoint(n)                                               
                         \pt(n)\x = x1 
-                        \pt(n)\y = y1  
+                        \pt(n)\y = y1 
                         update = 2
                       EndIf
                     Else
@@ -378,38 +375,36 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                 With Obj(ObjId)\Shape(ShapeId)
                   n = ArraySize(\pt())-2
                   If n >=0
+                    
                     ; on doit recalculer les angles des points tangent jusqu'à ce qu'on dépasse la distance (10 pour 40 de distance entre les points)              
                     ptid = n
                     If ptid>=2
-                      
                       sx = \pt(PtId)\x 
                       sy = \pt(PtId)\y 
-                      dist2.d = point_distance((x1-obj(ObjID)\x),(y1-obj(ObjID)\y),sx,sy)
-                      ; Debug Str(dist2)+" / "+Str(vdOptions\ToolOptions\distance)
+                      dist2.d = point_distance(x1,y1,sx,sy)
                       If dist2< (vdOptions\ToolOptions\distance/3)
                         
                         ; point tangeant 0
-                        \pt(PtId-1)\x = sx -(x1-obj(ObjID)\x -sx)
-                        \pt(PtId-1)\y = sy -(y1-obj(ObjID)\y -sy)
+                        \pt(PtId-1)\x = sx -(x1 -sx)
+                        \pt(PtId-1)\y = sy -(y1 -sy)
                         ; point tangeant 2
-                        \pt(PtId+1)\x =  x1-obj(ObjID)\x
-                        \pt(PtId+1)\y =  y1-obj(ObjID)\y
+                        \pt(PtId+1)\x =  x1
+                        \pt(PtId+1)\y =  y1
                         update =1
                       Else
-                       
-                        dist.d = point_distance((x1-obj(ObjID)\x),(y1-obj(ObjID)\y),\pt(n)\x,\pt(n)\y)
-                        angle.d= point_direction((x1-obj(ObjID)\x),(y1-obj(ObjID)\y),\pt(n)\x,\pt(n)\y) ; GetAngle(x1,y1,\pt(n)\x,\pt(n)\y)
+                        
+                        dist.d = point_distance(x1,y1,\pt(n)\x,\pt(n)\y)
+                        angle.d= point_direction(x1,y1,\pt(n)\x,\pt(n)\y) ; GetAngle(x1,y1,\pt(n)\x,\pt(n)\y)
                         ;Debug Str(dist)+" / "+Str(vdOptions\ToolOptions\distance)
                         
                         If dist > (vdOptions\ToolOptions\distance) 
-                          
                           Shape_Addpoint(x1,y1,2)
                           
                           n = ArraySize(\pt())-5
                           ptid = n
                           If ptid>=3
-                            x1 = \pt(n)\x 
-                            y1 = \pt(n)\y 
+                            x1 = \pt(n)\x
+                            y1 = \pt(n)\y
                             
                             dist.d = point_distance(x1,y1,\pt(n+3)\x,\pt(n+3)\y)/3
                             angle.d= point_direction(\pt(n+3)\x,\pt(n+3)\y,x1,y1)
@@ -421,12 +416,21 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                             \pt(PtId+1)\x = (x1 - Cos(angle) * a)
                             \pt(PtId+1)\y = (y1 - Sin(angle) * a)
                           EndIf
-
+                        
+;                           ptid = ArraySize(\pt())-3
+;                           If ptid>=0
+;                             sx = \pt(PtId)\x 
+;                             sy = \pt(PtId)\y 
+;                             \pt(PtId-1)\x = sx -(x1 -sx)
+;                             \pt(PtId-1)\y = sy -(y1 -sy)
+;                             ; point tangeant 2
+;                             \pt(PtId+1)\x =  x1
+;                             \pt(PtId+1)\y =  y1
+;                           EndIf
                           vd\AddObjet=2
                         EndIf
                       EndIf
                     Else
-                      Debug "ok curve pencil3"
                        dist.d = point_distance(x1,y1,\pt(n)\x,\pt(n)\y)
                         angle.d= GetAngle(x1,y1,\pt(n)\x,\pt(n)\y)
                         ;Debug Str(dist)+" / "+Str(vdOptions\ToolOptions\distance)
@@ -437,19 +441,18 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                         EndIf
                     EndIf
                     
+                    
                   Else
                     ;Dist = vdOptions\ToolOptions\distance+1
-                    Debug "ok cruve add point4"
                     Shape_Addpoint(x1,y1)
                     vd\AddObjet=2
                   EndIf
+                
+                 
                 EndWith
               Else
                 ; bezier
                 ;Debug "ok bezier on bouge"
-                x1 = x1 - obj(ObjID)\x
-                y1 = y1 - obj(ObjID)\y
-                
                 With Obj(ObjId)\Shape(shapeId)
                   If ptid<3
                     sx = \pt(PtId+1)\x 
@@ -498,17 +501,17 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                               If i <= ArraySize(Obj(ObjId)\Shape(ShapeId)\pt())
                                 If vd\Shift =0
                                   ;{ on ne bouge qu'un point
-                                  \pt(i)\x = x1 -\x  - Obj(ObjId)\x
-                                  \pt(i)\y = y1 -\y  - Obj(ObjId)\y
+                                  \pt(i)\x = x1 -\x ; - Obj(ObjId)\x
+                                  \pt(i)\y = y1 -\y ; - Obj(ObjId)\y
                                   SetGadgetText(#G_shapePtX,Str(\pt(i)\x))
                                   SetGadgetText(#G_shapePtY,Str(\pt(i)\y))
                                   ;}
                                 Else
                                   For i=0 To ArraySize(\pt())
                                     If \pt(i)\Selected = 1
-                                      \pt(i)\x = x1 +\pt(i)\StartX -\StartX  - Obj(ObjId)\x
+                                      \pt(i)\x = x1 +\pt(i)\StartX -\StartX ; - Obj(ObjId)\x
                                       SetGadgetText(#G_shapePtX,Str(\pt(i)\x))
-                                      \pt(i)\y = y1 +\pt(i)\startY -\StartY  - Obj(ObjId)\y                                                                                                                                                                                       
+                                      \pt(i)\y = y1 +\pt(i)\startY -\StartY ; - Obj(ObjId)\y                                                                                                                                                                                       
                                       SetGadgetText(#G_shapePtY,Str(\pt(i)\y))
                                     EndIf 
                                   Next                                                                                    
@@ -533,9 +536,9 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                   Else
                                     
                                     Debug "ici, ok on bouge la courbe"
-                                    ; je dois enlever la position du shape et du layer (obj) aux coordonnées mouse.
-                                    x1 - \x -obj(objID)\x
-                                    y1 - \y -obj(objID)\y
+                                    ; je dois enlever la position du shape aux coordonnées mouse.
+                                    x1 - \x
+                                    y1 - \y
                                     ; on doit vérifier sur quel point on est ainsi que le point d'après et le point d'avant.
                                     pt_c = i+1
                                     pt_c1 = i-1
@@ -882,21 +885,18 @@ If EventType() = #PB_EventType_LeftButtonDown Or
               
               ; x1 * (1-VdOptions\LockX)
               ; y1 * (1-VdOptions\LockY)
-              
+            
               If VdOptions\Snap = 1
                 Snap(x1,VdOptions\SnapX)  
                 Snap(y1,VdOptions\SnapY) 
               EndIf
-              
-              x1 = x1 - obj(ObjId)\x
-              y1 = y1 - obj(ObjId)\y
               
               With Obj(ObjId)\Shape(shapeId)
                 
                 startX = \StartX
                 startY = \StartY
                 
-                Select \ShapTyp ; vdOptions\Action
+                Select \ShapTyp ;vdOptions\Action
                     
                   Case #VD_ShapeLine ;#VD_actionAddLine
                     \pt(PointId)\x = X1
@@ -940,7 +940,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                     EndIf
                     
                   Case #VD_ShapeText
-                    \SizeW = Abs(X1 - Startx )                                                   
+                    \SizeW = Abs(X1 - Startx)                                                   
                     \SizeH = Abs(y1 - StartY)
                     Min(\SizeW,1)
                     
@@ -1062,7 +1062,8 @@ EndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 22
-; Folding = h-06884f2ucX+80+--2HP-4-604h
+; CursorPosition = 790
+; FirstLine = 247
+; Folding = h-06Lanf2usn8j0---2nv-4-p04h
 ; EnableXP
 ; DisableDebugger

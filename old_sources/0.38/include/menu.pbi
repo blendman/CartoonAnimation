@@ -109,7 +109,6 @@ Procedure VD_CreateTheMenu()
     MenuBar()
     MenuItem(#menuVD_ProjProperties,lang("Project properties"))
     MenuItem(#menuVD_ExportImageObj,lang("Export the object as image")+Chr(9)+"Ctrl+Shift+E")
-    MenuItem(#menuVD_ExportImageSelected,lang("Export the selected as image"))
     MenuItem(#menuVD_ExportScene,lang("Export Scene (full image)"))
     MenuBar()
     MenuItem(#menuVD_ExportPb,lang("Export in Purebasic"))
@@ -152,16 +151,9 @@ Procedure VD_CreateTheMenu()
     MenuItem(#menuVD_HideAncre,lang("Hide anchor"))
     MenuItem(#menuVD_ShowAncreSelected,lang("Show anchor of selected shapes"))
     MenuItem(#menuVD_ShowSelection,lang("Show selection (dash stroke)"))
-    MenuItem(#menuVD_ShowBoundingboxSelection,lang("Show boundingbox selection"))
-    MenuItem(#menuVD_ShowBoundingboxShape,lang("Show shape boundingbox"))
-    
-  
     MenuItem(#menuVD_ShowOnlySelected,lang("Show only selected"))
-    
     SetMenuItemState(#MenuWinVD,#menuVD_ShowSelection,VdOptions\ShowSelection)
     SetMenuItemState(#MenuWinVD,#menuVD_HideAncre,VdOptions\HideAncre)
-    SetMenuItemState(#MenuWinVD,#menuVD_ShowBoundingboxSelection,VdOptions\ShowBoxselect)
-    SetMenuItemState(#MenuWinVD,#menuVD_ShowBoundingboxShape,VdOptions\ShowShapeBoundingBox)
     CloseSubMenu()
     
     ;}
@@ -262,110 +254,6 @@ EndProcedure
 
 
 ; The functions by menu
-;{ Window Infos
-Procedure WindowInfos_Update(info$)
-  
-  Shared maininfo1$
-
-;   If StartVectorDrawing(CanvasVectorOutput(#G_CanvasWinInfos))
-;     w = GadgetWidth(#G_CanvasWinInfos)
-;     h = GadgetHeight(#G_CanvasWinInfos)
-;     AddPathBox(0,0,w,h)
-;     VectorSourceColor(RGBA(150,150,150,255))
-;     FillPath()
-;     
-;     ; draw the text
-;     w1 = w-20
-;     h1 = h-20
-;     MovePathCursor(10,10)
-;     ; draw main infos (exemple: "please wait....")
-;     DrawVectorText(maininfo1$)
-;     h2 = VectorTextHeight(maininfo1$)
-;     MovePathCursor(10,20+h2)
-;     ; draw paragraph of infos
-;     DrawVectorParagraph(info$,w1,h1)
-;     VectorSourceColor(RGBA(255,100,100,255))
-;     FillPath()
-;     StopDrawing()
-;   EndIf
-  
-  
-  win = #Win_VD_InfosForwainting
-  ; count the number of line to draw
-  info$ = maininfo1$+Chr(13)+info$
-  nb = CountString(info$, "#")
-  Dim txt$(nb)
-  
-  For i=0 To nb
-    
-    Txt$(i) = StringField(info$, i+1, "#")
-    ; check if need to resize the window
-    w = Len(txt$(i))*20 
-    h = 5+(1+nb*35)
-    
-    If h > WindowHeight( win)
-      ResizeWindow(win, #PB_Ignore, #PB_Ignore, #PB_Ignore, h)
-    EndIf
-    If w > WindowWidth( win)
-      ResizeWindow(win, #PB_Ignore, #PB_Ignore, w, #PB_Ignore)
-    EndIf
-    
-  Next
-  
-  If StartDrawing(WindowOutput(win))
-      DrawingMode(#PB_2DDrawing_Default)
-      Box(0,0,OutputWidth(),OutputHeight(), RGB(150,150,150))
-      
-      ; draw the infos
-      DrawingMode(#PB_2DDrawing_Transparent)
-      DrawingFont(FontID(#FontArial20Bold))
-      For i = 0 To nb
-        DrawText(10, 5+30*i, txt$(i), RGB(255, 255, 255))
-      Next 
-      
-      StopDrawing()
-    EndIf
-    
-    FreeArray(txt$())
-  
-EndProcedure
-Procedure WindowInfos_Create(maininfo$,info$)
-  
-  Shared maininfo1$
-  maininfo1$ = maininfo$
-  ; a window to wait when load or save long things (export image or load a big file)
-  w = 500
-  h = 300
-  If OpenWindow(#Win_VD_InfosForwainting,0,0,W,h,lang("Please, wait..."),#PB_Window_ScreenCentered)
-    
-    SetActiveWindow(#Win_VD_main)
-    If StartDrawing(WindowOutput(#Win_VD_InfosForwainting))
-      DrawingMode(#PB_2DDrawing_Default)
-      Box(0,0,OutputWidth(),OutputHeight(), RGB(150,150,150))
-      DrawingMode(#PB_2DDrawing_Transparent)
-      DrawingFont(FontID(#FontArial20Bold))
-      DrawText(10, 5, maininfo$, RGB(255, 255, 255))
-      DrawText(10, 25, info$, RGB(255, 255, 255))
-      StopDrawing()
-    EndIf
-;     If CanvasGadget(#G_CanvasWinInfos,0,0,w,h)
-;       WindowInfos_Update(info$)
-;     EndIf
-;     Repeat
-;       event=WaitWindowEvent(1)
-;       quit+1
-;     Until quit >=5
-  EndIf
-  
-EndProcedure
-Procedure WindowInfos_Close()
-  If IsWindow(#Win_VD_InfosForwainting)
-    CloseWindow(#Win_VD_InfosForwainting)
-  EndIf
-EndProcedure
-
-;}
-
 
 ;{ Files
 
@@ -440,6 +328,7 @@ Procedure Vd_OptionsReset()
   EndWith
   
 EndProcedure
+
 Procedure VD_SaveOptions()
     
     FileName.s = GetCurrentDirectory() + "Preferences.json"
@@ -450,6 +339,7 @@ Procedure VD_SaveOptions()
     SaveJSON(#JSONFile, FileName, #PB_JSON_PrettyPrint)
 
 EndProcedure
+
 Procedure VD_LoadOptions()
     
     Vd_OptionsReset()
@@ -468,7 +358,6 @@ Procedure VD_LoadOptions()
     
 EndProcedure
 
-
 Procedure VD_GetFileExists(filename$)
   
   If FileSize(filename$)<=0
@@ -483,7 +372,7 @@ Procedure VD_GetFileExists(filename$)
   
 EndProcedure
 
-; new
+
 Procedure Doc_New(mode=1,copy=0,draw=1,x=0,y=0)
   
   ; mode = #DocFileEraseALL : erase all
@@ -514,13 +403,6 @@ Procedure Doc_New(mode=1,copy=0,draw=1,x=0,y=0)
     VdOptions\AutosaveFileName$ =#Empty$
     vd\ShapeFileName$ = #Empty$
     vd\DocFilename$  =#Empty$
-    name$ = GetGadgetItemText(#G_shapeListAdd,0)
-    If GetExtensionPart(name$) = #Empty$
-      ; VD_UpdateShapeBankCanvas()
-    Else
-      vd\BankHasSubfolder =0
-      Vd\ShapeFileName$ = name$
-    EndIf
     ; Global Dim Animation.sAnim(0)
   EndIf
   
@@ -602,20 +484,12 @@ Procedure Doc_New(mode=1,copy=0,draw=1,x=0,y=0)
   
    ProcedureReturn 1
 EndProcedure
-Procedure Doc_Open()
-  Shared openmenu
-  openmenu = 1
-  Shape_Load()
-  
-EndProcedure
 
-; save
 Procedure Doc_Save(File$=#Empty$, autosave=0)
   Shape_Save(file$,autosave)
 EndProcedure
 
-
-; export (in Purebasic code or others)
+; export in Purebasic code
 Procedure VD_ExportPbCommand()
   
   ; pour exporter au format pb :)
@@ -900,6 +774,7 @@ Procedure VD_ExportPbCommand()
   EndIf
   
 EndProcedure
+
 Procedure VD_ExportInSVG(Title$="",desc$="")
   
   ; need to create a window for the export for svg.
@@ -1106,41 +981,8 @@ Procedure VD_ExportInSVG(Title$="",desc$="")
 
 EndProcedure
 
-; presets
-;{ camera
-Procedure.s VD_GetCameratext(i)
-  ; to get the camera parameter in txt
-  d$ =","
-  With VD_camera(i)
-    txt$ = "camera,"+\ID+d$+\name$+d$+\x+d$+\y+d$+\w+d$+\h+d$+\scale+d$+\zoom+d$
-    txt$ +\optionoutput+d$+\crop\x+d$+\crop\y+d$+\crop\w+d$+\crop\h+d$
-  EndWith
-  ProcedureReturn txt$
-EndProcedure
-Procedure VD_ExportPresetCamera(filename$=#Empty$)
-  ; export camera parameters as preset
-  If filename$ =#Empty$
-    filename$ = InputRequester(lang("Export"),lang("Export camera Preset"),VD_camera(CameraId)\name$)
-  EndIf
-  If filename$ <>#Empty$
-    filename$ = ReplaceString(filename$, " ", "")
-    If GetExtensionPart(filename$) <>"txt"
-      filename$ = ReplaceString(filename$, "txt","")+".txt"
-    EndIf
-    
-    If VD_GetFileExists(filename$)=0
-      If CreateFile(0,"data\presets\camera\"+filename$)
-        txt$ = VD_GetCameratext(cameraId)
-        WriteStringN(0,txt$)
-        CloseFile(0)
-      EndIf
-    EndIf
-  EndIf
-EndProcedure
-;}
-
 ; export image
-Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
+Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$)
   
   Shared ExportImage
   
@@ -1154,15 +996,13 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
   EndIf
 
   If File$ <> #Empty$ 
-     format = #PB_ImagePlugin_PNG
+    
     Select SelectedFilePattern()
       Case 0
         If GetExtensionPart(File$) <> "png"
           File$+".png"
-         
         EndIf 
       Case 1
-        format = #PB_ImagePlugin_JPEG
         If GetExtensionPart(File$) <> "jpg"
           File$+".jpg"
         EndIf
@@ -1205,25 +1045,16 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
         If old = 0
           ;{ c'est celui-ci qu'on utilise
           ResetCoordinates()
-          
           ;If scene =1
-            ; ScaleCoordinates(VD_camera(cameraId)\scale*0.01,VD_camera(cameraId)\scale*0.01)
+            ScaleCoordinates(VD_camera(cameraId)\scale*0.01,VD_camera(cameraId)\scale*0.01)
           ;EndIf
-          
-          For m = 0 To ArraySize(Obj()) 
+        
+          For m = 0 To ArraySize(Obj())  
             
-            ; the coordinates
-            ResetCoordinates()
-            VD_ShapeCoord(m,VD_camera(cameraId)\scale*0.01,VD_camera(cameraId)\scale*0.01)
-            
-            ; then draw the layer
-            BeginVectorLayer(Obj(m)\Alpha)
-            DrawObjClipping(m)
-             
-            ; then draw the shapes
-            If Obj(m)\Hide = 0 
+            If Obj(m)\Hide = 0
+              
               For j =0 To ArraySize(Obj(m)\Shape())  
-                If Obj(m)\Shape(j)\Hide = 0 And (selected = 0 Or Obj(m)\Shape(j)\selected) 
+                If Obj(m)\Shape(j)\Hide = 0
                   ; si clippath
                   ;                           SaveVectorState()
                   ;                           VdDrawShape1(m,j)
@@ -1239,9 +1070,8 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
                   ; RestoreVectorState()   
                 EndIf
               Next
+              
             EndIf
-            
-            EndVectorLayer()
             
           Next                     
           ;}
@@ -1355,7 +1185,7 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
         EndIf
         
         ; on sauve
-        If SaveImage(#Img_ExportCopy, File$, format) = 0
+        If SaveImage(#Img_ExportCopy, File$, #PB_ImagePlugin_PNG) = 0
           MessageRequester(lang("Save image"), lang("Can't save image: " )+ File$)
           ; Else
           ; MessageRequester("Save image","Image saved ! ")
@@ -1460,9 +1290,9 @@ EndProcedure
 ;}
 
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 611
-; FirstLine = 17
-; Folding = ApgvJAsHEAAAAAAAAAUfC9NAAAYA9
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 323
+; FirstLine = 75
+; Folding = AT6sNAWAAAAg----H5fAAgHA5-
 ; EnableXP
 ; DisableDebugger
