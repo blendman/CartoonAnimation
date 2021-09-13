@@ -448,24 +448,7 @@ CompilerEndIf
 ; - supprimer les raccourcis ctrl=X/ctrl+V si on est sur un gadget autre que canvasmain.
 ; - ajouter un fonction de verification des shapes (ex: si curve et que 1 seul pt : erreur) 
 ; - BUG : modifier procedure_draw et event_canvas.pb, pour bien positionner les ancres et les centres, 
-; car les derniers point de chaque courbe ne prennent pas le bon point final en compte.
-
-
-; 13/09/2021 0.42 (63)
-; // New
-; - tool move can select or not (in option in preference window)
-; - options : add "beta" (to have the beta features (which could be not finished sometimes)), toolmovecanselect (in option)
-; // Changes
-; - beta feature : merge 2 shapes 
-; - Shape_GetShapeIdSelected() : to know if we have at least 1 shape selected (add a mesage if not)
-; - window preference : add gadget for option : toolmovecanselect, beta
-; - VD_Addpoint(Mode=0) : add info when no point are selected
-; - menu #menuVD_PtSelectAll : add info when the shape isn't in editmor "point edition"
-; // Fixes
-; - fixe a crash when use "delete point" with no point selected (and add a message)
-; - fixe a crash when use VD_MovePoint() with no point selected (and add a message)
-; - when use menu\lock with no shape selected, the gadget should be disabled
-
+; car les derniers de chaque courbe ne rennent pas le bon point final en compte.
 
 
 ; 12/09/2021 0.41.7 (62)
@@ -1487,8 +1470,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 453
-; FirstLine = 127
+; CursorPosition = 455
+; FirstLine = 130
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger

@@ -1123,7 +1123,7 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
       If Selected = 1 And objid = m
         If EventType() = #PB_EventType_LeftButtonDown 
           If vd\EditMode <> #VD_Editmode_Point
-            If (vdoptions\Action = #VD_actionMove And vdoptions\ToolMoveCanSelect = 1) Or vdoptions\action = #VD_actionSelect
+            If vdoptions\Action = #VD_actionMove Or vdoptions\action = #VD_actionSelect
             For j =ArraySize(Obj(m)\Shape()) To 0 Step -1
               If Obj(m)\Shape(j)\Hide = 0
                 VdDrawShape1(m,j)
@@ -1301,7 +1301,7 @@ Procedure DrawCanvas(x=0,y=0,Selected=0, gad=#G_canvasVector)
             ; si on cliqué sur un shape, on garde en mémoire certaines choses
             If vd\EditMode <> #VD_Editmode_Point And selected =1
               If vd\AddObjet = 0 And Vd\space = 0  
-                If (Vd\TestShapeOk = -1 Or vd\move = 2 Or (vdOptions\Action=#VD_actionMove And VdOptions\ToolMoveCanSelect = 0))
+                If (Vd\TestShapeOk = -1 Or vd\move = 2)
                   Vd\TestShapeOk = 1
                   Vd\move = 2            
                   ; ShapeGetProperties()
@@ -1349,8 +1349,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1303
-; FirstLine = 57
-; Folding = Ul-vv+fY-fe+89-ff-x9f4D7b---HQ--
+; CursorPosition = 539
+; FirstLine = 21
+; Folding = Ul-vv+fY-f+-89-ff-x9f4D7b--4FQ+-
 ; EnableXP
 ; DisableDebugger

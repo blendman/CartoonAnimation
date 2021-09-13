@@ -1,7 +1,7 @@
 ﻿
 ; XIncludeFile "include\infos.pbi"
 
-#ProgramVersionVD = "0.42"
+#ProgramVersionVD = "0.41.6"
 #ProgramNameVD = "Cartoon Animation "
 
 XIncludeFile "include\enumeration.pbi"

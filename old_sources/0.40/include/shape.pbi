@@ -132,17 +132,6 @@ EndProcedure
 
 ;}
 
-; utiles
-Procedure.a Shape_GetShapeIdSelected(max=0)
-  If ShapeId <= ArraySize(Obj(ObjId)\Shape())-max And ShapeId > -1
-    ProcedureReturn 1
-  Else
-    MessageRequester(lang("Info"), Lang("You need at least 1 shape selected to use this feature"))
-    ProcedureReturn 0
-  EndIf
-  
-EndProcedure
-
 
 ;{ Edit point 
 Procedure Vd_DeletePoint(i)
@@ -200,81 +189,73 @@ Procedure Vd_SetPoint(param=0,draw=1)
   
   ; param = 0 : hard
   ; param = 1 : soft
-  ; param = 2 : Mirored (like a tangent) need improvements.
+  ; param = 2 : Mirored (like a tangent)
   
-  If Vd\EditMode <> #VD_Editmode_Point
-    MessageRequester(lang("Info"), Lang("You have to be in editMode 'point edition' To Select points."))
-  Else
+  ; pour changer la dureté d'un point : hard (line) ou smooth (curve)
+  If shapeId > -1 And shapeid <= ArraySize(Obj(ObjId)\Shape())
     
-    ; TO change the hardness of a point // pour changer la dureté d'un point 
-    ; hard (line) ou smooth (curve)
-    If shapeId > -1 And shapeid <= ArraySize(Obj(ObjId)\Shape())
-      If ptid=-1
-        MessageRequester(lang("Info"), Lang("You need at least 1 center point selected to use this feature (center points are displayed with blue square)."))
-      Else
-        With Obj(ObjId)\Shape(ShapeId)
+    With Obj(ObjId)\Shape(ShapeId)
+      
+      u = PtId-1
+      If u < 0
+        u =ArraySize(\pt())
+      EndIf  
+      v = PtId+1
+      If v > ArraySize(\pt())
+        v =0
+      EndIf   
+      
+      Select param 
           
-          u = PtId-1
-          If u < 0
-            u =ArraySize(\pt())
-          EndIf  
-          v = PtId+1
-          If v > ArraySize(\pt())
-            v =0
-          EndIf   
+        Case 2 ; point mirored
+          If \pt(PtId)\Center
+            x1 = \pt(u)\x
+            y1 = \pt(u)\y
+            ;If ptid<3
+             ; sx = \pt(v)\x 
+              ;sy = \pt(v)\y 
+              ;\pt(PtId)\x = X1 
+              ;\pt(PtId)\y = y1
+            ;Else
+              sx = \pt(PtId)\x 
+              sy = \pt(PtId)\y 
+              ; point tangeant 0
+              ;\pt(u)\x = sx -(x1 -sx)
+              ;\pt(u)\y = sy -(y1 -sy)
+              ; point tangeant 2
+              \pt(v)\x = sx -(x1 -sx)
+              \pt(v)\y = sy -(y1 -sy)
+           ; EndIf
+          EndIf
           
-          Select param 
-              
-            Case 2 ; point mirored
-              If \pt(PtId)\Center
-                x1 = \pt(u)\x
-                y1 = \pt(u)\y
-                ;If ptid<3
-                ; sx = \pt(v)\x 
-                ;sy = \pt(v)\y 
-                ;\pt(PtId)\x = X1 
-                ;\pt(PtId)\y = y1
-                ;Else
-                sx = \pt(PtId)\x 
-                sy = \pt(PtId)\y 
-                ; point tangeant 0
-                ;\pt(u)\x = sx -(x1 -sx)
-                ;\pt(u)\y = sy -(y1 -sy)
-                ; point tangeant 2
-                \pt(v)\x = sx -(x1 -sx)
-                \pt(v)\y = sy -(y1 -sy)
-                ; EndIf
-              EndIf
-              
-            Case 0 ; point hard
-              \pt(u)\hard = 1
-              \pt(u)\x = \pt(PtId)\x
-              \pt(u)\y = \pt(PtId)\y 
-              
-              \pt(v)\x = \pt(PtId)\x
-              \pt(v)\y = \pt(PtId)\y
-              \pt(v)\hard = 1
-              
-            Case 1; point soft
-              \pt(u)\hard = 0
-              \pt(u)\x = \pt(PtId)\x+20
-              \pt(u)\y = \pt(PtId)\y 
-              
-              \pt(v)\x = \pt(PtId)\x-20
-              \pt(v)\y = \pt(PtId)\y
-              \pt(v)\hard = 0
-              
-          EndSelect
+        Case 0 ; point hard
+          \pt(u)\hard = 1
+          \pt(u)\x = \pt(PtId)\x
+          \pt(u)\y = \pt(PtId)\y 
           
-        EndWith
-      EndIf
-    EndIf
-    
-    If draw=1
-      Drawcanvas()
-    EndIf
+          \pt(v)\x = \pt(PtId)\x
+          \pt(v)\y = \pt(PtId)\y
+          \pt(v)\hard = 1
+          
+        Case 1; point soft
+          \pt(u)\hard = 0
+          \pt(u)\x = \pt(PtId)\x+20
+          \pt(u)\y = \pt(PtId)\y 
+          
+          \pt(v)\x = \pt(PtId)\x-20
+          \pt(v)\y = \pt(PtId)\y
+          \pt(v)\hard = 0
+          
+      EndSelect
+      
+    EndWith
     
   EndIf
+  
+  If draw=1
+    Drawcanvas()
+  EndIf
+  
 EndProcedure  
 
 Procedure VD_MovePoint(i,x1,y1)
@@ -459,12 +440,11 @@ Procedure VD_Addpoint(Mode=0)
       With obj(objID)\Shape(SHapeId)
         For i=0 To ArraySize(\pt())
           If \pt(i)\Selected And \pt(i)\Center
-            ;             Debug "ok point 1"
+;             Debug "ok point 1"
             If i<ArraySize(\pt())-2
               If \pt(i+3)\Selected And \pt(i+3)\Center
                 ; Debug "ok point 2"=Str(i)+"/"+Str(i+3)
                 ; ok, we have two points selected
-                okpointselected = 1
                 If StartVectorDrawing(CanvasVectorOutput(#G_canvasVector))
                   MovePathCursor(\pt(i)\x,\pt(i)\y)
                   AddPathCurve(\pt(i)\x,\pt(i)\y,\pt(i+1)\x,\pt(i+1)\y,\pt(i+2)\x,\pt(i+3)\y)
@@ -505,15 +485,6 @@ Procedure VD_Addpoint(Mode=0)
         Next
       EndWith
       
-      If okpointselected = 0
-        If Vd\EditMode <> #VD_Editmode_Point
-          info$ = " You have To be in editMode 'point edition' To Select points."
-        EndIf
-        
-        MessageRequester(LAng("Info"), lang("You need at least 2 points selected."+info$))
-      EndIf
-      
-
     ElseIf mode = 1
       
     EndIf
@@ -2113,7 +2084,6 @@ Procedure Shape_Lock(lock=1)
             \Locked = lock
             \Selected = 0
             If i = shapeid And lock=1
-              ok = 1
               shapeid = -1
             EndIf
           EndIf
@@ -2123,12 +2093,11 @@ Procedure Shape_Lock(lock=1)
             \Locked = 1
           Else
             \Locked =0
-            ok = 1
           EndIf
         EndIf
       EndWith
     Next
-    If lock = 1 And ok
+    If lock = 1
       ShapeSetGadget(1)
     Else
       ShapeSetGadget(0)
@@ -2413,7 +2382,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 139
-; FirstLine = 10
-; Folding = AAweYw0P-8Qk5PAAAAAAAAA+DAA7fKneQIAgQ-GCAAAAA5PAAAAAAAA50
+; CursorPosition = 1674
+; FirstLine = 244
+; Folding = AAwHGA5EAQk5PAAAAAAAAA+DAA7fKneQIAgQ-GCAAAAAAAAAAAAAAA50
 ; EnableXP

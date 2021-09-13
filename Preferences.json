@@ -7,6 +7,7 @@
   "ShowGrid"                 : 0,
   "CameraH"                  : 768,
   "ShowShapeBoundingBox"     : 0,
+  "ToolMoveCanSelect"        : 0,
   "CameraCacheColor"         : 0,
   "ToolOptions"              : {
       "Color"   : 6401494,
@@ -27,14 +28,15 @@
   "ShowCameraBorder"         : 1,
   "Lang"                     : "",
   "BGChecker"                : 0,
+  "Beta"                     : 0,
   "CameraSizeW"              : 0,
   "ToolBarVertical"          : 0,
   "ShowOnlySel"              : 0,
   "CameraW"                  : 1024,
   "DebugOn"                  : 0,
-  "DocHasChanged"            : 1,
+  "DocHasChanged"            : 0,
   "CameraX"                  : 0,
-  "Zoom"                     : 120,
+  "Zoom"                     : 60,
   "UseHexForPBCode"          : 0,
   "CameraY"                  : 0,
   "WinState"                 : 16777216,
@@ -491,7 +493,7 @@
         "Rotation"    : 0
       }
     ],
-  "AutosaveTime"             : 180,
+  "AutosaveTime"             : 1,
   "ToolBarW"                 : 30,
   "GridColor"                : -3618616,
   "BgImg"                    : {

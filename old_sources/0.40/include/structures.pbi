@@ -415,8 +415,6 @@ Structure sVdOptions
   ShowTip.a
   ConfirmExit.a
   
-  Beta.a
-  ToolMoveCanSelect.a
   ; Theme color
   Theme$
   ThemeColor.i
@@ -609,7 +607,7 @@ Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 418
-; FirstLine = 69
-; Folding = AAA1w
+; CursorPosition = 301
+; FirstLine = 42
+; Folding = AAYwy
 ; EnableXP

@@ -1,5 +1,26 @@
 CHANGELOG
 
+13/09/2021 0.42
+// New
+- tool move can Select Or Not (in option in preference window)
+- options : add "beta" (To have the beta features (which could be Not finished sometimes)), toolmovecanselect (in option)
+// Changes
+- beta feature : merge 2 shapes 
+- Shape_GetShapeIdSelected() : To know If we have at least 1 shape selected (add a mesage If Not)
+- window preference : add gadget For option : toolmovecanselect, beta
+- VD_Addpoint(Mode=0) : add info when no point are selected
+- menu #menuVD_PtSelectAll : add info when the shape isn't in editmor "point edition"
+// Fixes
+- fixe a crash when use "delete point" With no point selected (And add a message)
+- fixe a crash when use VD_MovePoint() With no point selected (And add a message)
+- when use menu\lock With no shape selected, the gadget should be disabled
+
+
+12/09/2021 0.41.7
+// Fixes
+- procedure_draw : fixe selection border bug With curves shape (If \open Or Not...)
+
+
 11/09/2021 0.41.6
 // New
 - menu view : showboundingboxselection, showshapebbox

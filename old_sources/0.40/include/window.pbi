@@ -240,6 +240,7 @@ Procedure WindowPref()
     ;{ add gagdets
     h1 = 20
     
+    
     If PanelGadget(#G_PrefPanel, 5, 5, winW-10, winH-40)
       
       ;{ General
@@ -268,8 +269,6 @@ Procedure WindowPref()
       AddGadgetItem(#G_PrefPanel, -1, lang("Interface"))
       y1 = 5 :  x1 = 5
       ;       AddStringGadget(#G_pref_Theme, x1, y1, 250, 20, OptionsIE\Theme$, lang("Theme :"), lang("Set the directory for the icone and images theme")) : y1+35
-      AddGadget(#G_Pref_UseBeta, #Gad_Chkbox, x1, y1, 120, h1, LAng("Use beta features"),0,0,lang("Use beta features (attention, some features can be unstables and have unwanted behavior or may crash the program)"),VdOptions\Beta) : y1+h1+10
-      AddGadget(#G_Pref_ToolMoveCanSelect, #Gad_Chkbox, x1, y1, 120, h1, LAng("Tool Move can select"),0,0,lang("Enable tool move can select"),VdOptions\ToolMoveCanSelect) : y1+h1+10
       ;} 
       
       ;{ saving
@@ -353,6 +352,7 @@ Procedure WindowPref()
       
     EndIf
     
+    
     ; Add 2 buttons
     Addbuttons(#Win_VD_Preference)
     ;}
@@ -376,6 +376,7 @@ Procedure WindowPref()
     ;     SizeFrameW = OptionsIE\SizeFrameW
     ;}
     
+    
     Repeat
       
       Event = WindowEvent()
@@ -397,12 +398,6 @@ Procedure WindowPref()
               ;               
             Case #G_Pref_Autosave
               Autosave = GetGadgetState(EventGadget)
-              
-            Case #G_Pref_UseBeta
-              beta = GetGadgetState(EventGadget)
-              
-            Case #G_Pref_ToolMoveCanSelect
-              ToolMoveCanSelect = GetGadgetState(EventGadget)
               
             Case #G_Pref_AutosaveTime
               Autosavetime = Val(GetGadgetText(EventGadget))
@@ -494,8 +489,6 @@ Procedure WindowPref()
       ; saving
       VdOptions\Autosave = Autosave
       VdOptions\AutosaveTime = AutosaveTime
-      VdOptions\Beta = beta
-      VdOptions\ToolMoveCanSelect = ToolMoveCanSelect
       ;       OptionsIE\UsePaperForRendering = UsePaperForRendering
       ;       
       ;       ; painting
@@ -1118,8 +1111,7 @@ Procedure WindowIntro()
 EndProcedure
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 270
-; FirstLine = 33
-; Folding = s--nPMgBAAAAAAAA9
+; CursorPosition = 20
+; Folding = +--HAAAAAAAAAAAA9
 ; EnableXP
 ; DisableDebugger

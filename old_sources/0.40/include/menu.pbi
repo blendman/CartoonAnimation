@@ -20,18 +20,16 @@ Procedure VD_CreatePopUpMenu()
     ; MenuItem(#menuVD_AddPtAfter,"Add point after this point")
     MenuItem(#menuVD_AddPtAtMiddle,"Add point in the middle of two selected points")
     MenuBar()
-    MenuItem(#menuVD_PtSelectAll,"Select all the points of the shape (in mode edition)"+Chr(9)+"ctrl+A")
+    MenuItem(#menuVD_PtSelectAll,"Select all the points of the shape")
     MenuBar()
-    MenuItem(#menuVD_DeletePt,"Delete this point"+Chr(9)+"Del")
+    MenuItem(#menuVD_DeletePt,"Delete this point")
     MenuBar()
     MenuItem(#menuVD_ConvertToline,"Convert to line")
     MenuItem(#menuVD_ConvertToCurve,"Convert to curve")
-    ;MenuItem(#menuVD_ConvertToShape,"Convert to complexe shape")
-    If VdOptions\Beta = 1
-       MenuBar()
-      MenuItem(#menuVD_JointShape,"Joint selected shape")
-    EndIf
-    ;MenuItem(#menuVD_SeparateShape,"Separate all sub-shape to shape")
+    MenuItem(#menuVD_ConvertToShape,"Convert to complexe shape")
+    MenuBar()
+    MenuItem(#menuVD_SeparateShape,"Separate all sub-shape to shape")
+    MenuItem(#menuVD_JointShape,"Joint selected shape")
     
   EndIf
   
@@ -1463,7 +1461,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 22
-; Folding = OSBfTAYPIAAAAAAAAAo+E5bAAAwA5
+; CursorPosition = 611
+; FirstLine = 17
+; Folding = ApgvJAsHEAAAAAAAAAUfC9NAAAYA9
 ; EnableXP
 ; DisableDebugger

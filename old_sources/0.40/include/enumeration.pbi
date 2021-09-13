@@ -368,8 +368,6 @@ Enumeration ; Gadgets
   #G_pref_Lang
   #G_Pref_Autosave
   #G_Pref_AutosaveTime
-  #G_Pref_UseBeta
-  #G_Pref_ToolMoveCanSelect
   ;}
   
   ;{ window character editor
@@ -846,7 +844,7 @@ EndEnumeration
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 371
-; FirstLine = 12
-; Folding = ogKCIFA+
+; CursorPosition = 555
+; FirstLine = 19
+; Folding = wgKBJFA+
 ; EnableXP

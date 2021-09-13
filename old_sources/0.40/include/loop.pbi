@@ -1093,7 +1093,7 @@ Repeat
           
           ;}
           
-          ;{ Layers
+          ;{ Object
         Case #menuVD_AddObjet
           Vd_LayerAdd()
           
@@ -1144,7 +1144,7 @@ Repeat
           SetMenuItemState(#MenuWinVD,#menuVD_ShapeLockSelect, Vd\LockSelection)
 
         Case #menuVD_SetShapeToTop
-          If Shape_GetShapeIDselected(1) = 1
+          If ShapeId < ArraySize(Obj(ObjId)\Shape()) And ShapeId > -1
             
             ; on échange uniquement les positions
             NewShapeId = ArraySize(Obj(ObjId)\Shape())                       
@@ -1224,15 +1224,11 @@ Repeat
           ;{ popup point
         Case #menuVD_PtSelectAll
           If shapeId >-1
-            If Vd\EditMode <> #VD_Editmode_Point
-              MessageRequester(lang("Info"), Lang("You have to be in editMode 'point edition' To Select points."))
-            Else
-              For i=0 To ArraySize(Obj(ObjId)\Shape(ShapeId)\pt())
-                Obj(ObjId)\Shape(ShapeId)\pt(i)\Selected =1
-              Next
-              Vd\Shift = 1
-              Drawcanvas()
-            EndIf
+            For i=0 To ArraySize(Obj(ObjId)\Shape(ShapeId)\pt())
+              Obj(ObjId)\Shape(ShapeId)\pt(i)\Selected =1
+            Next
+            Vd\Shift = 1
+            Drawcanvas()
           EndIf
           
         Case #menuVD_ConvertToCurve
@@ -1258,15 +1254,8 @@ Repeat
           VD_Addpoint(0)
           
         Case #menuVD_DeletePt
-          If PtId>-1
-            Vd_DeletePoint(PtId)
-            DrawCanvas()
-          Else
-            If Vd\EditMode <> #VD_Editmode_Point
-              info$ = " You have To be in editMode 'point edition' To Select points."
-            EndIf
-            MessageRequester(lang("Info"), Lang("You need at least 1 point selected, And the shape should have at least 2 points to use this feature."+info$))
-          EndIf
+          Vd_DeletePoint(PtId)
+          DrawCanvas()
           ;}
           
         Default
@@ -1315,8 +1304,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1185
-; FirstLine = 81
-; Folding = LUAPAWaxPeAAAAAeAAIAA1Aeh
+; CursorPosition = 61
+; FirstLine = 25
+; Folding = LeBPAWaxPeAAAAAeAAAAAwCM9
 ; EnableXP
 ; DisableDebugger
