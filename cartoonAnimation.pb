@@ -130,7 +130,7 @@ OpenWinVectorDrawing()
 ; EnableXP
 ; EnableOnError
 ; UseIcon = spriteanimation.ico
-; Executable = _released\carton0.36.8\cartoon.exe
+; Executable = release\windows\x86\cartoon0.42\cartoon.exe
 ; DisableDebugger
 ; EnablePurifier
 ; EnableUnicode
