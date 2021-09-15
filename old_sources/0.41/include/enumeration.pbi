@@ -33,7 +33,7 @@ Enumeration ; Gadgets
   ;{ Main window
   #G_canvasVector = 0
   
-  #G_CanvasIntro ; for the window intro
+  #G_CanvasIntro ; for the windo intro
   #G_CanvasPathVD
   #G_CanvasPathVDScene
   #G_CanvasPathVDObjet
@@ -45,6 +45,7 @@ Enumeration ; Gadgets
   #G_ToolVDSnapX
   #G_ToolVDSnapY
   #G_ToolVDEditMode
+  
   
   ; Timeline
   #G_VDTimeline
@@ -157,20 +158,22 @@ Enumeration ; Gadgets
   #G_shapeLock     
   #G_shapeShow
   
-  #G_shapeSA
-  
-  ; ATTENTION, Doit démarrer en #G_shapeName et conserver les gadget jusque #G_shapeLast (on peut en ajoutant (s'ils sont disabled or not)
-  ; attention : #G_shapeName should be the first gadget for shape gadget (to enable/disable all between #G_shapeName and #G_shapeLast)
-  #G_shapeName
+  ; ATTENTION, Doit démarrer en #G_shapenom et conserver les gadget jusque #G_shapeLast (on peut en ajoutant (s'ils sont disabled or not)
+  #G_shapeNom 
   #G_shapeLink    
   #G_shapeClose 
   #G_shapeDepth
   #G_shapeClip  
   #G_shapeParent
-  ;}
   
-  ;{ Edit & color
-  
+  ; color
+  #G_shapeColor
+  #G_shapeColorTyp
+  #G_shapeColorTypProp ; to open a window to create gradients
+  #G_shapeGradient    
+  #G_shapeTexture 
+  #G_shapeTextureOk 
+  #G_shapeAlpha
   #G_shapePosUp
   #G_shapePosDown    
   #G_shapeCX
@@ -179,17 +182,6 @@ Enumeration ; Gadgets
   #G_shapeY
   #G_shapeSizeW
   #G_shapeSizeH
-  #G_shapeRot
-  #G_shapeGroup
-  
-  #G_shapeColor
-  #G_shapeColorTyp
-  #G_shapeColorTypProp ; to open a window to create gradients
-  #G_shapeGradient    
-  #G_shapeTexture 
-  #G_shapeTextureOk 
-  #G_shapeAlpha
-
   #G_shapeTyp
   #G_shapeLineW ; width of the line (for line, dash, dot)
   #G_shapeLineH ; height for dash
@@ -254,13 +246,10 @@ Enumeration ; Gadgets
   #G_shapeFxClip
   
   
- 
+  #G_shapeLast
   
   
   ;}
-  
-  ; attention ça doit être le dernier gadget pour les gadget shape // should be the last gadget for the shape gadgets
-   #G_shapeLast
   ;}
   
   ;{ Panel control anim
@@ -452,16 +441,7 @@ Enumeration ; Gadgets
   
   ;}
   
-  ;{ window gradient
-  #G_WinGradientList
-  #G_WinGradientcanvas
-  #G_WinGradientName
-  #G_WinGradientAdd
-  #G_WinGradientDel
-  #G_WinGradientSave
-  ;}
-  
-  ;{ Window BG properties
+  ;{ BG properties
   #G_win_BG_Canvas
   #G_win_BG_resize
   #G_win_BG_Scale
@@ -470,6 +450,7 @@ Enumeration ; Gadgets
   #G_win_BG_ClipOutW
   #G_win_BG_ClipOutH
   ;}
+  
   
   ;{ window groups
    #G_win_group_list
@@ -515,7 +496,6 @@ Enumeration ; menu
   #menuVD_ShapeSaveselected 
   #menuVD_ExportImageObj
   #menuVD_ExportImageSelected
-  #menuVD_ExportImageGroup
   #menuVD_ExportScene
   #menuVD_ExportPb
   #menuVD_ExportSVG
@@ -608,7 +588,7 @@ Enumeration ; menu
   ;}
   
   
-  ;{ pop up
+  ; pop up
   
   ; pt
   #menuVD_PathClose
@@ -625,7 +605,6 @@ Enumeration ; menu
   #menuVD_PtSelectAll
   #menuVD_AddPtAtMiddle
   #menuVD_AddPtInTheCurve
-  ;}
   
   #menuVD_Last
   
@@ -867,7 +846,7 @@ EndEnumeration
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 162
-; FirstLine = 48
-; Folding = YcAAIoAw
+; CursorPosition = 371
+; FirstLine = 12
+; Folding = ogKCIFA+
 ; EnableXP

@@ -365,14 +365,14 @@ Repeat
               ;{ * Shape properties 
               
               ;{ parameters : nom, link, hide, close, lock, x,y,w,h
-            Case #G_shapeName
+            Case #G_shapeNom
               If EventType() = #PB_EventType_Focus           
                 ChangeShortCut(0)
               ElseIf EventType() = #PB_EventType_LostFocus   
                 ChangeShortCut()
               EndIf
               If ShapeId > -1
-                Name$ = GetGadgetText(#G_shapeName)
+                Name$ = GetGadgetText(#G_shapeNom)
                 If name$ <> #Empty$
                   Obj(ObjId)\Shape(ShapeId)\Nom$ = name$
                 EndIf
@@ -603,9 +603,6 @@ Repeat
               ;}
               
               ;{ color, alpha 
-            Case #G_shapeColorTypProp
-              WindowGradient()
-              
             Case #G_shapeColorTyp
               Shape_SetPropertie(#ShapePropertie_ColorTyp)
               
@@ -933,9 +930,6 @@ Repeat
           
         Case #menuVD_ExportImageObj
           Scene_Export()
-          
-        Case #menuVD_ExportImageGroup
-          ExportGroupAsImages()
           
         Case #menuVD_ExportImageSelected
           Scene_Export(0,0,"",1)
@@ -1321,8 +1315,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 374
-; FirstLine = 50
-; Folding = LegOAW7hPOAAAgAeAAABAwAeh
+; CursorPosition = 1185
+; FirstLine = 81
+; Folding = LUAPAWaxPeAAAAAeAAIAA1Aeh
 ; EnableXP
 ; DisableDebugger

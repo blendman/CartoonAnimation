@@ -275,7 +275,6 @@ EndProcedure
 ;{ unpremultiply
 ;{ module unpremultiply
 
-CompilerIf #PB_Compiler_Backend = 0
 ; MOdule by Wilbert
 DeclareModule Premultiply
   
@@ -290,7 +289,7 @@ Module Premultiply
   
   EnableASM
   DisableDebugger
-    
+  
   CompilerIf #PB_Compiler_Processor = #PB_Processor_x86
     Macro rax : eax : EndMacro
     Macro rbx : ebx : EndMacro
@@ -396,9 +395,7 @@ Module Premultiply
     !premultiply.l_premultiplyTable: times 131072 db 0
   EndDataSection
   
-  
 EndModule
-CompilerEndIf
 ;}
 
 Procedure UnPreMultiplyAlpha(image)
@@ -591,10 +588,10 @@ EndProcedure
 ;}
 
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 292
-; FirstLine = 86
-; Folding = BA8A+u+AK4B-
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 484
+; FirstLine = 95
+; Folding = BA8A+C-Al6g-
 ; EnableXP
 ; EnableOnError
 ; DisableDebugger

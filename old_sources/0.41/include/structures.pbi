@@ -109,15 +109,6 @@ EndStructure
 Global Dim ShapeGroup.Sgroup(0), NbGroup=-1
 
 
-
-Structure sColorBase
-  Color.i
-  r.a
-  g.a
-  b.a
-  a.a
-EndStructure
-
 ; les shapes
 Structure sFXShape
   
@@ -149,7 +140,6 @@ Structure sParent Extends sRectangle
   id.w
   startx.d
   startY.d
-  StartRot.w
 EndStructure
 
 Structure sShape
@@ -190,13 +180,11 @@ Structure sShape
   ; the final X,Y = position (\X,Y) + Transformation + Parenting
   FinalX.d
   FinalY.d
-  FinalRot.w
-  
   Scale.d
   SizeW.d  
   SizeH.d
   ; nécessaire pour les trnasformations par groupe (selected = 1)
-  StartRot.d
+  StartROt.d
   StartX.d
   StartY.d
   StartW.d
@@ -218,7 +206,7 @@ Structure sShape
   ;  if shape is filled
   Color.i
   ColorGrad.a ; couleur uni ou un dégradé ?
-  Array ColGrad.sColorBase(0)
+  Array ColGrad.i(0)
   Alpha.a
 
   ; pour le style 
@@ -306,21 +294,6 @@ OldShapeId =-1
 Global CopyObj.sObj
 
 
-
-Structure sColor2 Extends sColorbase
-  x.f
-  y.f
-EndStructure
-Structure sGradient
-  Filename$
-  name$
-  NbColor.w
-  Array color.sColor2(0)
-EndStructure
-Global Dim Gradient.sGradient(0)
-Global nbGradient=-1
-
-
 Structure sObjLayer
   Hide.a
   IdUnik$
@@ -403,7 +376,11 @@ Global Vd.sVd
 
 
 ; for gadgets
-Structure sColor Extends sColorBase
+Structure sColor
+  R.a
+  G.a
+  B.a
+  A.a
   H.l ; hue
   S.l ; saturation
   L.l ; luminence 
@@ -632,7 +609,7 @@ Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 151
-; FirstLine = 36
-; Folding = AAGAG+
+; CursorPosition = 418
+; FirstLine = 69
+; Folding = AAA1w
 ; EnableXP

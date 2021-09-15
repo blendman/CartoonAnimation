@@ -368,7 +368,6 @@ Procedure VD_CreateTheGadgets()
   w1 = 130 : w2 = 30 : w7=70 : w8=40 : w3 = 50 : w4 = 60 : w5 = 20 : w6 = 80
   h1 = 20 : h2 = 25
   Hg = Winh-10-BarVDH
-  
   VD_CreateToolBar()
   
   tbw = 0
@@ -377,10 +376,8 @@ Procedure VD_CreateTheGadgets()
   EndIf
   
   ; the panel and canvas, timeline
-  x0 = 10 : y0 = 5
-  x1 = x0 : y1 = y0
-  a = 3 : b = 5 : c = 2 : w2 = 20 : b1 =18
-  x2 = 5
+  x1 = 10 : y1 = 10
+  a = 3 : b = 5 : c = 2
   canvasW =  winw-PanelVDW-PanelLayerW-10-tbw
   
   ; Left panel : tooloption, Shape, points, color, fx
@@ -407,96 +404,80 @@ Procedure VD_CreateTheGadgets()
     
     ;{ edit shape (properties)
     AddGadgetItem(#G_panelVD,-1,lang("Edit"))
-    x1 = x0 : y1 = 10
+    x1 = 10 : y1 = 10
+    TextGadget(#PB_Any, x1,y1+3,w3,h1,lang("Name")) : x1+w3+2
+    StringGadget(#G_shapeNom, x1,y1,w1,h1,"") : y1 +h1+a : x1 =10
     
-
-    If ScrollAreaGadget(#G_shapeSA,0,0,PanelVDW-8,Hg,PanelVDW-33,Hg+200)
-    ; editor
-    If FrameGadget(#PB_Any,x2,5,PanelVDW-w2,(h1+a)*2+b1+105,lang("Editor")) : y1 +15
-      If ListViewGadget(#G_shapelist,x1,y1,130,100,#PB_ListView_ClickSelect) : y1+100+a  
-      Else
-        End
-      EndIf
-      AddGadget(#G_shapePosUp, #Gad_BtnImg, x1,y1,h1,h1,"",0,ImgLayer(#ivd_layerup),lang("Move the shape up.")) : x1+h1+a
-      AddGadget(#G_shapePosDown, #Gad_BtnImg, x1,y1,h1,h1,"",0,ImgLayer(#ivd_layerdown),lang("Move the shape down.")) : x1+h1+a
-      AddGadget(#G_shapeHide, #Gad_BtnImg, x1,y1,h1,h1,"",1, ImgLayer(#ivd_layerhide),lang("Hide the selected shape.")) : x1+h1+a
-      AddGadget(#G_shapeLock, #Gad_BtnImg, x1,y1,h1,h1,"",1, ImgLayer(#ivd_layerlock),lang("Lock the selected shape.")) : x1+h1+a
-      AddGadget(#G_shapeShow, #Gad_Chkbox, x1,y1,w7,h1,lang("Show"),0,0,lang("Show the shape)")) : y1+h1+a
-      x1=x0 
-      AddGadget(#G_shapeLink, #Gad_Chkbox, x1,y1,w3,h1,lang("Link"),0,0,lang("To link the shape with the next shape and get 'hole' in shape if intersection instead of filled color.")) : : y1+h1+a
-      y1+10
+    
+    If ListViewGadget(#G_shapelist,x1,y1,130,100,#PB_ListView_ClickSelect) : y1+100+a  
+    Else
+      End
     EndIf
+    AddGadget(#G_shapePosUp, #Gad_BtnImg, x1,y1,h1,h1,"",0,ImgLayer(#ivd_layerup),lang("Move the shape up.")) : x1+h1+a
+    AddGadget(#G_shapePosDown, #Gad_BtnImg, x1,y1,h1,h1,"",0,ImgLayer(#ivd_layerdown),lang("Move the shape down.")) : x1+h1+a
+    AddGadget(#G_shapeHide, #Gad_BtnImg, x1,y1,h1,h1,"",1, ImgLayer(#ivd_layerhide),lang("Hide the selected shape.")) : x1+h1+a
+    AddGadget(#G_shapeLock, #Gad_BtnImg, x1,y1,h1,h1,"",1, ImgLayer(#ivd_layerlock),lang("Lock the selected shape.")) : x1+h1+a
     
-    ; properties
-    If FrameGadget(#PB_Any,x2,y1,PanelVDW-w2,(h1+a)*9+b1,lang("Properties")) : y1 +15
-      AddGadget(#G_shapeName, #Gad_String, x1,y1,w7,h1,lang("Name"),0,0,lang("Set the name for the shape"),0,lang("Name")) : y1+h1+a
-      AddGadget(#G_shapeClose, #Gad_Chkbox, x1,y1,w7,h1,lang("Open"),0,0,lang("Open or close the path (line, curve, complexe shape)"),0,lang("Open")) : : y1+h1+a
-
-      AddGadget(#G_shapeDepth, #Gad_Spin, x1,y1,w7,h1,lang("Depth"),0,1000,lang("Set the depth of the shape (the more depth is high, the more the shape is on the top)"))
-      x1=x0 : y1+h1+a
-      
-      AddGadget(#G_shapeX, #Gad_Spin, x1,y1,w7,h1,lang("X "),-100000,100000,Lang("Set the X position of the shape.")) : y1+h1+a
-      AddGadget(#G_shapeY, #Gad_Spin, x1,y1,w7,h1,lang("Y "),-100000,100000,Lang("Set the Y position of the shape."))  : y1+h1+a
-      AddGadget(#G_shapeSizeW, #Gad_Spin, x1,y1,w7,h1,lang("W "),0,10000,Lang("Set the width of the shape."))  : y1+h1+a
-      AddGadget(#G_shapeSizeH, #Gad_Spin, x1,y1,w7,h1,lang("H "),0,10000,Lang("Set the height of the shape."))  : y1+h1+a
-      AddGadget(#G_shapeRot, #Gad_Spin, x1,y1,w7,h1,lang("Rot"),-10000,10000,Lang("Set the Rot of the shape."))  : y1+h1+a
-      AddGadget(#G_shapeParent, #Gad_Cbbox, x1,y1,w7,h1,lang("Parent "),0,0,Lang("Set the parent of the shape."),-1,Lang("Parent "))  : y1+h1+a
-      y1+10
-    EndIf
+    y1 + h1+a : x1 = 10
+    AddGadget(#G_shapeLink, #Gad_Chkbox, x1,y1,w3,h1,lang("Link "),0,0,lang("To link the shape with the next shape and get 'hole' in shape if intersection instead of filled color.")) : x1 + w3+a
+    AddGadget(#G_shapeClose, #Gad_Chkbox, x1,y1,w7,h1,lang("Open "),0,0,lang("Open or close the path (line, curve, complexe shape)")) : x1=10 : y1+h1+a
     
-    ; debug infos
+    AddGadget(#G_shapeShow, #Gad_Chkbox, x1,y1,w7,h1,lang("Show"),0,0,lang("Show the shape)"))
+    x1=10 : y1+h1+a
+    AddGadget(#G_shapeDepth, #Gad_Spin, x1,y1,w7,h1,lang("Depth"),0,1000,lang("Set the depth of the shape (the more depth is high, the more the shape is on the top)"))
+    x1=10 : y1+h1+a
+    
+    AddGadget(#G_shapeX, #Gad_Spin, x1,y1,w7,h1,lang("X "),-100000,100000,Lang("Set the X position of the shape.")) : y1+h1+a
+    AddGadget(#G_shapeY, #Gad_Spin, x1,y1,w7,h1,lang("Y "),-100000,100000,Lang("Set the Y position of the shape."))  : y1+h1+a
+    AddGadget(#G_shapeSizeW, #Gad_Spin, x1,y1,w7,h1,lang("W "),0,10000,Lang("Set the width of the shape."))  : y1+h1+a
+    AddGadget(#G_shapeSizeH, #Gad_Spin, x1,y1,w7,h1,lang("H "),0,10000,Lang("Set the height of the shape."))  : y1+h1+a
     If VdOptions\DebugOn
-      If FrameGadget(#PB_Any,x2,y1,PanelVDW-w2,(h1+a)+b1,lang("Debug infos")) : y1 +15
-        AddGadget(#G_shapeIdUnik, #Gad_String, x1,y1,w7,h1,#Empty$,0,0,Lang("The Id unique of the shape.)"),#PB_String_ReadOnly  ,Lang("Id Unik "))  : y1+h1+a
-        y1+10  
-      EndIf
+      AddGadget(#G_shapeIdUnik, #Gad_String, x1,y1,w7,h1,#Empty$,0,0,Lang("The Id unique of the shape.)"),#PB_String_ReadOnly  ,Lang("Id Unik "))  : y1+h1+a
     EndIf
+    AddGadget(#G_shapeParent, #Gad_Cbbox, x1,y1,w7,h1,lang("Parent "),0,0,Lang("Set the parent of the shape."),-1,Lang("Parent "))  : y1+h1+a
     
-    ; center of shape
-    If FrameGadget(#PB_Any,x2,y1,PanelVDW-w2,(h1+a)*2+b1,lang("Center")) : y1 +15
-      AddGadget(#G_shapeCX, #Gad_Spin,x1,y1,w7,h1,lang("CX"),-10000,10000,Lang("Change the center X (offset)")) : y1+h1+a 
-      AddGadget(#G_shapeCY, #Gad_Spin,x1,y1,w7,h1,lang("Cy"),-10000,10000,Lang("Change the center Y (offset)")) : y1+h1+a
-      y1+10
-    EndIf
-  
+    
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*3+b,lang("Center")) : y1 +15
+    AddGadget(#G_shapeCX, #Gad_Spin,x1,y1,w7,h1,lang("CX"),-10000,10000,Lang("Change the center X (offset)")) : y1+h1+a 
+    AddGadget(#G_shapeCY, #Gad_Spin,x1,y1,w7,h1,lang("Cy"),-10000,10000,Lang("Change the center Y (offset)")) : y1+h1+b*3
+    
     ; Point
-    If FrameGadget(#PB_Any,x2,y1,PanelVDW-w2,(h1+a)*4+b1,Lang("Points")) : y1 +15
-      AddGadget(#G_shapePtMenu,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Properties),Lang("Open the properties menu for the points")) : x1+h1+a
-      AddGadget(#G_shapePtHard,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Hard),Lang("Set the point hard")) : x1+h1+a
-      AddGadget(#G_shapePtSoft,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Soft),Lang("Set the point soft")) : x1+h1+a
-      AddGadget(#G_shapePtMirored,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Soft),Lang("Set the point mirrored")) : x1+h1+a 
-      AddGadget(#G_shapePtUseMirored,#Gad_Cbbox,x1,y1,w7,h1,lang("Move mode"),0,0,Lang("Use the mirrored or smooth move (only available For curve)")) 
-      VD_AddGadgetItem(#G_shapePtUseMirored,lang("Free,miror,smooth,"))
-      
-      y1+h1+a : x1=x0
-      AddGadget(#G_shapePtX,#Gad_Spin,x1,y1,w7,h1,lang("X "),-100000,100000,Lang("Position X of the point (or the shape for box, ellipse, image, text).")) :
-      x1 = GadgetX(#G_shapePtX)+GadgetWidth(#G_shapePtX)+2
-      AddGadget(#G_shapePtXlock,#Gad_Chkbox,x1,y1,w8,h1,lang("Lock"),0,0,Lang("Lock X")) : y1+h1+a
-      x1=x0
-      AddGadget(#G_shapePtY,#Gad_Spin,x1,y1,w7,h1,lang("Y "),-100000,100000,Lang("Position Y of the point (or the shape for box, ellipse, image, text).")) : x1+w7+w2+a*2
-      x1 = GadgetX(#G_shapePtY)+GadgetWidth(#G_shapePtY)+2
-      AddGadget(#G_shapePtYLock,#Gad_Chkbox,x1,y1,w8,h1,lang("Lock"),0,0,Lang("Lock Y")) : y1+h1+a
-      x1=x0
-      AddGadget(#G_shapeNotRender,#Gad_Chkbox,x1,y1,w7,h1,Lang("Hide"),0,0,Lang("set selected curve (by point) visible Or Not"),0,Lang("Hide")) : y1+h1+a
-    EndIf
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*4+b,Lang("Points")) : y1 +15
+    AddGadget(#G_shapePtMenu,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Properties),Lang("Open the properties menu for the points")) : x1+h1+a
+    AddGadget(#G_shapePtHard,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Hard),Lang("Set the point hard")) : x1+h1+a
+    AddGadget(#G_shapePtSoft,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Soft),Lang("Set the point soft")) : x1+h1+a
+    AddGadget(#G_shapePtMirored,#Gad_BtnImg,x1,y1,h1,h1,"",0,ImgVd(#Img_Soft),Lang("Set the point mirrored")) : x1+h1+a 
+    AddGadget(#G_shapePtUseMirored,#Gad_Cbbox,x1,y1,w7,h1,lang("Move mode"),0,0,Lang("Use the mirrored or smooth move (only available For curve)")) 
+;     line$ =lang( "Free,miror,smooth,")
+;     For i=0 To 2
+;       AddGadgetItem(#G_shapePtUseMirored,i,StringField(line$,i+1,","))
+;     Next
+;     SetGadgetState(#G_shapePtUseMirored,0)
+    VD_AddGadgetItem(#G_shapePtUseMirored,lang("Free,miror,smooth,"))
+
+    x1+w7+a
+    AddGadget(#G_shapeNotRender,#Gad_Chkbox,x1,y1,w7,h1,Lang("Hide"),0,0,Lang("set selected curve (by point) visible Or Not")) :
+    y1+h1+a
+    x1=10
+    AddGadget(#G_shapePtX,#Gad_Spin,x1,y1,w7,h1,lang("X "),-100000,100000,Lang("Position X of the point (or the shape for box, ellipse, image, text).")) :
+    x1 = GadgetX(#G_shapePtX)+GadgetWidth(#G_shapePtX)+2
+    AddGadget(#G_shapePtXlock,#Gad_Chkbox,x1,y1,w8,h1,lang("Lock"),0,0,Lang("Lock X")) : y1+h1+a
+    x1=10
+    AddGadget(#G_shapePtY,#Gad_Spin,x1,y1,w7,h1,lang("Y "),-100000,100000,Lang("Position Y of the point (or the shape for box, ellipse, image, text).")) : x1+w7+w2+a*2
+    x1 = GadgetX(#G_shapePtY)+GadgetWidth(#G_shapePtY)+2
+    AddGadget(#G_shapePtYLock,#Gad_Chkbox,x1,y1,w8,h1,lang("Lock"),0,0,Lang("Lock Y")) : y1+h1+a
     
-    CloseGadgetList()
-  EndIf
-  
     ;}
     
     ;{ Color
     AddGadgetItem(#G_panelVD,-1,lang("Color"))
     x1 = 10 : y1 = 10    
     
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*5+10,lang("Color")) : y1 +15 
+    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*4+10,lang("Color")) : y1 +15 
       AddGadget(#G_shapeColor, #Gad_Btn, x1,y1,W7,h1,lang("Color"),0,255,lang("Change the color of the shape."),0,lang("Color")) : y1+h1+a
       AddGadget(#G_shapeAlpha, #Gad_Spin, x1,y1,W7,h1,lang("Alpha"),0,255,lang("Change alpha of the shape.")) : y1+h1+a  
-      AddGadget(#G_shapeColorTyp, #Gad_Cbbox, x1,y1,W7,h1,lang("Color Typ"),0,255,lang("Change color typ of the shape."),0,lang("Color Typ")) : y1+h1+a  
+      AddGadget(#G_shapeColorTyp, #Gad_Cbbox, x1,y1,W7,h1,lang("Color Typ"),0,255,lang("Change color typ of the shape."),0,lang("Color Typ")) : y1+h1+10   
       VD_AddGadgetItem(#G_shapeColorTyp,lang( "color,linear gradient,circular gradient,texture,"))
-      
-      AddGadget(#G_shapeColorTypProp, #Gad_Btn, x1,y1,W7,h1,lang("Properties"),0,255,lang("Open a properties window (for gradient)"),0,lang("Properties"))  
-      : y1+h1+10  
     EndIf
        
     ; ButtonGadget(#G_shapeTexture, x1,y1,w7,h1,"Texture"): y1+h1+b*3 : x1=10
@@ -548,57 +529,52 @@ Procedure VD_CreateTheGadgets()
     AddGadgetItem(#G_panelVD,-1,lang("FX"))
     x1 = 10 : y1 = 10
     
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*2,lang("Presets"))
-      y1 + 15
-      AddGadget(#G_shapeFxPresetList, #Gad_Cbbox, x1,y1,w1,h1,"",0,0,lang("Select a preset for the Fx, if you prefer ;)."))  : x1+w1+2
-      AddGadget(#G_shapeFxPresetAdd, #Gad_Btn, x1,y1,w5,h1,"+",0,0,lang("Add a new FX to the shape."))  : x1+w5+2
-      AddGadget(#G_shapeFxPresetSave, #Gad_Btn, x1,y1,w2,h1,lang("Save"),0,0,lang("Save the current parameter of the preset."))  : x1=10 : y1 +h1+10
-      UpdateListPresetFx()
-    EndIf
-  
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,a+h1*2+25,lang("Parameters"))
-      y1+20
-      AddGadget(#G_shapeFxList, #Gad_Cbbox, x1,y1,w1,h1,"",0,0,lang("Select the Fx to change."))  : x1+w1+2
-      AddGadget(#G_shapeFxAdd, #Gad_Btn, x1,y1,w5,h1,"+",0,0,lang("Add a new Fx for the shape.")) : x1+w5+2 ;: x1=10 ;: y1+h1+a
-      AddGadget(#G_shapeFxDel, #Gad_Btn, x1,y1,w5,h1,"-",0,0,lang("Delete the current Fx from the shape.")) : x1=10 : y1+h1+a
-      AddGadget(#G_shapeFxActif, #Gad_Chkbox, x1,y1,w3,h1,lang("Actif"),0,0,lang("Set the Fx actif.")) : x1+w3+2
-      AddGadget(#G_shapeFxOpen, #Gad_Chkbox, x1,y1,w3,h1,lang("open"),0,0,lang("Set the Fx open.")) 
-      
-      y1+h1+10
-    EndIf
-  
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,h1*2,lang("Presets"))
+    y1 + 15
+    AddGadget(#G_shapeFxPresetList, #Gad_Cbbox, x1,y1,w1,h1,"",0,0,lang("Select a preset for the Fx, if you prefer ;)."))  : x1+w1+2
+    AddGadget(#G_shapeFxPresetAdd, #Gad_Btn, x1,y1,w5,h1,"+",0,0,lang("Add a new FX to the shape."))  : x1+w5+2
+    AddGadget(#G_shapeFxPresetSave, #Gad_Btn, x1,y1,w2,h1,lang("Save"),0,0,lang("Save the current parameter of the preset."))  : x1=10 : y1 +h1+10
+    UpdateListPresetFx()
+    
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,a+h1*2+25,lang("Parameters"))
+    y1+20
+    AddGadget(#G_shapeFxList, #Gad_Cbbox, x1,y1,w1,h1,"",0,0,lang("Select the Fx to change."))  : x1+w1+2
+    AddGadget(#G_shapeFxAdd, #Gad_Btn, x1,y1,w5,h1,"+",0,0,lang("Add a new Fx for the shape.")) : x1+w5+2 ;: x1=10 ;: y1+h1+a
+    AddGadget(#G_shapeFxDel, #Gad_Btn, x1,y1,w5,h1,"-",0,0,lang("Delete the current Fx from the shape.")) : x1=10 : y1+h1+a
+    AddGadget(#G_shapeFxActif, #Gad_Chkbox, x1,y1,w3,h1,lang("Actif"),0,0,lang("Set the Fx actif.")) : x1+w3+2
+    AddGadget(#G_shapeFxOpen, #Gad_Chkbox, x1,y1,w3,h1,lang("open"),0,0,lang("Set the Fx open.")) 
+    
+    y1+h1+10
     x1=10
     
     
-    If FrameGadget(#PB_Any,5,y1,PanelVDW-15,(a+h1)*10+35,lang("Style"))
-      Y1 +20
-      AddGadget(#G_shapeFxLineTyp, #Gad_Cbbox, x1,y1,w1,h1,lang("Type"),0,0,lang("Set the type of the Fx.")) : y1+h1+a
-      VD_AddGadgetItem(#G_shapeFxLineTyp,lang( "filled,line,dash,dot,"))
-      
-      ;     For i=0 To 3
-      ;       AddGadgetItem(#G_shapeFxLineTyp,i,StringField(line$,i+1,","))
-      ;     Next
-      
-      AddGadget(#G_shapeFxLineW, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the width of the line Fx."),0, lang("Width")) : y1+h1+a
-      AddGadget(#G_shapeFxLineH, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the height of the line Fx (only for dash line)."),0, lang("Height")) : y1+h1+a
-      AddGadget(#G_shapeFxLineD, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the distance For the line Fx (dot & dash line)."),0, lang("Dist")) : y1+h1+a
-      
-      y1 +10
-      AddGadget(#G_shapeFxX, #Gad_Spin, x1,y1,w7,h1,lang("X "),-10000,10000,lang("Set the X of the Fx.")) : y1+h1+a 
-      AddGadget(#G_shapeFxY, #Gad_Spin, x1,y1,w7,h1,lang("Y "),-10000,10000,lang("Set the Y of the Fx.")) : y1+h1+a 
-      AddGadget(#G_shapeFxAlpha, #Gad_Spin, x1,y1,w7,h1,lang("Alpha"),0,255,lang("Set the alpha of the Fx.")) : y1+h1+a ;: x1+w3+w2+10
-                                                                                                                        ; x1 = GadgetX(#G_shapeFxAlpha)+GadgetWidth(#G_shapeFxAlpha)+2
-      AddGadget(#G_shapeFxColor, #Gad_Btn, x1,y1,w7,h1,lang("Color"),0,0,lang("Set the color of the Fx."),0,lang("Color")) : y1+h1+a : x1 = 10
-      AddGadget(#G_shapeFxScale, #Gad_Spin, x1,y1,w7,h1,lang("Scale"),-10000,10000,lang("Set the scale of the Fx.")) : y1+h1+a :
-      
-      AddGadget(#G_shapeFxDepth, #Gad_Cbbox, x1,y1,w1,h1,lang("Depth"),0,0,lang("Set the depth of the Fx.")) : y1+h1+a 
-      depth$ = lang("Back,Front,All back,All front")
-      For i=0 To 3
-        AddGadgetItem(#G_shapeFxDepth,i,StringField(Depth$,i+1,","))
-      Next
-      
-    EndIf
-  ;}
+    FrameGadget(#PB_Any,5,y1,PanelVDW-15,(a+h1)*10+35,lang("Style"))
+    Y1 +20
+    AddGadget(#G_shapeFxLineTyp, #Gad_Cbbox, x1,y1,w1,h1,lang("Type"),0,0,lang("Set the type of the Fx.")) : y1+h1+a
+    VD_AddGadgetItem(#G_shapeFxLineTyp,lang( "filled,line,dash,dot,"))
+
+;     For i=0 To 3
+;       AddGadgetItem(#G_shapeFxLineTyp,i,StringField(line$,i+1,","))
+;     Next
+    
+    AddGadget(#G_shapeFxLineW, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the width of the line Fx."),0, lang("Width")) : y1+h1+a
+    AddGadget(#G_shapeFxLineH, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the height of the line Fx (only for dash line)."),0, lang("Height")) : y1+h1+a
+    AddGadget(#G_shapeFxLineD, #Gad_String, x1,y1,w7,h1,"",0,0,lang("Change the distance For the line Fx (dot & dash line)."),0, lang("Dist")) : y1+h1+a
+    
+    y1 +10
+    AddGadget(#G_shapeFxX, #Gad_Spin, x1,y1,w7,h1,lang("X "),-10000,10000,lang("Set the X of the Fx.")) : y1+h1+a 
+    AddGadget(#G_shapeFxY, #Gad_Spin, x1,y1,w7,h1,lang("Y "),-10000,10000,lang("Set the Y of the Fx.")) : y1+h1+a 
+    AddGadget(#G_shapeFxAlpha, #Gad_Spin, x1,y1,w7,h1,lang("Alpha"),0,255,lang("Set the alpha of the Fx.")) : y1+h1+a ;: x1+w3+w2+10
+    ; x1 = GadgetX(#G_shapeFxAlpha)+GadgetWidth(#G_shapeFxAlpha)+2
+    AddGadget(#G_shapeFxColor, #Gad_Btn, x1,y1,w7,h1,lang("Color"),0,0,lang("Set the color of the Fx."),0,lang("Color")) : y1+h1+a : x1 = 10
+    AddGadget(#G_shapeFxScale, #Gad_Spin, x1,y1,w7,h1,lang("Scale"),-10000,10000,lang("Set the scale of the Fx.")) : y1+h1+a :
+    
+    AddGadget(#G_shapeFxDepth, #Gad_Cbbox, x1,y1,w1,h1,lang("Depth"),0,0,lang("Set the depth of the Fx.")) : y1+h1+a 
+    depth$ = lang("Back,Front,All back,All front")
+    For i=0 To 3
+      AddGadgetItem(#G_shapeFxDepth,i,StringField(Depth$,i+1,","))
+    Next
+    ;}
     
     CloseGadgetList()
   EndIf
@@ -2078,7 +2054,7 @@ Procedure ShapeSetGadget(Disable=1)
   
   Shared GadgetsAreDisabled
   
-  For i=#G_shapeName To #G_shapeLast
+  For i=#G_shapeNom To #G_shapeLast
     If IsGadget(i)
       DisableGadget(i, disable)
     EndIf
@@ -2135,6 +2111,9 @@ Procedure ShapeGetProperties(state=1)
       EndIf
       GadgetsAreDisabled = Obj(ObjId)\Shape(ShapeId)\Locked
       
+      
+      
+      
       SetGadgetState(#G_shapeAlpha,Obj(ObjId)\Shape(ShapeId)\Alpha)
       SetGadgetState(#G_shapeTyp,Obj(ObjId)\Shape(ShapeId)\Typ)
       
@@ -2161,7 +2140,6 @@ Procedure ShapeGetProperties(state=1)
       If state =1
         SetGadgetState(#G_shapeSizeW,Obj(ObjId)\Shape(ShapeId)\SizeW)
         SetGadgetState(#G_shapeSizeH,Obj(ObjId)\Shape(ShapeId)\SizeH)
-        SetGadgetState(#G_shapeRot,Obj(ObjId)\Shape(ShapeId)\Rot)
         ;SetGadgetState(#G_shapeLineW,(Obj(ObjId)\Shape(ShapeId)\w))
         ;SetGadgetState(#G_shapeLineH,(Obj(ObjId)\Shape(ShapeId)\h))
         ;SetGadgetState(#G_shapeLineD,Obj(ObjId)\Shape(ShapeId)\d)
@@ -2172,13 +2150,12 @@ Procedure ShapeGetProperties(state=1)
       Else
         SetGadgetText(#G_shapeSizeW,Str(Obj(ObjId)\Shape(ShapeId)\SizeW))
         SetGadgetText(#G_shapeSizeH,Str(Obj(ObjId)\Shape(ShapeId)\SizeH))
-        SetGadgetText(#G_shapeRot,Str(Obj(ObjId)\Shape(ShapeId)\Rot))
         SetGadgetText(#G_shapeCX,Str(Obj(ObjId)\Shape(ShapeId)\Cx))
         SetGadgetText(#G_shapeCY,Str(Obj(ObjId)\Shape(ShapeId)\Cy))
         SetGadgetText(#G_shapeX,Str(Obj(ObjId)\Shape(ShapeId)\X))
         SetGadgetText(#G_shapeY,Str(Obj(ObjId)\Shape(ShapeId)\Y))
       EndIf
-      SetGadgetText(#G_shapeName,Obj(ObjId)\Shape(ShapeId)\Nom$ )
+      SetGadgetText(#G_shapeNom,Obj(ObjId)\Shape(ShapeId)\Nom$ )
       If IsGadget(#G_shapeIdUnik)
         SetGadgetText(#G_shapeIdUnik,Obj(ObjId)\Shape(ShapeId)\idUnik$)
       EndIf
@@ -2274,7 +2251,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 414
-; FirstLine = 53
-; Folding = CAobfAGAEMUvvhn18APA9z0HAgICAAAOAAAAAAAAAAAAAAAy9BA+
+; CursorPosition = 2081
+; FirstLine = 58
+; Folding = CAobfAGAAIYhBkfH5Bgfu-AAERAAAwBAAAAAAAAAAAAAAAnPAw
 ; EnableXP

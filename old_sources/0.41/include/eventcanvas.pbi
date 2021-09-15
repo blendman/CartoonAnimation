@@ -759,9 +759,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                 EndIf
                                 \SizeW = newW
                                 \SizeH = newH
-                                SetGadgetText(#G_shapeSizeW,Str(Obj(ObjId)\Shape(ShapeId)\SizeW))
-                                SetGadgetText(#G_shapeSizeH,Str(Obj(ObjId)\Shape(ShapeId)\SizeH))
-
+                                
                                 ; then move the position if center of transformation = boundingbox
                                 If vdoptions\CenterTransformation = 0
                                   ; if the center of transformation = boundingbox
@@ -862,9 +860,6 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                   ;\rot =\rot/90
                                   \rot = \rot *10
                                 EndIf
-                                SetGadgetText(#G_shapeRot,Str(Obj(ObjId)\Shape(ShapeId)\Rot))
-                    
-
                                 ;}
                                 
                             EndSelect 
@@ -909,6 +904,11 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                     
                   Case #VD_ShapeCurve
                     ; #VD_actionAddCurve 
+                    
+                    ; For i=0 To 2
+                    ;   \pt(PointId+i)\x = X1-5+i*5
+                    ;   \pt(PointId+i)\y = Y1-5+i*5
+                    ; Next
                     If ptid<3
                       sx = \pt(PtId+1)\x 
                       sy = \pt(PtId+1)\y 
@@ -938,9 +938,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                     Else
                        \SizeH = y1 - StartY
                     EndIf
-                    SetGadgetText(#G_shapeSizeW,Str(Obj(ObjId)\Shape(ShapeId)\SizeW))
-                    SetGadgetText(#G_shapeSizeH,Str(Obj(ObjId)\Shape(ShapeId)\SizeH))
-
+                    
                   Case #VD_ShapeText
                     \SizeW = Abs(X1 - Startx )                                                   
                     \SizeH = Abs(y1 - StartY)
@@ -955,9 +953,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                     EndIf
                     min(\SizeW,1)
                     min(\SizeH,1)
-                    SetGadgetText(#G_shapeSizeW,Str(Obj(ObjId)\Shape(ShapeId)\SizeW))
-                    SetGadgetText(#G_shapeSizeH,Str(Obj(ObjId)\Shape(ShapeId)\SizeH))
-
+                    
                 EndSelect
                 
                 update =1
@@ -1066,8 +1062,7 @@ EndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 762
-; FirstLine = 174
-; Folding = g-068z4f2uMX+80+--2nv-f-504h
+; CursorPosition = 22
+; Folding = h-06884f2ucX+80+--2HP-4-604h
 ; EnableXP
 ; DisableDebugger

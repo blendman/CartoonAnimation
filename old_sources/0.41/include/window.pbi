@@ -268,8 +268,8 @@ Procedure WindowPref()
       AddGadgetItem(#G_PrefPanel, -1, lang("Interface"))
       y1 = 5 :  x1 = 5
       ;       AddStringGadget(#G_pref_Theme, x1, y1, 250, 20, OptionsIE\Theme$, lang("Theme :"), lang("Set the directory for the icone and images theme")) : y1+35
-      AddGadget(#G_Pref_UseBeta, #Gad_Chkbox, x1, y1, 200, h1, LAng("Use beta features"),0,0,lang("Use beta features (attention, some features can be unstables and have unwanted behavior or may crash the program)"),VdOptions\Beta) : y1+h1+10
-      AddGadget(#G_Pref_ToolMoveCanSelect, #Gad_Chkbox, x1, y1, 200, h1, LAng("Tool Move can select"),0,0,lang("Enable tool move can select"),VdOptions\ToolMoveCanSelect) : y1+h1+10
+      AddGadget(#G_Pref_UseBeta, #Gad_Chkbox, x1, y1, 120, h1, LAng("Use beta features"),0,0,lang("Use beta features (attention, some features can be unstables and have unwanted behavior or may crash the program)"),VdOptions\Beta) : y1+h1+10
+      AddGadget(#G_Pref_ToolMoveCanSelect, #Gad_Chkbox, x1, y1, 120, h1, LAng("Tool Move can select"),0,0,lang("Enable tool move can select"),VdOptions\ToolMoveCanSelect) : y1+h1+10
       ;} 
       
       ;{ saving
@@ -536,248 +536,14 @@ EndProcedure
 
 
 ; window gradient
-Procedure SaveGradient(i)
-  ; save the gradient
-  d$ = ","
-  folder$  ="data\Presets\Gradients\"
-  If CreateFile(0, folder$+Gradient(i)\Filename$)
-    WriteStringN(0,"gradient,"+Gradient(i)\Name$+d$)
-    For k=0 To ArraySize(Gradient(i)\color())
-      text$ = "color,"+Str(Gradient(i)\color(k)\x)+d$
-      text$ +Str(Gradient(i)\color(k)\R)+d$+Str(Gradient(i)\color(k)\G)+d$+Str(Gradient(i)\color(k)\b)+d$+Str(Gradient(i)\color(k)\a)+d$
-      WriteStringN(0,text$)
-    Next 
-    CloseFile(0)
-  EndIf
-  
-EndProcedure
-Procedure WinGrad_UpdateGradient()
-  
-  Shared GradientID
-  With obj(objID)\Shape(shapeId)
-    col1 = \ColGrad(0) ;Brush(Action)\color
-    col2 = \ColGrad(n) ;Brush(Action)\ColorFG
-  EndWith
-
-  If StartDrawing(CanvasOutput(#G_WinGradientcanvas))
-   
-    w = OutputWidth()
-    h = 50 ; height for gradient preview
-    y = 15
-    h1 = h+10+y
-    s = 10 ; size of square for colors
-    w1 = w-s*2
-    s1=s/2
-    
-    ; the grey background
-    DrawingMode(#PB_2DDrawing_Default)  
-    Box(0,0,w,OutputHeight(), RGB(150,150,150))
-    
-    ; draw the gradient
-    DrawingMode(#PB_2DDrawing_Gradient)      
-    j = gradientID
-    For k=0 To ArraySize(Gradient(j)\color())
-      With Gradient(j)\color(k)
-        color = RGBA(\R,\g,\b,\A)
-        GradientColor(\x*0.01, color)
-      EndWith
-    Next
-    LinearGradient(s,y,w1,y)    
-    Box(s,y,w1,h)
-    
-    ; draw the color box
-    DrawingMode(#PB_2DDrawing_Default)  
-    j = gradientID
-    For k=0 To ArraySize(Gradient(j)\color())
-      With Gradient(j)\color(k)
-        color = RGBA(\R,\g, \b,\A)
-        x1=\x*w1*0.01+s-s1
-        Box(x1,h1,s,s,color)
-        \y = h1
-      EndWith
-    Next
-   
-    
-    ; draw a broder
-    DrawingMode(#PB_2DDrawing_Outlined)    
-    Box(s,y,w1,h,RGB(0,0,0))
-    Box(1+s,1+y,w1-2,h-2,RGB(255,255,255))
-    
-    StopDrawing()
-  EndIf
-  
-EndProcedure
-Procedure WinGrad_EventGradient()
-  
-  Shared GradientID
-  Static leftclic,x,y
-  
-  gad = #G_WinGradientcanvas
-  w = GadgetWidth(#G_WinGradientcanvas)
-  s = 10 ; size of square for colors
-  w1 = w-s*2
-  s1=s/2
-  
-  If EventType() = #PB_EventType_LeftButtonDown
-    leftclic= 1
-  ElseIf EventType() = #PB_EventType_LeftDoubleClick
-    x = GetGadgetAttribute(gad, #PB_Canvas_MouseX)
-    y = GetGadgetAttribute(gad, #PB_Canvas_MouseY)
-    For i=0 To ArraySize(gradient(gradientID)\color())
-      With Gradient(gradientId)\color(i)
-        x1=\x*w1*0.01+s-s1
-        If x>=x1 And x<=x1+s And y>=\y And y<=\y+s
-          color = ColorRequester(RGBA(\R,\g,\b,\a))
-          If color>-1
-            \r = Red(color)
-            \g = Green(color)
-            \b = Blue(color)
-            \a = Alpha(color)
-          EndIf
-          WinGrad_UpdateGradient()
-        EndIf
-      EndWith
-    Next
-  ElseIf EventType() = #PB_EventType_LeftButtonUp
-    leftclic = 0
-  ElseIf EventType() =  #PB_EventType_MouseMove 
-    If leftclic = 1
-       x = GetGadgetAttribute(gad, #PB_Canvas_MouseX)
-       y = GetGadgetAttribute(gad, #PB_Canvas_MouseY)
-       For i=0 To ArraySize(gradient(gradientID)\color())
-         With Gradient(gradientId)\color(i)
-           If x>= \x And x<=\x+s And y>=\y And y<=\y+s
-            ; Debug i
-           EndIf
-         EndWith
-       Next
-    EndIf
-  EndIf
-  
-EndProcedure
 Procedure WindowGradient()
-  ; Gradient() = array of gradients filenames and properties (color, position...)
-  Shared GradientID
   
   winW = 750
   winH = 500
   If OpenWindow(#Win_VD_Gradient, 0, 0, winw, winH, Lang("Gradient"), #PB_Window_ScreenCentered|#PB_Window_SystemMenu, WindowID(#Win_VD_main))
     
-    ; reset the gradient
-    GradientID = 0
-    nbgradient=-1
-    ReDim Gradient.sGradient(0) 
-
-    ;{ gadgets
-    x = 10 : y=10 :w1 = 60 : h1 = 30 : w2 = 120
-    ; list of gradients
-    w = 200
-    h = winh - 20
-    If ListViewGadget(#G_WinGradientList,x,y,w,h)
-      name$ = lang("Default")
-      AddGadgetItem(#G_WinGradientList,0,name$)
-      
-      ; add the default gradient (Color /foreground color)
-      nbgradient+1
-      i = nbgradient
-      ReDim Gradient.sGradient(i) 
-      Gradient(i)\NbColor = -1
-      Gradient(i)\Name$ = name$
-      For j=0 To 1
-        Gradient(i)\NbColor+1
-        k = Gradient(i)\NbColor
-        ReDim  Gradient(i)\color(k)
-        
-        ; get colors
-        With obj(objid)\shape(ShapeId)
-          n = ArraySize(\ColGrad())
-          If n=0
-            n=1
-            ReDim \ColGrad(n)
-            \ColGrad(n)\Color = RGBA(0,0,0,255)
-          EndIf
-          n = ArraySize(\ColGrad())
-          If k = 0
-            col = \ColGrad(0)\color
-            Gradient(i)\color(k)\a = \Alpha
-          Else
-            col = \ColGrad(n)\color
-            Gradient(i)\color(k)\a = \ColGrad(n)\a
-          EndIf
-        EndWith
-        
-        ; set colors
-        Gradient(i)\color(k)\r = Red(col)
-        Gradient(i)\color(k)\g = Green(col)
-        Gradient(i)\color(k)\b = Blue(col)
-        Gradient(i)\color(k)\x = 100*j
-      Next
-      
-      
-      
-      
-      ; update the list of gradient (open the gradient files, from the folder "Data\Gradients\"
-      d$ = ","
-      folder$  ="data\Presets\Gradients\"
-      If ExamineDirectory(0,folder$,"*.txt")
-        While NextDirectoryEntry(0)
-          If DirectoryEntryType(0) = #PB_DirectoryEntry_File
-            If DirectoryEntryName(0) <> #Empty$ And DirectoryEntrySize(0) >0
-              ; add the gradient in the gradients list
-              nbgradient+1
-              i = nbgradient
-              ReDim Gradient.sGradient(i) 
-              Gradient(i)\NbColor = -1
-              Gradient(i)\Filename$ = DirectoryEntryName(0)
-              If ReadFile(0,folder$ +Gradient(i)\Filename$)
-                While Eof(0) =0
-                  line$ = ReadString(0)
-                  index$ = StringField(line$,1,d$)
-                  If index$ = "gradient"
-                    Gradient(i)\Name$ = StringField(line$, 2,d$)
-                  ElseIf index$ = "color"
-                    Gradient(i)\NbColor+1
-                    k = Gradient(i)\NbColor
-                    ReDim  Gradient(i)\color(k)
-                    u= 2
-                    Gradient(i)\color(k)\x = Val(StringField(line$, u,d$)) : u+1
-                    Gradient(i)\color(k)\r = Val(StringField(line$, u,d$)) : u+1
-                    Gradient(i)\color(k)\g = Val(StringField(line$, u,d$)) : u+1
-                    Gradient(i)\color(k)\b = Val(StringField(line$, u,d$)) : u+1
-                    Gradient(i)\color(k)\a = Val(StringField(line$, u,d$)) : u+1
-                  EndIf
-                Wend
-                Debug Gradient(i)\Name$+" "+Str(i)+" : "+Str( Gradient(i)\color(k)\r)+"/"+Str( Gradient(i)\color(k)\G)+"/"+Str( Gradient(i)\color(k)\b)
-                CloseFile(0)
-              EndIf
-              AddGadgetItem(#G_WinGradientList,-1,Gradient(i)\Name$)
-            EndIf
-          EndIf
-        Wend
-
-        FinishDirectory(0)
-      EndIf
-      x+W+5
-    EndIf
-    
-    ; the canvas to create the gradient
-    wc = winw-w-20
-    h = 100
-    If CanvasGadget(#G_WinGradientcanvas,x,y,wc,h,#PB_Canvas_Border)
-      WinGrad_UpdateGradient()
-      y+h+10
-    EndIf
-    
-    ; other gadgets
-    AddGadget(#G_WinGradientName,#Gad_String,x,y,w2,h1,"",0,0,lang("Rename the selected gradient")) : x+w2+5
-    AddGadget(#G_WinGradientAdd,#Gad_Btn,x,y,w1,h1,"+",0,0,lang("Create a new gradient")) : x+w1+5
-    AddGadget(#G_WinGradientDel,#Gad_Btn,x,y,w1,h1,"-",0,0,lang("Delete the selected gradient")): x+w1+5
-    AddGadget(#G_WinGradientSave,#Gad_Btn,x,y,w1,h1,lang("Save"),0,0,lang("Save the selected gradient"))
-
     ; Add 2 buttons
-    AddButtons(#Win_VD_Gradient)
-    
-    ;}
+    Addbuttons(#Win_VD_Gradient)
     
     
     Repeat
@@ -790,71 +556,7 @@ Procedure WindowGradient()
           gad = 0
           Select EventGadget
               
-            Case #G_WinGradientcanvas
-              WinGrad_EventGradient()
-              
-            Case #G_WinGradientAdd
-              name$= InputRequester(Lang("Name"),lang("Name of the new gradient"),"")
-              If name$ <> #Empty$
-                ext$ = GetExtensionPart(name$)
-                If ext$ <> "txt"
-                  ext$ = ".txt"
-                EndIf
-                If VD_GetFileExists(folder$ + name$+ext$) = 0
-                  ok = 0
-                  For i=0 To ArraySize(gradient())
-                    If Gradient(i)\Filename$ = name$+ext$
-                      ok= 1
-                      Break
-                    EndIf
-                  Next
-                  If ok=0
-                    nbgradient+1
-                    i = nbgradient
-                    ReDim Gradient.sGradient(i) 
-                  EndIf
-                  Gradient(i)\NbColor = -1
-                  Gradient(i)\Filename$ = name$+ext$
-                  Gradient(i)\Name$ = name$
-                  id = 0
-                  For j=0 To 1
-                    Gradient(i)\NbColor+1
-                    k = Gradient(i)\NbColor
-                    ReDim  Gradient(i)\color(k)
-                    If k = 0
-                      u = 0
-                    Else
-                      u = ArraySize(Gradient(id)\color())
-                    EndIf
-                    Gradient(i)\color(k)\x = Gradient(id)\color(u)\x
-                    Gradient(i)\color(k)\r = Gradient(id)\color(u)\r
-                    Gradient(i)\color(k)\g = Gradient(id)\color(u)\g
-                    Gradient(i)\color(k)\b = Gradient(id)\color(u)\b
-                    Gradient(i)\color(k)\a = Gradient(id)\color(u)\a
-                  Next
-                  SaveGradient(i)
-                  
-                  ; add to gagdetlist
-                  If ok = 0
-;                     ClearGadgetItems(#G_WinGradientList)
-;                     For i=0 To ArraySize(Gradient())
-                      AddGadgetItem(#G_WinGradientList,-1,Gradient(i)\Name$)
-;                     Next
-                  EndIf
-                EndIf
-              EndIf
-              
-            Case #G_WinGradientSave
-              SaveGradient(GradientId)
-              
-            Case #G_WinGradientList
-              id = GetGadgetState(#G_WinGradientList)
-              If id >=0 And id<= ArraySize(Gradient())
-                GradientID = id
-                WinGrad_UpdateGradient()
-              EndIf
-              
-            Case #G_Win_BtnOk 
+            Case #G_Win_BtnOk
               quit = 1
               
             Case #G_Win_BtnCancel
@@ -870,49 +572,13 @@ Procedure WindowGradient()
       
       
     Until quit >= 1
-    
-    If quit =1
-      ; apply the gradient color
-      ;col1 = Brush(Action)\color
-      ;col2 = Brush(Action)\ColorFG
-      j = gradientID
-      k =  ArraySize(Gradient(j)\color())
-      ; set the last color
-        With Gradient(j)\color(k)
-          ; colorFG = RGBA(\R,\g,\b,\A)
-          n = ArraySize(obj(objid)\shape(shapeId)\ColGrad())
-          Shape_SetColorGradient(shapeId,1,n,\r,\g,\b,\a)
-        EndWith
-      ; set the first color
-        With Gradient(j)\color(0)
-          ;colorBG = RGBA(\R,\g,\b,\A)
-          Shape_SetColorGradient(shapeId,1,0,\r,\g,\b,\a)
-        EndWith
-       ; set color FG
-;       Brush(Action)\ColorFG=colorFG
-;       UpdateColorFG()
-        
-        Drawcanvas()
-        
-      ; set color BG
-;       Brush(Action)\color=colorBG
-;       Brush(Action)\ColorBG\R = Red(Brush(Action)\Color)
-;       Brush(Action)\ColorBG\G = Green(Brush(Action)\Color)
-;       Brush(Action)\ColorBG\B = Blue(Brush(Action)\Color)                      
-;       BrushUpdateColor()      
-;       color = RGBA(Brush(Action)\col\R,Brush(Action)\col\G,Brush(Action)\col\B,Brush(Action)\alpha)
-;       SetColorSelector(color,Xx8,yy8,3,1)
-    EndIf
-    
-    
     CloseWindow(#Win_VD_Gradient)
   EndIf
   
 EndProcedure
 
 
-
-; window Character
+; window gradient
 Procedure WindowCharacterEditor_updatecanvas()
   Shared character.scharacter
   
@@ -1453,7 +1119,7 @@ EndProcedure
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
 ; CursorPosition = 270
-; FirstLine = 19
-; Folding = AAAgPEAw+0f-08-fAAAAAAAg
+; FirstLine = 33
+; Folding = s--nPMgBAAAAAAAA9
 ; EnableXP
 ; DisableDebugger

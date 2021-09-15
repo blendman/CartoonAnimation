@@ -381,7 +381,6 @@ CompilerEndIf
 ; - parfois, on ne peut pas supprimer un shape avec "del", mais ça fonctionne avec le bouton "-" du panneau "bank"
 ; - clic to select shape doesn't use the obj()\w,h,x,y parameters.e
 ; - bug avec merge 2 shapes (draw selection border).
-; ok 0.42 - add options for gradient
 
 ; ok - ajouter un système de storyboard (voir le fichier cartoon_dev) : see BDcreator
 ; ok - ajouter un système de création de page de BD : see BDcreator
@@ -396,7 +395,7 @@ CompilerEndIf
 
 
 ; En réflexion : 
-; non : - ajouter un gadgets pour passer d'un point à un autre
+; bof : - ajouter un gadgets pour passer d'un point à un autre
 
 ; Not urgent : 
 ; - modifier/option miror quand on crée des points
@@ -413,81 +412,43 @@ CompilerEndIf
 
 
 ; BUGS :
-; ?? - bug quand on supprime un point : il faudrait avoir un choix : seulement le point ou le point et les 2 points d'encrage (si courbe)
+; - bug quand on supprime un point : il faudrait avoir un choix : seulement le point ou le point et les 2 points d'encrage (si courbe)
 ; - bug avec le deparanting : les shapes ne restent pas à leur place si on l'applique.
 ; - bug when lockselection and move (the startX /Y should be recalcultaed each time we clicdown)
 ; - revoir le système de savepreviewimage si on sauve un fichier (car si les shapes ne sont pas dans la vue camera, c'est coupé)
 ; wip - fixe the bug setorigin with parenting
 ; - bug export purebasic : ne prend pas les fx en compte
 ; - bug scale : n'est pas en fonction du centre mais en 0,0
-; - bug add point with line
 
-;************************************* priority *************************************
-
+;******** priority
 ; ok a integrer - simplifier des points d'un path (supprimer les points trop prêt et si angle<20 de différence)
 ; WIP - add shape\finalX,Y for selection and other thing which use shape\X,Y
 ; WIP 0.30 - pouvoir save des preset d'outils (comme la line : avec les options (couleur, style, fx, couleur fx...) 
-; ***** FX : 
+; FX : 
 ; - pouvoir change le depth (position) des fx
 ; - ajouter le depth, dans les options de création.
 ; - pouvoir copier/coller le fx du shapeId à tous les shapes selected
-; ***** SHAPE : 
+; Shape : 
 ; - pouvoir séparer un shape en plusieurs morceaux (en plusieurs shapes ?)
 ; - pouvoir continuer un shape (line, box, etc...), donc ajouter des points
-; ***** SAVE/EXPORT
+; Save/export
 ; - add bg img to save_Doc(), and load only it if doc_open()
 ; - bug exportimage : si la camera est décalée en y et le scale <> 100%
-; ***** MISC : 
+; misc : 
 ; WIP - ajouter un editeur de personnage (créer à partir d'une banque facilement : tete, oreille, yeux, bouche, nez, cou, cheveux..)
 ; - verifier si les idunik des shapes sont bien unik, sinon-> changer l'idunik et changer l'idunik sur les objet enfants
 ; - pouvoir créer des objets à partir de groupe (? ou autre) de shape, qui seraient des images. Si je modifie un shape du groupe, ça update l'image.
 ; - ajouter les options de strokepath(roundend...)
+; - add options for gradient
 ; - pouvoir rotationner tous les shapes sélectionnés, mais par rapport à une bounding box (le centre du shapeid par ex)
 ; - tool miror avec boundingbox
 
-; - text : ajouter les gadgets pour text width, height, font size... ou changer les  texte de gadgets qu'on n'utilise pas (linew\h\depth)
+; - text : ajouter les gadgets pour text width, height, font size...
 ; - bug avec tool selection
 ; - supprimer les raccourcis ctrl=X/ctrl+V si on est sur un gadget autre que canvasmain.
 ; - ajouter un fonction de verification des shapes (ex: si curve et que 1 seul pt : erreur) 
 ; - BUG : modifier procedure_draw et event_canvas.pb, pour bien positionner les ancres et les centres, 
 ; car les derniers point de chaque courbe ne prennent pas le bon point final en compte.
-; - with gradient, some text for gadgets "style" should be changed (linew\h\depth)
-
-
-
-; 15/09/2021 0.42.9 (65)
-; // New
-; - panel Edit : add gadget : rotation
-; - panel Edit : add scrollareagadget
-; // Changes
-; - when create some shape (box, ellipse, image..) the sieW\H is now 10x10 (was 5x5)
-; - panel Edit : add framegadgets and do lots of changes with (positon, size, section (editor, properties, debug infos, center...))
-; // Fixes
-; - when create shape (box, ellipse), gadgets size aren't updated.
-; - when change size (box, ellipse, image), gadgets size aren't updated.
-; - Rotation isn't centered (box, ellipse, image)
-; - preference\interface : text isn't seen full (movetool can move, beta..)
-
-
-
-; 14/09/2021 0.42.7 (64)
-; // New
-; wip beta - add parenting with rotation (not finished)
-; - Gradient : add buton to open a window gradient
-; - Gradient : we can change gradient for the shape, with window gradient (not alpha for the moment and only 2 colors)
-; - add Shape_SetColorGradient(m,mode=0,i=0,r=0,g=0,b=0,a=0) to set gradient color to shape
-; - SaveGradient(i) (copy from animatoon gradient) and make changes to adapt for cartoon
-; - add WinGrad_UpdateGradient() (copy from animatoon gradient) and make changes to adapt for cartoon
-; - add WinGrad_EventGradient() (copy from animatoon gradient) and make changes to adapt for cartoon
-; // changes
-; - Shape_SetPropertie() : the lineW/H can be=0 now (before it was at least>=0.01)
-; - VDDrawShapeColor() : for gradient linear : add viewx/y, change the gradient position x1,y1,x2,y2
-
-
-; 13/09/2021 0.42.1 (63)
-; // New
-; - menu\file : add export group as images
-; - export group of shapes as separate images 
 
 
 ; 13/09/2021 0.42 (63)
@@ -1293,7 +1254,6 @@ CompilerEndIf
 ; - Shape : set origin to shape
 ; - Shape : set shape to bottom (depth)
 ; - Shape : set shape to top (depth)
-; - add points tool buton
 ; // Fixes
 ; - fixe some bug in the export for purebasic
 ; - fixe a bug with Addfx : fx isn't add to the shape
@@ -1527,8 +1487,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 439
-; FirstLine = 133
+; CursorPosition = 453
+; FirstLine = 127
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger

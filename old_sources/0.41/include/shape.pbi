@@ -284,8 +284,8 @@ Procedure VD_MovePoint(i,x1,y1)
     sx0 = \pt(i)\x + \x - Obj(ObjId)\x
     sy0 = \pt(i)\y + \y - Obj(ObjId)\y
     
-    \pt(i)\startX = \pt(i)\x ; - x1 
-    \pt(i)\startY = \pt(i)\y ; - y1
+    \pt(i)\startX = \pt(i)\x ;- x1 
+    \pt(i)\startY = \pt(i)\y ;- y1
     
     \pt(i)\x = x1 -\x  - Obj(ObjId)\x
     \pt(i)\y = y1 -\y  - Obj(ObjId)\y
@@ -379,8 +379,8 @@ Macro VD_PointGetSelected(x1,y1)
             sx0 = Obj(ObjId)\Shape(ShapeId)\pt(ip)\x + Obj(ObjId)\Shape(ShapeId)\x ;+ Obj(ObjId)\x
             sy0 = Obj(ObjId)\Shape(ShapeId)\pt(ip)\y + Obj(ObjId)\Shape(ShapeId)\y ;+ Obj(ObjId)\y
             
-            Obj(ObjId)\Shape(ShapeId)\pt(ip)\startX = Obj(ObjId)\Shape(ShapeId)\pt(ip)\x ; - x1 
-            Obj(ObjId)\Shape(ShapeId)\pt(ip)\startY = Obj(ObjId)\Shape(ShapeId)\pt(ip)\y ; - y1
+            Obj(ObjId)\Shape(ShapeId)\pt(ip)\startX = Obj(ObjId)\Shape(ShapeId)\pt(ip)\x ;- x1 
+            Obj(ObjId)\Shape(ShapeId)\pt(ip)\startY = Obj(ObjId)\Shape(ShapeId)\pt(ip)\y ;- y1
             j=ip
             
             If Obj(ObjId)\Shape(ShapeId)\ShapTyp = #VD_ShapeShape Or Obj(ObjId)\Shape(ShapeId)\ShapTyp = #VD_ShapeCurve
@@ -394,18 +394,18 @@ Macro VD_PointGetSelected(x1,y1)
                   v =ArraySize(Obj(ObjId)\Shape(ShapeId)\pt())
                 EndIf  
                 
-                sx1 = Obj(ObjId)\Shape(ShapeId)\pt(u)\x + Obj(ObjId)\Shape(ShapeId)\x ; + Obj(ObjId)\x
-                sy1 = Obj(ObjId)\Shape(ShapeId)\pt(u)\y + Obj(ObjId)\Shape(ShapeId)\y ; + Obj(ObjId)\y
-                sx2 = Obj(ObjId)\Shape(ShapeId)\pt(v)\x + Obj(ObjId)\Shape(ShapeId)\x ; + Obj(ObjId)\x
-                sy2 = Obj(ObjId)\Shape(ShapeId)\pt(v)\y + Obj(ObjId)\Shape(ShapeId)\y ; + Obj(ObjId)\y
+                sx1 = Obj(ObjId)\Shape(ShapeId)\pt(u)\x + Obj(ObjId)\Shape(ShapeId)\x ;+ Obj(ObjId)\x
+                sy1 = Obj(ObjId)\Shape(ShapeId)\pt(u)\y + Obj(ObjId)\Shape(ShapeId)\y ;+ Obj(ObjId)\y
+                sx2 = Obj(ObjId)\Shape(ShapeId)\pt(v)\x + Obj(ObjId)\Shape(ShapeId)\x ;+ Obj(ObjId)\x
+                sy2 = Obj(ObjId)\Shape(ShapeId)\pt(v)\y + Obj(ObjId)\Shape(ShapeId)\y ;+ Obj(ObjId)\y
                 If vd\shift
                   Obj(ObjId)\Shape(ShapeId)\pt(u)\Selected = 1
                   Obj(ObjId)\Shape(ShapeId)\pt(v)\Selected = 1
                 EndIf
-                Obj(ObjId)\Shape(ShapeId)\pt(u)\startX = Obj(ObjId)\Shape(ShapeId)\pt(u)\x ; - x1  ;+ Obj(ObjId)\x
-                Obj(ObjId)\Shape(ShapeId)\pt(u)\startY = Obj(ObjId)\Shape(ShapeId)\pt(u)\y ; - y1  ;+ Obj(ObjId)\y
-                Obj(ObjId)\Shape(ShapeId)\pt(v)\startX = Obj(ObjId)\Shape(ShapeId)\pt(v)\x ; - x1  ;+ Obj(ObjId)\x
-                Obj(ObjId)\Shape(ShapeId)\pt(v)\startY = Obj(ObjId)\Shape(ShapeId)\pt(v)\y ; - y1  ;+ Obj(ObjId)\y
+                Obj(ObjId)\Shape(ShapeId)\pt(u)\startX = Obj(ObjId)\Shape(ShapeId)\pt(u)\x ;- x1  ;+ Obj(ObjId)\x
+                Obj(ObjId)\Shape(ShapeId)\pt(u)\startY = Obj(ObjId)\Shape(ShapeId)\pt(u)\y ;- y1  ;+ Obj(ObjId)\y
+                Obj(ObjId)\Shape(ShapeId)\pt(v)\startX = Obj(ObjId)\Shape(ShapeId)\pt(v)\x ;- x1  ;+ Obj(ObjId)\x
+                Obj(ObjId)\Shape(ShapeId)\pt(v)\startY = Obj(ObjId)\Shape(ShapeId)\pt(v)\y ;- y1  ;+ Obj(ObjId)\y
                 
               EndIf
             EndIf
@@ -538,37 +538,6 @@ Procedure.s Shape_CreateIdUnik()
   ProcedureReturn idunik$
 EndProcedure
 
-; Color
-Procedure Shape_SetColorGradient(m,mode=0,i=0,r=0,g=0,b=0,a=0)
-  ; mode = 0 : set the colors from the color of shape and gradient
-  ; mode = 1 : set the gradient color For the window gradient or swacht, colorrequester()...
-  
-  With obj(objid)\shape(m)
-    If mode = 0
-      c = \ColGrad(0)\Color
-      \ColGrad(0)\r = Red(c)
-      \ColGrad(0)\g = Green(c)
-      \ColGrad(0)\b = Blue(c)
-      \ColGrad(0)\a = \Alpha
-      For i=1 To ArraySize(\ColGrad())
-        c = \ColGrad(i)\Color
-        \ColGrad(i)\r = Red(c)
-        \ColGrad(i)\g = Green(c)
-        \ColGrad(i)\b = Blue(c)
-        \ColGrad(i)\a = Alpha(c)
-      Next
-    ElseIf mode =1
-      Debug Str(i)+" / "+Str(color)
-      \ColGrad(i)\color = RGBA(r,g,b,255)
-      \ColGrad(i)\r = r
-      \ColGrad(i)\g = g
-      \ColGrad(i)\b = b
-      \ColGrad(i)\a = 255
-    EndIf
-  EndWith
-  
-EndProcedure
-
 
 ; Add a shape
 Procedure AddPathRoundBox(x, y, w, h, r)
@@ -618,21 +587,18 @@ Procedure Shape_Add(x,y)
   Else
     
     ;{ On créé un autre type d'objet
-    s = 5
+    
     ; Set the name of the Shape
     Select vdOptions\Action
         
       Case #VD_actionAddBox            
         nom$ ="Box_"
-        s = 10
         
       Case #VD_actionAddBoxRnd                
         nom$ ="RoundBox_"
-        s=10
         
       Case #VD_actionAddCircle
         nom$ ="Circle_"
-        s=10
         
       Case #VD_actionAddShape
         nom$ ="Shape_"
@@ -656,14 +622,11 @@ Procedure Shape_Add(x,y)
             Nom$ = GetFilePart(file$)
             ext$ = "."+GetExtensionPart(file$)
             Nom$ = RemoveString(Nom$,ext$)
-            ok=1
-            s = 10
           EndIf                
         EndIf
         
       Case #VD_actionAddText
         nom$="Text_"
-        s=10
         
     EndSelect
     
@@ -751,14 +714,13 @@ Procedure Shape_Add(x,y)
         \Shape(m)\Rnd   = 20
         \Shape(m)\depth = (m+1)*20
         \Shape(m)\pos = (m+1)*20
-        \Shape(m)\SizeW = s
-        \Shape(m)\SizeH = s              
+        \Shape(m)\SizeW = 5
+        \Shape(m)\SizeH = 5              
         \Shape(m)\Nom$ = nom$+Str(m)
         \Shape(m)\Alpha = vdoptions\ToolOptions\Alpha
         \Shape(m)\Color = vdoptions\ToolOptions\Color; RGBA(220,220,120,255)
         c = vdoptions\ToolOptions\Color
-        \Shape(m)\ColGrad(0)\Color = RGBA(Red(c),Green(c),Blue(c),vdoptions\ToolOptions\Alpha)
-        Shape_SetColorGradient(m)
+        \Shape(m)\ColGrad(0) = RGBA(Red(c),Green(c),Blue(c),vdoptions\ToolOptions\Alpha)
         \Shape(m)\pt(0)\x = x
         \Shape(m)\pt(0)\y = y
         \Shape(m)\pt(0)\MaxPt = ArraySize(\Shape(m)\pt())
@@ -2203,8 +2165,7 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
             With Obj(ObjId)\Shape(i)
               If \Selected Or i = shapeid
                 \Color=RGBA(Red(col),Green(col),Blue(col),Obj(ObjId)\Shape(i)\alpha)
-                \ColGrad(0)\Color=RGBA(Red(col),Green(col),Blue(col),Obj(ObjId)\Shape(i)\alpha)
-                 Shape_SetColorGradient(i)
+                \ColGrad(0)=RGBA(Red(col),Green(col),Blue(col),Obj(ObjId)\Shape(i)\alpha)
               EndIf
             EndWith
           Next 
@@ -2238,27 +2199,23 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
               Obj(ObjId)\Shape(i)\w = ValD(GetGadgetText(#G_shapeLineW))
-              ; min(Obj(ObjId)\Shape(i)\w,0.001)
+              min(Obj(ObjId)\Shape(i)\w,0.001)
             EndIf
           Next 
         
       Case #ShapePropertie_LineD
-        For i=0 To ArraySize(obj(ObjId)\Shape())
-          If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
-            Obj(ObjId)\Shape(i)\d = ValD(GetGadgetText(#G_shapeLineD))
-;             If Obj(ObjId)\Shape(i)\Typ =0
-;               min(Obj(ObjId)\Shape(i)\d,0.001)
-;             EndIf
-          EndIf
-        Next 
+          For i=0 To ArraySize(obj(ObjId)\Shape())
+            If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
+              Obj(ObjId)\Shape(i)\d = ValD(GetGadgetText(#G_shapeLineD))
+              min(Obj(ObjId)\Shape(i)\d,0.001)
+            EndIf
+          Next 
         
       Case #ShapePropertie_LineH
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If  Obj(ObjId)\Shape(i)\Selected Or i = shapeid
               Obj(ObjId)\Shape(i)\h = ValD(GetGadgetText(#G_shapeLineH))
-;               If Obj(ObjId)\Shape(i)\Typ =0
-;                 min(Obj(ObjId)\Shape(i)\h,0.001)
-;               EndIf
+              min(Obj(ObjId)\Shape(i)\h,0.001)
             EndIf
           Next 
         
@@ -2276,8 +2233,7 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
               \alpha = GetGadgetState(#G_shapeAlpha)
               col = \Color
               \Color = RGBA(Red(col),Green(col),Blue(col),\alpha)
-              \ColGrad(0)\Color=\Color
-               Shape_SetColorGradient(i)
+              \ColGrad(0)=\Color
             EndIf
           EndWith
         Next 
@@ -2457,7 +2413,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 2179
-; FirstLine = 314
-; Folding = AAwfYw0P-89kP+DAAAAAAAAg-AAg+vwpHECAIkvhAAAAAA+bwB-fAAAAe-
+; CursorPosition = 139
+; FirstLine = 10
+; Folding = AAweYw0P-8Qk5PAAAAAAAAA+DAA7fKneQIAgQ-GCAAAAA5PAAAAAAAA50
 ; EnableXP

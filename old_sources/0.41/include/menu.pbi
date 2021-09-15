@@ -112,7 +112,6 @@ Procedure VD_CreateTheMenu()
     MenuItem(#menuVD_ProjProperties,lang("Project properties"))
     MenuItem(#menuVD_ExportImageObj,lang("Export the object as image")+Chr(9)+"Ctrl+Shift+E")
     MenuItem(#menuVD_ExportImageSelected,lang("Export the selected as image"))
-    MenuItem(#menuVD_ExportImageGroup,lang("Export the groups as image"))
     MenuItem(#menuVD_ExportScene,lang("Export Scene (full image)"))
     MenuBar()
     MenuItem(#menuVD_ExportPb,lang("Export in Purebasic"))
@@ -1143,27 +1142,6 @@ EndProcedure
 ;}
 
 ; export image
-Procedure ExportGroupAsImages()
-  
-  ; export the group of shape as separate images
-  For i=0 To ArraySize(ShapeGroup())
-    name$ = ShapeGroup(i)\Name$
-    ; unselecte all
-    For k=0 To ArraySize(obj(objID)\Shape())
-      obj(objID)\Shape(k)\Selected = 0
-    Next
-    ; select form group
-    For k=0 To ArraySize(obj(objID)\Shape())
-      If obj(objID)\Shape(k)\Group$ = name$
-        obj(objID)\Shape(k)\Selected = 1
-      EndIf 
-    Next
-    ; export image
-    Scene_Export(0,5,VdOptions\PathSave$ + name$+".png",1)
-  Next
-  
-EndProcedure
-
 Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
   
   Shared ExportImage
@@ -1361,10 +1339,7 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
       
       ; unpremultiply, to fixe the PB bug eport with vectorlib
       If StartDrawing(ImageOutput(#Img_Export))
-        CompilerIf #PB_Compiler_Backend = 0
-          Premultiply::UnpremultiplyPixels(DrawingBuffer(), (DrawingBufferPitch()*OutputHeight())>>2)
-        CompilerEndIf
-        
+        Premultiply::UnpremultiplyPixels(DrawingBuffer(), (DrawingBufferPitch()*OutputHeight())>>2)
         StopDrawing()
       EndIf
       
@@ -1488,8 +1463,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1364
-; FirstLine = 114
-; Folding = MGBfTAYPIAAAAAAAAAo+-H1NAA5zA5
+; CursorPosition = 22
+; Folding = OSBfTAYPIAAAAAAAAAo+E5bAAAwA5
 ; EnableXP
 ; DisableDebugger

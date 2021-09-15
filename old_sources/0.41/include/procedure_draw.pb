@@ -2,26 +2,15 @@
 
 ; macro utilisied for shape drawing
 Macro ShapeSetParentingPosition(i,j)
-  ; pour connaitre la position du shape sil a un parent
   vo = i
-  rot = 0
   If Obj(vo)\Shape(j)\Parent\id >0 And Obj(vo)\Shape(j)\parent\id-1 <> j
-    ; position
     px = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\X - Obj(vo)\Shape(j)\Parent\startx
     pY = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Y - Obj(vo)\Shape(j)\Parent\starty
     Obj(vo)\Shape(j)\Parent\x = px
     Obj(vo)\Shape(j)\Parent\y = py
-    
-    If VdOptions\Beta
-    ; rotation
-      rot = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Rot - Obj(vo)\Shape(j)\Parent\StartRot
-    EndIf
-    
   EndIf
   Obj(vo)\Shape(j)\FinalX = Obj(vo)\Shape(j)\x +px
   Obj(vo)\Shape(j)\FinalY = Obj(vo)\Shape(j)\y +py
-  Obj(vo)\Shape(j)\FinalRot = Obj(vo)\Shape(j)\Rot +rot
-  
 EndMacro
 
 
@@ -246,18 +235,15 @@ Procedure VdDrawShape1(vo,j)
     
     With Obj(vo)\Shape(j)
       
-      ShapeSetParentingPosition(vo,j)
-      VD_ShapeCoord(vo)
-     
-      
+        ShapeSetParentingPosition(vo,j)
+        
         vx = Vd\viewX + \x + px ; + Obj(ObjId)\x 
         vy = Vd\viewY + \y + pY ; + Obj(ObjId)\y
-      
+        
         MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
         
         If \rot <> 0
-          ;RotateCoordinates(\pt(0)\x+\Cx+vx, \pt(0)\y+\cy+vy, \FinalRot) 
-          RotateCoordinates(\Cx+vx, \cy+vy, \FinalRot) 
+          RotateCoordinates(\pt(0)\x+\Cx+vx, \pt(0)\y+\cy+vy, \rot) 
           ; faire la rotation par rapport à un centre de l'objet \centerX+vx et \centerY+vy
           ; de base : \centerX = \pt(0)\x+\Cx et \centerY =  \pt(0)\y+\cy
         EndIf
@@ -418,8 +404,6 @@ Procedure VDDrawShapeColor(vo,j)
   ; pour remplir le chemin, avec le style souhaité : filled, line, dash, dot
   Protected  d.d  
   
-  vx = vd\ViewX
-  vy = vd\ViewY
   With Obj(vo)\Shape(j)
     
     ; the color or gradient
@@ -437,18 +421,18 @@ Procedure VDDrawShapeColor(vo,j)
           If n=0
             n=1
             ReDim \ColGrad(n)
-            \ColGrad(n)\Color = RGBA(0,0,0,255)
+            \ColGrad(n) = RGBA(0,0,0,255)
           EndIf
           p = ArraySize(\pt())
 
-;           If p>0
-            VectorSourceLinearGradient(vx+\x+\pt(0)\x,vy+\y+\pt(0)\y,vx+\x+\pt(p)\x+\w*0.1*\SizeW*0.1,vy+\y+\pt(p)\y+\h*0.1*\sizeW*0.1)  
-;           Else
-;             VectorSourceLinearGradient(vx+\x+\pt(0)\x+\w,vy+\y+\pt(0)\y+\h,vx+\x+\pt(0)\x,vy+\y+\pt(0)\y)  
-;           EndIf
+          If p>0
+            VectorSourceLinearGradient(\pt(0)\x+\w/2,\pt(0)\y+\h/2,\pt(p)\x,\pt(p)\y)  
+          Else
+             VectorSourceLinearGradient(\pt(0)\x+\w/2,\pt(0)\y+\h/2,\pt(0)\x,\pt(0)\y)  
+          EndIf
           For i=0 To n
-            d.d = i/n
-            VectorSourceGradientColor(\ColGrad(i)\color,d) 
+            d = i/n
+            VectorSourceGradientColor(\ColGrad(i),d) 
           Next
           
         Case 2 ; gradient circulaire
@@ -456,12 +440,12 @@ Procedure VDDrawShapeColor(vo,j)
            If n=0
              n=1
              ReDim \ColGrad(n)
-            \ColGrad(n)\Color = RGBA(0,0,0,255)
+            \ColGrad(n) = RGBA(0,0,0,255)
           EndIf
           VectorSourceCircularGradient(\pt(0)\x+\w/2,\pt(0)\y+\h/2,\w/2) 
           For i=0 To n
             d = i/n
-            VectorSourceGradientColor(\ColGrad(i)\Color, d)                    
+            VectorSourceGradientColor(\ColGrad(i), d)                    
           Next
           
         Case 3 ; image texture 
@@ -469,11 +453,11 @@ Procedure VDDrawShapeColor(vo,j)
           If IsImage(\Img)
             VectorSourceImage(ImageID(\Img))  
           EndIf
-;           For i=0 To n
-;             d = i/n
-;             VectorSourceGradientColor(\ColGrad(i)\Color,d) 
-;           Next
-;           
+          For i=0 To n
+            d = i/n
+            VectorSourceGradientColor(\ColGrad(i),d) 
+          Next
+          
       EndSelect
       
     EndIf
@@ -1365,8 +1349,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 254
-; FirstLine = 54
-; Folding = dl-v-8fY-nn-O--44fM-40g+4--fB1--
+; CursorPosition = 1303
+; FirstLine = 57
+; Folding = Ul-vv+fY-fe+89-ff-x9f4D7b---HQ--
 ; EnableXP
 ; DisableDebugger
