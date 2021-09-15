@@ -7,7 +7,7 @@
   "ShowGrid"                 : 0,
   "CameraH"                  : 768,
   "ShowShapeBoundingBox"     : 0,
-  "ToolMoveCanSelect"        : 0,
+  "ToolMoveCanSelect"        : 1,
   "CameraCacheColor"         : 0,
   "ToolOptions"              : {
       "Color"   : 6401494,
@@ -540,7 +540,7 @@
   "ThemeColor"               : 150,
   "WinW"                     : 1360,
   "Swatch"                   : "data\\presets\\swatch\\Tango.gpl",
-  "CenterTransformation"     : 0,
+  "CenterTransformation"     : 1,
   "BankOutputSize"           : 64,
   "ShowTimeLine"             : 0,
   "ConfirmExit"              : 1,

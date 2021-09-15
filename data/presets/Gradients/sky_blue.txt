@@ -1,0 +1,3 @@
+gradient,Sky turquoise,
+color,0,0,128,192,255,
+color,100,0,255,255,255,

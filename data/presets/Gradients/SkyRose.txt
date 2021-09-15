@@ -1,0 +1,3 @@
+gradient,SkyRose,
+color,0,255,128,192,255,
+color,100,254,186,249,255,
