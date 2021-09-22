@@ -7,20 +7,20 @@ Macro ShapeSetParentingPosition(i,j)
   rot = 0
   If Obj(vo)\Shape(j)\Parent\id >0 And Obj(vo)\Shape(j)\parent\id-1 <> j
     ; position
-    px = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\FinalX - Obj(vo)\Shape(j)\Parent\startx
-    pY = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\FinalY - Obj(vo)\Shape(j)\Parent\starty
+    px = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\X - Obj(vo)\Shape(j)\Parent\startx
+    pY = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Y - Obj(vo)\Shape(j)\Parent\starty
     Obj(vo)\Shape(j)\Parent\x = px
     Obj(vo)\Shape(j)\Parent\y = py
     
     If VdOptions\Beta
     ; rotation
-      rot = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Rot+Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\FinalRot - Obj(vo)\Shape(j)\Parent\StartRot
+      rot = Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Rot - Obj(vo)\Shape(j)\Parent\StartRot
     EndIf
     
   EndIf
   Obj(vo)\Shape(j)\FinalX = Obj(vo)\Shape(j)\x +px
   Obj(vo)\Shape(j)\FinalY = Obj(vo)\Shape(j)\y +py
-  Obj(vo)\Shape(j)\FinalRot = rot ; Obj(vo)\Shape(j)\Rot +rot
+  Obj(vo)\Shape(j)\FinalRot = Obj(vo)\Shape(j)\Rot +rot
   
 EndMacro
 
@@ -248,50 +248,19 @@ Procedure VdDrawShape1(vo,j)
       
       ShapeSetParentingPosition(vo,j)
       VD_ShapeCoord(vo)
+     
       
         vx = Vd\viewX + \x + px ; + Obj(ObjId)\x 
         vy = Vd\viewY + \y + pY ; + Obj(ObjId)\y
-        
-        If \FinalRot <>0
-          vx1 = Vd\viewX + Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\x ; + Obj(ObjId)\x 
-          vy1 = Vd\viewY + Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\y ; + Obj(ObjId)\y
-          RotateCoordinates(Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Cx+vx1, Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\cy+vy1, \FinalRot) 
-          ; attention, il faut recalculer les positions en X et Y par rapport à la rotation ! 
-        EndIf
-        
-         MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+      
+        MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
         
         If \rot <> 0
           ;RotateCoordinates(\pt(0)\x+\Cx+vx, \pt(0)\y+\cy+vy, \FinalRot) 
-          RotateCoordinates(\Cx+vx, \cy+vy, \Rot) 
+          RotateCoordinates(\Cx+vx, \cy+vy, \FinalRot) 
           ; faire la rotation par rapport à un centre de l'objet \centerX+vx et \centerY+vy
           ; de base : \centerX = \pt(0)\x+\Cx et \centerY =  \pt(0)\y+\cy
         EndIf
-        
-        MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
-        
-;         If \shaptyp = #VD_ShapeCurve
-;           If \FinalRot <> 0
-;             Cos.f = Cos(Radian(\FinalRot))
-;             Sin.f = Sin(Radian(\FinalRot))
-;             
-;             ; on garde les coordonnées du premier point
-;             x1 = \CurX + \Cx
-;             y1 = \CurY + \Cy
-;             
-;             For k = 0 To ArraySize(\pt()) 
-;               If \pt(k)\Selected
-;                 Xx = \pt(k)\startRotX ;-x1                                         
-;                 Yy = \pt(k)\startRotY ;-y1
-;                 
-;                 \pt(k)\x = Xx*Cos - Yy*Sin + x1 
-;                 \pt(k)\y = Xx*Sin + Yy*Cos + y1
-;               EndIf
-;             Next 
-;           EndIf
-;         EndIf
-        
-        
         
         Select \ShapTyp
                 
@@ -436,9 +405,9 @@ Procedure VdDrawShape1(vo,j)
             
         EndSelect
         
-        ;If \rot <> 0
+        If \rot <> 0
           VD_ResetCoord()
-        ;EndIf
+        EndIf
         
     EndWith
     
@@ -510,28 +479,6 @@ Procedure VDDrawShapeColor(vo,j)
     EndIf
     
     ; on choisit le type (line, dash, dot, filled..)
-;     If \Border>0
-;       Select \Typ
-;         Case 0
-;           FillPath(#PB_Path_Preserve)
-;         Case 1
-;           StrokePath(\w,#PB_Path_RoundEnd) 
-;         Case 2
-;           DashPath(\w,\h)
-;         Case 3
-;           DotPath(\w,\d,#PB_Path_RoundEnd)
-;       EndSelect
-;      Select \Border
-;         Case 0
-;           
-;         Case 1
-;           StrokePath(\w,#PB_Path_RoundEnd) 
-;         Case 2
-;           DashPath(\w,\h)
-;         Case 3
-;           DotPath(\w,\d,#PB_Path_RoundEnd)
-;       EndSelect
-;     Else
       Select \Typ
         Case 0
           FillPath()
@@ -542,7 +489,6 @@ Procedure VDDrawShapeColor(vo,j)
         Case 3
           DotPath(\w,\d,#PB_Path_RoundEnd)
       EndSelect
-;     EndIf
     
   EndWith
   
@@ -884,33 +830,33 @@ Procedure VDDrawUtil()
         ; draw the boundingbox for each shapes
         For kk = 0 To ArraySize(Obj(ObjId)\Shape())
             With Obj(ObjId)\Shape(kk)
-;             px = 0
-;             py = 0
-;             ShapeSetParentingPosition(ObjId,kk)
-;             
-;             vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
-;             vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
+            px = 0
+            py = 0
+            ShapeSetParentingPosition(ObjId,kk)
+            
+            vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
+            vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
             
             If \Selected = 1 ;And kk<> shapeId
               
-;               MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
-;               Select \ShapTyp
-;                   
-;                 Case #VD_ShapeShape, #VD_ShapeCurve                               
-;                   DrawShapeCurve(ObjID,kk,vx,vy)
-;                   
-;                 Case #VD_ShapeText
-;                   sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
-;                   sizeH = VectorParagraphHeight(\text$, \d,\h)
-;                   AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
-;                   
-;                 Case #VD_ShapeImage 
-;                   AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
-;                   
-;                 Default
+              MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+              Select \ShapTyp
+                  
+                Case #VD_ShapeShape, #VD_ShapeCurve                               
+                  DrawShapeCurve(ObjID,kk,vx,vy)
+                  
+                Case #VD_ShapeText
+                  sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+                  sizeH = VectorParagraphHeight(\text$, \d,\h)
+                  AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
+                  
+                Case #VD_ShapeImage 
+                  AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
+                  
+                Default
                   VdDrawShape1(ObjId, kk)
                   
-;               EndSelect
+              EndSelect
               
               \boundx = PathBoundsX()
               \boundy = PathBoundsY()
@@ -950,47 +896,47 @@ Procedure VDDrawUtil()
             With Obj(ObjId)\Shape(kk)
               If \hide = 0 And \Selected = 1   ;And kk<> shapeId
                 
-;                 px = 0
-;                 py = 0
-;                 
-;                 ShapeSetParentingPosition(ObjId,kk)
-;                 
-;                 vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
-;                 vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
-;                 
-;                 MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
-;                 Select \ShapTyp
-;                     
-;                   Case #VD_ShapeShape, #VD_ShapeCurve                               
-;                     For i =0 To ArraySize(\pt()) Step 3
-;                       
-;                       u = 1+i
-;                       If u > ArraySize(\pt())
-;                         u =0
-;                       EndIf
-;                       v = u+1
-;                       If v > ArraySize(\pt())
-;                         v =0
-;                       EndIf
-;                       w = v+1              
-;                       If w > ArraySize(\pt())
-;                         w=0
-;                       EndIf
-;                       AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
-;                     Next
-;                     
-;                   Case #VD_ShapeText
-;                     sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
-;                     sizeH = VectorParagraphHeight(\text$, \d,\h)
-;                     AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
-;                     
-;                   Case #VD_ShapeImage 
-;                     AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
-;                     
-;                   Default
+                px = 0
+                py = 0
+                
+                ShapeSetParentingPosition(ObjId,kk)
+                
+                vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
+                vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
+                
+                MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+                Select \ShapTyp
+                    
+                  Case #VD_ShapeShape, #VD_ShapeCurve                               
+                    For i =0 To ArraySize(\pt()) Step 3
+                      
+                      u = 1+i
+                      If u > ArraySize(\pt())
+                        u =0
+                      EndIf
+                      v = u+1
+                      If v > ArraySize(\pt())
+                        v =0
+                      EndIf
+                      w = v+1              
+                      If w > ArraySize(\pt())
+                        w=0
+                      EndIf
+                      AddPathCurve(\pt(u)\x+vx, \pt(u)\y+vy,\pt(v)\x+vx,\pt(v)\y+vy,\pt(w)\x+vx,\pt(w)\y+vy)
+                    Next
+                    
+                  Case #VD_ShapeText
+                    sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+                    sizeH = VectorParagraphHeight(\text$, \d,\h)
+                    AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
+                    
+                  Case #VD_ShapeImage 
+                    AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
+                    
+                  Default
                     VdDrawShape1(ObjId, kk)
                     
-;                 EndSelect
+                EndSelect
               EndIf
             EndWith                
           Next
@@ -1019,26 +965,26 @@ Procedure VDDrawUtil()
             
             vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
             vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
-;             
-;             MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
-;            
-;             Select \ShapTyp
-;                 
-;               Case #VD_ShapeShape, #VD_ShapeCurve  
-;                 DrawShapeCurve(ObjID,shapeId,vx,vy)
-;                 
-;               Case #VD_ShapeText
-;                 sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
-;                 sizeH = VectorParagraphHeight(\text$, \d,200000)
-;                 AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
-;                 
-;               Case #VD_ShapeImage 
-;                 AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
-;                 
-;               Default
+            
+            MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+           
+            Select \ShapTyp
+                
+              Case #VD_ShapeShape, #VD_ShapeCurve  
+                DrawShapeCurve(ObjID,shapeId,vx,vy)
+                
+              Case #VD_ShapeText
+                sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+                sizeH = VectorParagraphHeight(\text$, \d,200000)
+                AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
+                
+              Case #VD_ShapeImage 
+                AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
+                
+              Default
                 VdDrawShape1(ObjId, ShapeId)
                 
-;             EndSelect
+            EndSelect
             VectorSourceColor(RGBA(60,30,40,255)) 
             DashPath(1,5)
             
@@ -1216,8 +1162,7 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
                       EndIf
                     EndIf
                     If vd\ClicSelect =1  
-                      ; If ( (IsInsidePath(x1, y1) And \Typ =0)  Or (IsInsideStroke(x1, y1, \w) And \typ>0) Or mouseOn_shape = 1) And Vd\move = 0   
-                      If ( IsInsidePath(x1, y1)   Or IsInsideStroke(x1, y1, \w) Or mouseOn_shape = 1) And Vd\move = 0   
+                      If (IsInsidePath(x1, y1) Or IsInsideStroke(x1, y1, \w) Or mouseOn_shape = 1) And Vd\move = 0   
                         vd\ClicSelect=0
                         Vd\TestShapeOk = -1  
                         ;\selected= 1
@@ -1420,8 +1365,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 258
-; FirstLine = 39
-; Folding = Vl-v-zfw9nn-O--44--veQ-8---Ay--
+; CursorPosition = 254
+; FirstLine = 54
+; Folding = dl-v-8fY-nn-O--44fM-40g+4--fB1--
 ; EnableXP
 ; DisableDebugger

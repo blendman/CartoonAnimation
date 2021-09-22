@@ -452,56 +452,23 @@ CompilerEndIf
 ; - BUG : modifier procedure_draw et event_canvas.pb, pour bien positionner les ancres et les centres, 
 ; car les derniers point de chaque courbe ne prennent pas le bon point final en compte.
 ; - with gradient, some text for gadgets "style" should be changed (linew\h\depth)
-; - copy/paste all fx from a shape to another.
-;- view\show name
 
-; 20/09/2021 0.43.8 (68)
+
+
+; 15/09/2021 0.42.9 (65)
 ; // New
-; WIP - view\show name
-; // Changes
-; - rotation for curve/line use now \rot. The rotation is no more calculated on point.
-; - procedure_draw : now, I use VdDrawShape1(vo,j) in all procedure, to get the same resulat to draw the sahpe, its border selection...
-; // fixes
-; - rotation + curve/lien : the selection border wasn't correct
-
-
-; 19/09/2021 0.43.6 (67)
-; // fixes
-; - fixe some bug with rotation and parenting (not finished)
-
-
-; 16/09/2021 0.43.5 (66)
-; // New
-; - add menu shape : verify all shapes
-; - add Shape_UpdateParenting() to update parenting if needed
-; // Changes
-; - doc_save() : add "sub-version" (ex : 0.43.3-> version = 0.43, sub-version  = 0.003 (3*0.001))
-; - doc_save() : add parent\startx, starty, startRot
-; // Fixes
-; - parenting move : when a shape has a parent, it should be used in parenting for its children
-; - doc_open() : parenting isn't updated and used. if version is <0.43.2 -> set "start" parenting with x\y\rot of parent (see Shape_UpdateParenting())
-; - doc_open() : when merge, camera of merged file shouldn't be replace the camera of the current file
-; - doc_open() : add verification (camera and if shape is ok)
-; - doc_New() : when erase all (new doc), verify some camera parameters
-; - deparenting : fix a bug when deparenting with position
-
-
-; 15/09/2021 0.43 (65)
-; // New
-; - Shape_CheckIfShapeIdOk(j,i,confirm=0) : to verify and delete a shape if not ok (ex : name = "", w & h = 0, etc)
-; - panel Edit : add gadget : rotation (we can change shape rotation)
+; - panel Edit : add gadget : rotation
 ; - panel Edit : add scrollareagadget
 ; // Changes
-; - when create some shape (box, ellipse, image..) the sizeW\H is now 10x10 (was 5x5)
+; - when create some shape (box, ellipse, image..) the sieW\H is now 10x10 (was 5x5)
 ; - panel Edit : add framegadgets and do lots of changes with (positon, size, section (editor, properties, debug infos, center...))
 ; // Fixes
-; - fixe some parenting bugs with rotation (not finished)
 ; - when create shape (box, ellipse), gadgets size aren't updated.
 ; - when change size (box, ellipse, image), gadgets size aren't updated.
 ; - Rotation isn't centered (box, ellipse, image)
 ; - preference\interface : text isn't seen full (movetool can move, beta..)
 ; - ResizeImageProportion() : fixe a bug when image W or H =0
-; - toolbar : butons new, open, save shouldn't have "toggle" option.
+; - toolbar : butons new, open, save shouldn't be toggle.
 
 
 ; 14/09/2021 0.42.7 (64)
@@ -1561,8 +1528,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 459
-; FirstLine = 139
+; CursorPosition = 470
+; FirstLine = 133
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger

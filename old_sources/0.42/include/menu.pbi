@@ -127,8 +127,6 @@ Procedure VD_CreateTheMenu()
     MenuTitle(lang("Edit"))
     MenuItem(#menuVD_ShapeCopy,lang("Copy")+Chr(9)+"Ctrl+C")
     MenuItem(#menuVD_ShapePast,lang("Paste")+Chr(9)+"Ctrl+V")
-    MenuItem(#menuVD_ShapePastToshape,lang("Past previous parameters to shape"))
-    MenuBar()
     ;}
     
     ;{ VIEW
@@ -197,8 +195,9 @@ Procedure VD_CreateTheMenu()
     MenuTitle(lang("Shape"))
     ;       MenuItem(#menuVD_ShapeCopy,"Copy current shape"+Chr(9)+"Ctrl+C")
     ;       MenuItem(#menuVD_ShapePast,"Paste"+Chr(9)+"Ctrl+V")
+    MenuItem(#menuVD_ShapePastToshape,lang("Past previous parameters to shape"))
+    MenuBar()
     MenuItem(#menuVD_ShapeDelete,lang("Delete the current shape")+Chr(9)+"Del")
-    MenuItem(#menuVD_ShapeVerifyIfOk,lang("Check if all Shapes are ok"))
     MenuBar()
     OpenSubMenu(lang("Lock"))
     MenuItem(#menuVD_LockSelected,lang("Lock")+Chr(9)+"L")
@@ -563,26 +562,19 @@ Procedure Doc_New(mode=1,copy=0,draw=1,x=0,y=0)
         ProcedureReturn 0
       EndIf
       
-      ; Debug "Taille_1 : "+ArraySize(Obj(ObjId)\shape())
+      
+      ;Debug "Taille_1 : "+ArraySize(Obj(ObjId)\shape())
+      
+      For i=0 To ArraySize(Obj(ObjId)\Shape())
+        If Obj(ObjId)\Shape(i)\Nom$ = ""
+          DeleteArrayElement(Obj(ObjId)\Shape,i)
+          i-1
+        EndIf        
+      Next
       
       ; Debug "Taille_2 : "+ArraySize(Obj(ObjId)\shape())
       ; Obj(ObjId)\Shape(0)\CurX = Obj(ObjId)\Shape(0)\pt(0)\x
       ; Obj(ObjId)\Shape(0)\CurY = Obj(ObjId)\Shape(0)\pt(0)\y
-      
-      ;{ verifications
-      ; verify camera clip
-      If mode = #DocFileEraseALL 
-        With vdoptions
-          If  \CameraW = 0
-            \CameraW=1024
-          EndIf
-          If \cameraH = 0
-            \CameraH=768
-          EndIf
-        EndWith
-      EndIf
-      ;}
-      
       
       SetWindowTitle(#Win_VD_main,#ProgramNameVD+#ProgramVersionVD+#ProgramBitVD)
       Vd\DocFilename$ = ""
@@ -617,6 +609,7 @@ Procedure Doc_Open()
   Shared openmenu
   openmenu = 1
   Shape_Load()
+  
 EndProcedure
 
 ; save
@@ -1495,8 +1488,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 131
-; FirstLine = 6
-; Folding = ALCAAFojdBAAAAAAAAAAAAAAAAAAAA-
+; CursorPosition = 1364
+; FirstLine = 114
+; Folding = MGBfTAYPIAAAAAAAAAo+-H1NAA5zA5
 ; EnableXP
 ; DisableDebugger

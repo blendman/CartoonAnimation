@@ -221,10 +221,10 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                   
                 ElseIf vdOptions\Action = #VD_actionRot
                   ;   Debug "leftclic GetShapeStartTransformation"
-                  Shape_GetStartTransformation(1,x,y)
+                  GetShapeStartTransformation(1,x,y)
                   
                 ElseIf  vdOptions\Action = #VD_actionScale 
-                    Shape_GetStartTransformation(0,x,y)
+                   GetShapeStartTransformation(0,x,y)
 
                 Else
                   
@@ -709,7 +709,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                             ;{ action scale
                                 If start_Rot = 0
                                   start_Rot = 1
-                                   Shape_GetStartTransformation(0,x,y)
+                                  GetShapeStartTransformation(0,x,y)
                                   ; ajouter la position du centre de rotation (pt(0) ou autre)
                                   
                                   ; center position for transformation with boundingbox
@@ -807,19 +807,18 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                 
                                 If start_Rot = 0
                                   start_Rot = 1
-                                   Shape_GetStartTransformation(1,x,y)
+                                  GetShapeStartTransformation(1,x,y)
                                 EndIf
                                 
                                 
                                 Rot = (x-\StartRot) ; *0.1
-                                \Rot = (x-\StartRot) *0.1
                                 If vd\ctrl
                                   ;\rot =\rot/90
                                   rot = rot *10
                                 EndIf
                                 
                                 ; Debug "ok rotation "+StrD(\rot)
-                                If use_forpoint = 1
+                                ;If use_forpoint = 1
                                   Cos.f = Cos(Radian(rot))
                                   Sin.f = Sin(Radian(rot))
                                   
@@ -846,7 +845,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                       \pt(k)\y = Xx*Sin + Yy*Cos + y1
                                     Next 
                                   EndIf
-                                EndIf
+                                ;EndIf
                                 ;}
                                 
                               Case #VD_ShapeBox, #VD_ShapeBoxRnd, #VD_ShapeCircle, #VD_ShapeImage, #VD_ShapeText
@@ -855,7 +854,7 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                 ; pour essayer de corriger un bug avec les rotations
                                 If start_Rot = 0
                                   start_Rot = 1
-                                  Shape_GetStartTransformation(1,x,y)
+                                  GetShapeStartTransformation(1,x,y)
                                 EndIf
                                 
                                 \Rot = (x-\StartRot);*0.1
@@ -1067,8 +1066,8 @@ EndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 814
-; FirstLine = 306
-; Folding = g-06884f2uMX+80+--2nv---v8vD-
+; CursorPosition = 762
+; FirstLine = 174
+; Folding = g-068z4f2uMX+80+--2nv-f-504h
 ; EnableXP
 ; DisableDebugger

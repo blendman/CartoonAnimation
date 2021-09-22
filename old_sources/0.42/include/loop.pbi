@@ -193,7 +193,7 @@ Repeat
               EndIf
               
             Case #G_TBOptRotation
-               Shape_GetStartTransformation(1)
+              GetShapeStartTransformation(1)
               rot = Val(GetGadgetText(#G_TBOptRotation))
               ;Debug Rot
               ; VdOptions\Tool(vdOptions\Action)\Rotation = Rot
@@ -440,12 +440,6 @@ Repeat
                   ;ShapeGetProperties()     
                   DrawCanvas()
                 EndIf
-              EndIf
-              
-            Case #G_shapeRot
-              If Shape_GetShapeIdSelected(0,0)
-                 Obj(ObjId)\Shape(ShapeId)\rot = GetGadgetState(#G_shapeRot)
-                DrawCanvas()
               EndIf
               
             Case #G_shapeParent
@@ -1116,7 +1110,6 @@ Repeat
           ;}
           
           ;{ Shapes 
-        
         Case #menuVD_ShapeSetGroup
           WindowGroup()
           
@@ -1203,14 +1196,6 @@ Repeat
           
         Case #menuVD_SetOriginToShape
           Shape_SetOrigin(1)
-          
-        Case #menuVD_ShapeVerifyIfOk
-          For j=0 To ArraySize(obj())
-            For i=0 To ArraySize(obj(j)\Shape())
-               Shape_CheckIfShapeIsOk(j,i,1)
-            Next
-          Next
-          MessageRequester(lang("Info"), lang("Verification finished"))
           ;}
           
           ;{ Windows
@@ -1257,13 +1242,13 @@ Repeat
           EndIf
           
         Case #menuVD_ConvertToCurve
-          VD_Shape_Convert(1,2)
+          VD_ConvertShape(1,2)
           
         Case #menuVD_ConvertToline
-          VD_Shape_Convert(1,1)
+          VD_ConvertShape(1,1)
           
         Case #menuVD_ConvertToShape
-          VD_Shape_Convert()
+          VD_ConvertShape()
           
         Case #menuVD_SeparateShape
           If shapeID >-1
@@ -1305,6 +1290,7 @@ Repeat
       
     EndIf
     
+    
   Until event = 0 Or quit = 1
   
   If Vd\Play = 0
@@ -1335,8 +1321,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1209
-; FirstLine = 314
-; Folding = LegeAW7lPeEAAAB9AAQCAowwL9
+; CursorPosition = 374
+; FirstLine = 50
+; Folding = LegOAW7hPOAAAgAeAAABAwAeh
 ; EnableXP
 ; DisableDebugger

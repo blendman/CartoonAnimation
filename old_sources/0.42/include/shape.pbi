@@ -130,164 +130,17 @@ Procedure ShapeAddFx(i=0)
     
 EndProcedure
 
-; Shape FX
-Procedure Shape_SetFXpropertie(propertie=#ShapePropertie_Color,mode=0,value=-1,i=-1)
-  ; mode = 1 to set a propertie by its own propertie
-  ; mode = 0 to change propertie by a gadget for example. for all selected shapes
-  
-  If shapeid > -1
-    
-    If mode = 0
-      ;{ changer avec un gadget pour tous les shapes selected
-
-      ; d'abord, on définit ShapeFxId en fonction du shapeId
-      If ShapeFxId > ArraySize(Obj(ObjId)\Shape(ShapeId)\Fx())
-        ShapeFxId = 0
-      EndIf  
-      
-      Select propertie
-        Case #ShapePropertie_Color
-          color = value
-          If value = -1
-            color1 = Obj(ObjId)\Shape(ShapeId)\Fx(ShapeFxId)\Color
-            Color = ColorRequester(RGB(Red(color1),Green(color1),Blue(color1)))
-          EndIf
-          
-          If color<>-1
-            For i =0 To ArraySize(Obj(ObjId)\Shape())
-              With Obj(ObjId)\Shape(i)
-                If \Selected And \Hide = 0 And \Locked = 0
-                  alpha = \Fx(ShapeFxId)\Alpha
-                  \Fx(ShapeFxId)\color=RGBA(Red(color),Green(color),Blue(color),alpha)
-                EndIf
-              EndWith
-            Next 
-          EndIf
-          
-        Case #ShapePropertie_StrokeWidth
-          W = ValD(GetGadgetText(#G_shapeFxLineW)) : min(w,0.001)
-          
-        Case #ShapePropertie_ActiveFx
-          Actif = GetGadgetState(#G_shapeFxActif)
-          
-        Case #ShapePropertie_Alpha
-          Alpha = GetGadgetState(#G_shapeFxAlpha)
-          
-      EndSelect
-      
-      ; then set to all selected and not locked shapes
-      If propertie <> #ShapePropertie_Color
-        For i =0 To ArraySize(Obj(ObjId)\Shape())
-          With Obj(ObjId)\Shape(i)
-            If \Selected And \Hide = 0 And \Locked = 0
-              
-              Select propertie
-                  
-                Case #ShapePropertie_StrokeWidth
-                  \Fx(ShapeFxId)\w =w                    
-                  
-                Case #ShapePropertie_ActiveFx
-                  \Fx(ShapeFxId)\Actif = actif
-                  If Actif = 1
-                    Shape_SetFXpropertie(#ShapePropertie_Color,1,0,i)
-                    \UseFx =1
-                  Else
-                    ; verify if the shape use fx
-                    \UseFx =0
-                    For k=0 To ArraySize(\Fx())
-                      If \fx(k)\Actif
-                        \UseFx =1
-                        Break
-                      EndIf
-                    Next
-                  EndIf
-                  
-                Case #ShapePropertie_Alpha
-                  \Fx(ShapeFxId)\Alpha = alpha
-                  color = \Fx(ShapeFxId)\color
-                  \Fx(ShapeFxId)\color=RGBA(Red(color),Green(color),Blue(color),alpha)
-                  
-                Case #ShapePropertie_Style 
-                  \Fx(ShapeFxId)\Style = GetGadgetState(#G_shapeFxLineTyp)
-              EndSelect
-            EndIf
-          EndWith
-        Next 
-      EndIf
-      
-      Drawcanvas()
-      ;}
-      
-    ElseIf mode =1
-      If i=-1
-        i = ShapeId
-      EndIf
-      
-      Select propertie
-          
-        Case #ShapePropertie_Color
-          color = Obj(ObjId)\Shape(i)\Fx(ShapeFxId)\Color
-          alpha = Obj(ObjId)\Shape(i)\Fx(ShapeFxId)\Alpha
-          Obj(ObjId)\Shape(i)\Fx(ShapeFxId)\color=RGBA(Red(color),Green(color),Blue(color),alpha)
-      EndSelect
-    EndIf
-  EndIf
-  
-EndProcedure
-
-
 ;}
 
 ; utiles
-Procedure.a Shape_GetShapeIdSelected(max=0,info=1)
+Procedure.a Shape_GetShapeIdSelected(max=0)
   If ShapeId <= ArraySize(Obj(ObjId)\Shape())-max And ShapeId > -1
     ProcedureReturn 1
   Else
-    If info=1
-      MessageRequester(lang("Info"), Lang("You need at least 1 shape selected to use this feature"))
-    EndIf
+    MessageRequester(lang("Info"), Lang("You need at least 1 shape selected to use this feature"))
     ProcedureReturn 0
   EndIf
   
-EndProcedure
-Procedure.a Shape_CheckIfShapeIsOk(j,i,confirm=0)
-  With obj(j)\shape(i)
-    If confirm=1
-      If \Nom$ = "" Or \SizeW = 0 Or \SizeH = 0
-        message$= lang("The shape seems to be not ok. would you like to delete it ?")+
-                  Chr(13)+lang("Name :")+" "+\Nom$+
-                  Chr(13)+Lang("Width :")+" "+Str(\SizeW)+
-                  Chr(13)+Lang("Height :")+" "+Str(\SizeH)+
-                  Chr(13)+Lang("Id unique :")+" "+\idUnik$
-        If MessageRequester(lang("Confirmation"), message$,#PB_MessageRequester_YesNo) = #PB_MessageRequester_Yes    
-          ok = 1  
-        EndIf
-      EndIf
-      
-    Else
-      If \Nom$ = "" And \SizeW = 0 And \SizeH = 0
-        ok = 1
-      EndIf
-    EndIf
-    If ok = 1
-      DeleteArrayElement(Obj(j)\Shape,i)
-      UpdateListShape()
-    EndIf
-    
-  EndWith
-  ProcedureReturn ok
-EndProcedure
-
-Procedure.s Shape_CreateIdUnik()
-  
-  t$ ="ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxz12345678908@çà%.§$)&(-_=+*"
-  For i= 0 To 12
-    tt$+Mid(t$,1+Random(Len(t$)),1)
-  Next
-  
-  idunik$ = tt$; +FormatDate("%yyyy%mm%dd%hh%ii%ss", Date())
-  
-  ProcedureReturn idunik$
 EndProcedure
 
 
@@ -672,6 +525,19 @@ EndProcedure
 ;}
 
 
+; Create
+Procedure.s Shape_CreateIdUnik()
+  
+  t$ ="ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxz12345678908@çà%.§$)&(-_=+*"
+  For i= 0 To 12
+    tt$+Mid(t$,1+Random(Len(t$)),1)
+  Next
+  
+  idunik$ = tt$; +FormatDate("%yyyy%mm%dd%hh%ii%ss", Date())
+  
+  ProcedureReturn idunik$
+EndProcedure
+
 ; Color
 Procedure Shape_SetColorGradient(m,mode=0,i=0,r=0,g=0,b=0,a=0)
   ; mode = 0 : set the colors from the color of shape and gradient
@@ -702,36 +568,6 @@ Procedure Shape_SetColorGradient(m,mode=0,i=0,r=0,g=0,b=0,a=0)
   EndWith
   
 EndProcedure
-
-; parenting
-Procedure Shape_UpdateParenting(set=0)
-  ; to set or update the parentings of shapes
-  
-  For k=0 To ArraySize(obj())
-    For j =0 To ArraySize(obj(k)\Shape())
-      idunik$ = Obj(k)\Shape(j)\Parent\idUnik$
-      If idunik$ <> ""
-        Debug "ok parent trouvé"
-        ; parenting the shape with its parent
-        For i = 0 To ArraySize(obj(k)\Shape())
-          If i <> j
-            If  idunik$ = Obj(k)\Shape(i)\idUnik$
-              id = i
-              Obj(k)\Shape(j)\Parent\id = id+1
-              If set = 1
-                Obj(k)\Shape(j)\Parent\startx = Obj(k)\Shape(id)\x
-                Obj(k)\Shape(j)\Parent\starty = Obj(k)\Shape(id)\y
-                Obj(k)\Shape(j)\Parent\StartRot = Obj(k)\Shape(id)\Rot
-              EndIf
-              Break
-            EndIf
-          EndIf
-        Next
-      EndIf
-    Next
-  Next
-
-EndProcedure    
 
 
 ; Add a shape
@@ -1113,7 +949,7 @@ Procedure VD_Shape_ChangeImage()
   EndIf
     
 EndProcedure
-Procedure Shape_GetStartTransformation(action=0,x=0,y=0)
+Procedure GetShapeStartTransformation(action=0,x=0,y=0)
   
   If action= 0 ; scale
     Vd\move = 2  
@@ -1228,7 +1064,7 @@ EndProcedure
 
 
 ; Convert
-Procedure VD_Shape_Convert(to_Pt=1, typ=0)
+Procedure VD_ConvertShape(to_Pt=1, typ=0)
   ; typ = 0 convert to shapecomplex (=curve)
   ; typ = 1 convert to line
   ; typ = 2 convert to curve
@@ -1514,16 +1350,8 @@ Procedure Shape_Save(file$ = #Empty$,autosave=0, selection=0)
         
         If CreateFile(0,file$)
             
-          txt$= "gen,"+" "+d$+StrD(ValD(#ProgramVersionVD),4)+d$+FormatDate("%yyyy%mm%dd%hh%ii%ss", Date())+d$
-          If ValD(#ProgramVersionVD) <10
-            v$ = ReplaceString(#ProgramVersionVD, Left(#ProgramVersionVD,5),"")
-          ElseIf ValD(#ProgramVersionVD) <100
-            v$ = ReplaceString(#ProgramVersionVD, Left(#ProgramVersionVD,6),"")
-          Else
-            v$ = ReplaceString(#ProgramVersionVD, Left(#ProgramVersionVD,7),"")
-          EndIf
-          txt$ + v$+d$
-          WriteStringN(0,txt$)
+            txt$= "gen,"+" "+d$+StrD(ValD(#ProgramVersionVD),4)+d$+FormatDate("%yyyy%mm%dd%hh%ii%ss", Date())+d$
+            WriteStringN(0,txt$)
             
             ; camera
             txt$ = VD_GetCameratext(CameraId)
@@ -1557,8 +1385,7 @@ Procedure Shape_Save(file$ = #Empty$,autosave=0, selection=0)
                       EndSelect
                       txt$ + d$
                       txt$ +Str(\Shape(j)\X)+d$+Str(\Shape(j)\Y)+d$
-                      txt$ +Str(\Shape(j)\open)+d$+\Shape(j)\idUnik$+d$+Str(\Shape(j)\Depth)+d$+Str(\Shape(j)\Pos)+d$
-                      txt$ +\Shape(j)\Parent\idUnik$+d$+Str(\Shape(j)\Parent\startx)+d$+Str(\Shape(j)\Parent\startY)+d$+Str(\Shape(j)\Parent\StartRot)+d$
+                      txt$ +Str(\Shape(j)\open)+d$+\Shape(j)\idUnik$+d$+Str(\Shape(j)\Depth)+d$+Str(\Shape(j)\Pos)+d$+\Shape(j)\Parent\idUnik$+d$
                       
                       WriteStringN(0,txt$)
                       
@@ -1627,8 +1454,6 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
         ; Debug"openfile shape : "+file$
         Vd\DocFilename$ = file$
         
-        d$ = ","
-        
         If merge = 0 ; on ne merge pas, on efface donc tout
           ReDim Obj.sObj(0)
           k = 0
@@ -1642,12 +1467,11 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
         While Eof(10) = 0
           
           line$ = ReadString(10)
-          index$ = StringField(line$,1,d$)
+          index$ = StringField(line$,1,",")
           
           Select index$
               
             Case "gen"
-              ;{ generality
               Nom$ = StringField(line$,2,",")
               If merge = 0
                 ReDim Obj(ObjId)\Shape.sShape(0)
@@ -1655,10 +1479,7 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 nbShape = ArraySize(Obj(ObjId)\Shape())+1
                 ReDim Obj(ObjId)\Shape.sShape(NbShape)
               EndIf
-              Version$ = StringField(line$,3,",")
               Version.d = ValD(StringField(line$,3,","))
-              Sub_Version.d = Val(StringField(line$,5,d$))
-              version + Sub_Version*0.001
               ; Debug ""+ValD(#ProgramVersionVD)
               If version < 0.14
                 If Obj(ObjId)\nom$ ="" 
@@ -1674,38 +1495,36 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 If Obj(ObjId)\w <= 0
                   Obj(ObjId)\w = 100
                 EndIf
+                
                 If merge = 0
                   Obj(ObjId)\h = 100
                   Obj(ObjId)\w = 100 
                 EndIf
               EndIf
-              ;}
               
             Case "camera"
-              If merge = 0
-                NBcamera = -1
-                Global Dim VD_camera.sVDCamera(0)
-                ; 
-                u = 2
-                ID    = Val(StringField(line$,u,",")) : u+1
-                name$    = StringField(line$,u,",") : u+1
-                VdOptions\CameraX   = Val(StringField(line$,u,",")) : u+1
-                VdOptions\CameraY   = Val(StringField(line$,u,",")) : u+1
-                VdOptions\CameraW   = Val(StringField(line$,u,",")) : u+1
-                VdOptions\CameraH   = Val(StringField(line$,u,",")) : u+1
-                scale   = Val(StringField(line$,u,",")) : u+1
-                zoom.d   = ValD(StringField(line$,u,",")) : u+1
-                optionoutput   = Val(StringField(line$,u,",")) : u+1
-                crop.Srectangle
-                crop\x   = Val(StringField(line$,u,",")) : u+1
-                crop\y   = Val(StringField(line$,u,",")) : u+1
-                crop\w   = Val(StringField(line$,u,",")) : u+1
-                crop\h   = Val(StringField(line$,u,",")) : u+1
-                VD_CameraAdd(name$,VdOptions\CameraX,VdOptions\CameraY,VdOptions\CameraW,VdOptions\CameraH,scale,zoom)
-              EndIf
+              NBcamera = -1
+              Global Dim VD_camera.sVDCamera(0)
+              ; 
+              u = 2
+              ID    = Val(StringField(line$,u,",")) : u+1
+              name$    = StringField(line$,u,",") : u+1
+              VdOptions\CameraX   = Val(StringField(line$,u,",")) : u+1
+              VdOptions\CameraY   = Val(StringField(line$,u,",")) : u+1
+              VdOptions\CameraW   = Val(StringField(line$,u,",")) : u+1
+              VdOptions\CameraH   = Val(StringField(line$,u,",")) : u+1
+              scale   = Val(StringField(line$,u,",")) : u+1
+              zoom.d   = ValD(StringField(line$,u,",")) : u+1
+              optionoutput   = Val(StringField(line$,u,",")) : u+1
+              crop.Srectangle
+              crop\x   = Val(StringField(line$,u,",")) : u+1
+              crop\y   = Val(StringField(line$,u,",")) : u+1
+              crop\w   = Val(StringField(line$,u,",")) : u+1
+              crop\h   = Val(StringField(line$,u,",")) : u+1
+              VD_CameraAdd(name$,VdOptions\CameraX,VdOptions\CameraY,VdOptions\CameraW,VdOptions\CameraH,scale,zoom)
+                
               
             Case "obj"
-              ;{ add an object
               If Vd\NbShape >=1 And merge <> 2 And nbObj >-1 ; Obj(ObjId)\Actif = 0
                 k = ArraySize(Obj())+1 
                 NbObj = k
@@ -1773,10 +1592,9 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 k=ObjId
                 nbShape = ArraySize(Obj(ObjId)\Shape())+1
               EndIf                   
-              ;}
               
             Case "shape" 
-              ;{ add a shape
+              ;{ 
               j = Val(StringField(line$,2,",")) + nbShape
               If j > ArraySize(Obj(ObjId)\Shape())
                 ReDim Obj(ObjId)\Shape.sShape(j)
@@ -1846,27 +1664,20 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
               ; other
               Obj(ObjId)\Shape(j)\open = Val(StringField(line$,u,",")) : u+1
               Obj(ObjId)\Shape(j)\idunik$ = StringField(line$,u,",") : u+1
-              ; Debug Obj(ObjId)\Shape(j)\idunik$
               If Obj(ObjId)\Shape(j)\idunik$ = #Empty$
                 Obj(ObjId)\Shape(j)\idunik$ = Shape_CreateIdUnik()
               EndIf
               
+              
               old_depth = Val(StringField(line$,u,",")) : u+1
               old_pos = Val(StringField(line$,u,",")) : u+1
               Obj(ObjId)\Shape(j)\Parent\idUnik$ = StringField(line$,u,",") : u+1
-              Obj(ObjId)\Shape(j)\Parent\startx = Val(StringField(line$,u,",")) : u+1
-              Obj(ObjId)\Shape(j)\Parent\startY = Val(StringField(line$,u,",")) : u+1
-              Obj(ObjId)\Shape(j)\Parent\StartRot = Val(StringField(line$,u,",")) : u+1
-;               If Obj(ObjId)\Shape(j)\Parent\idUnik$ <> ""
-;                 Debug "ok id parent : "+Obj(ObjId)\Shape(j)\Parent\idUnik$
-;               EndIf
               
               Obj(ObjId)\Actif = 1
               i=0
               ;}
               
             Case "shapefx"
-              ;{ add the shapefx to the current shape
               k = Val(StringField(line$,2,","))
               If k > ArraySize(Obj(ObjId)\Shape(j)\Fx())
                 ReDim Obj(ObjId)\Shape(j)\Fx(k)
@@ -1895,10 +1706,8 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 
               EndWith
               UpdateListShapeFX()
-              ;}
               
             Case "pt"
-              ;{ add the point of the current shape
               u = 3
               i = Val(StringField(line$,2,","))
               If i > ArraySize(Obj(ObjId)\Shape(j)\pt())
@@ -1912,33 +1721,10 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
                 \Center = Val(StringField(line$,u,",")) : u+1
                 \hide = Val(StringField(line$,u,",")) : u+1
               EndWith
-              ;}
               
           EndSelect           
           
         Wend
-        
-        ;{ The verifications
-        ; verify if object are ok
-        For j=0 To ArraySize(obj())
-          For i=0 To ArraySize(Obj(j)\Shape())
-            If Shape_CheckIfShapeIsOk(j,i) = 1
-              i-1
-            EndIf
-          Next
-        Next
-        
-        ; verify camera clip
-        If merge = 0
-          With vdoptions
-            If  \CameraW = 0
-              \CameraW=1024
-            EndIf
-            If \cameraH = 0
-              \CameraH=768
-            EndIf
-          EndWith
-        EndIf
         
         ; on doit vérifie si on les points "broken et \maxpt, pour les shapes en plusieurs parties
         For i=0 To ArraySize(Obj())
@@ -1951,20 +1737,9 @@ Procedure Shape_Load(merge=0, file$ ="",draw=1)
             EndWith
           Next
         Next
-        ;}
-        
-        ;{ set parenting for shapes
-        If version< 0.432
-          set=1
-        Else
-          set=0
-        EndIf
-        Shape_UpdateParenting(set)
-        
-        ;}
         
         If openmenu = 1
-          ; Debug "ok"
+          Debug "ok"
           SetWindowTitle(#Win_VD_main,#ProgramNameVD+#ProgramVersionVD+#ProgramBitVD+" - "+GetFilePart(file$))
           VdOptions\PathOpen$ = file$
         EndIf
@@ -2281,6 +2056,8 @@ Procedure Shape_SetTransformation(action,ratio.d)
 EndProcedure
 
 
+
+
 ; Shape propertie
 Procedure Shape_Hide(hide=1)
   
@@ -2440,9 +2217,8 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
           For i=0 To ArraySize(obj(ObjId)\Shape())
             If Obj(ObjId)\Shape(i)\Selected Or i = shapeId
               p_id =  Obj(ObjId)\Shape(i)\Parent\id 
-              Obj(ObjId)\Shape(i)\x  = Obj(ObjId)\Shape(i)\Finalx ; + Obj(ObjId)\Shape(p_id)\x - Obj(ObjId)\Shape(i)\Parent\startX
-              Obj(ObjId)\Shape(i)\y  = Obj(ObjId)\Shape(i)\Finaly ; + Obj(ObjId)\Shape(p_id)\y - Obj(ObjId)\Shape(i)\Parent\startY
-              Obj(ObjId)\Shape(i)\Parent\id = -1
+              Obj(ObjId)\Shape(i)\x + Obj(ObjId)\Shape(p_id)\x - Obj(ObjId)\Shape(i)\Parent\startX
+              Obj(ObjId)\Shape(i)\y + Obj(ObjId)\Shape(p_id)\y - Obj(ObjId)\Shape(i)\Parent\startY
             EndIf
           Next
         EndIf
@@ -2513,6 +2289,113 @@ Procedure Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
 EndProcedure
 
 
+; Shape FX
+Procedure Shape_SetFXpropertie(propertie=#ShapePropertie_Color,mode=0,value=-1,i=-1)
+  ; mode = 1 to set a propertie by its own propertie
+  ; mode = 0 to change propertie by a gadget for example. for all selected shapes
+  
+  If shapeid > -1
+    
+    If mode = 0
+      ;{ changer avec un gadget pour tous les shapes selected
+
+      ; d'abord, on définit ShapeFxId en fonction du shapeId
+      If ShapeFxId > ArraySize(Obj(ObjId)\Shape(ShapeId)\Fx())
+        ShapeFxId = 0
+      EndIf  
+      
+      Select propertie
+        Case #ShapePropertie_Color
+          color = value
+          If value = -1
+            color1 = Obj(ObjId)\Shape(ShapeId)\Fx(ShapeFxId)\Color
+            Color = ColorRequester(RGB(Red(color1),Green(color1),Blue(color1)))
+          EndIf
+          
+          If color<>-1
+            For i =0 To ArraySize(Obj(ObjId)\Shape())
+              With Obj(ObjId)\Shape(i)
+                If \Selected And \Hide = 0 And \Locked = 0
+                  alpha = \Fx(ShapeFxId)\Alpha
+                  \Fx(ShapeFxId)\color=RGBA(Red(color),Green(color),Blue(color),alpha)
+                EndIf
+              EndWith
+            Next 
+          EndIf
+          
+        Case #ShapePropertie_StrokeWidth
+          W = ValD(GetGadgetText(#G_shapeFxLineW)) : min(w,0.001)
+          
+        Case #ShapePropertie_ActiveFx
+          Actif = GetGadgetState(#G_shapeFxActif)
+          
+        Case #ShapePropertie_Alpha
+          Alpha = GetGadgetState(#G_shapeFxAlpha)
+          
+      EndSelect
+      
+      ; then set to all selected and not locked shapes
+      If propertie <> #ShapePropertie_Color
+        For i =0 To ArraySize(Obj(ObjId)\Shape())
+          With Obj(ObjId)\Shape(i)
+            If \Selected And \Hide = 0 And \Locked = 0
+              
+              Select propertie
+                  
+                Case #ShapePropertie_StrokeWidth
+                  \Fx(ShapeFxId)\w =w                    
+                  
+                Case #ShapePropertie_ActiveFx
+                  \Fx(ShapeFxId)\Actif = actif
+                  If Actif = 1
+                    Shape_SetFXpropertie(#ShapePropertie_Color,1,0,i)
+                    \UseFx =1
+                  Else
+                    ; verify if the shape use fx
+                    \UseFx =0
+                    For k=0 To ArraySize(\Fx())
+                      If \fx(k)\Actif
+                        \UseFx =1
+                        Break
+                      EndIf
+                    Next
+                  EndIf
+                  
+                Case #ShapePropertie_Alpha
+                  \Fx(ShapeFxId)\Alpha = alpha
+                  color = \Fx(ShapeFxId)\color
+                  \Fx(ShapeFxId)\color=RGBA(Red(color),Green(color),Blue(color),alpha)
+                  
+                Case #ShapePropertie_Style 
+                  \Fx(ShapeFxId)\Style = GetGadgetState(#G_shapeFxLineTyp)
+              EndSelect
+            EndIf
+          EndWith
+        Next 
+      EndIf
+      
+      Drawcanvas()
+      ;}
+      
+    ElseIf mode =1
+      If i=-1
+        i = ShapeId
+      EndIf
+      
+      Select propertie
+          
+        Case #ShapePropertie_Color
+          color = Obj(ObjId)\Shape(i)\Fx(ShapeFxId)\Color
+          alpha = Obj(ObjId)\Shape(i)\Fx(ShapeFxId)\Alpha
+          Obj(ObjId)\Shape(i)\Fx(ShapeFxId)\color=RGBA(Red(color),Green(color),Blue(color),alpha)
+      EndSelect
+    EndIf
+  EndIf
+  
+EndProcedure
+
+
+
 ; other : selection
 Procedure MouseOnShape(m,i,x,y)
   Protected w, h
@@ -2574,7 +2457,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 2444
-; FirstLine = 170
-; Folding = AAg---0fBAAAAAAA-NRAJAAAAAAAAAAAAA1fAXCAACIA40BAAAAAAAAAOAfBAA9
+; CursorPosition = 2179
+; FirstLine = 314
+; Folding = AAwfYw0P-89kP+DAAAAAAAAg-AAg+vwpHECAIkvhAAAAAA+bwB-fAAAAe-
 ; EnableXP

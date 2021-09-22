@@ -28,6 +28,16 @@ Declare VD_CreateGadgetsBankShape(y1=0)
 Declare VD_UpdateShapeBankCanvas(createImage=0, updatefolder=1)
 Declare VD_EventBangkGadget()
 
+; shape edit
+Declare ShapeGetProperties(state=1)
+Declare Shape_SelectAll(Selection=1)
+Declare VD_Shape_ChangeImage()
+Declare VD_ConvertShape(to_Pt=1, typ=0)
+Declare Shape_Delete()
+Declare Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
+Declare Shape_SetFXpropertie(propertie=#ShapePropertie_Color,mode=0,value=-1,i=-1)
+Declare Shape_SetOrigin(Mode=0,x=0,y=0,update=1)
+Declare MouseOnShape(m,i,x,y)
 
 ; Shape point edit
 Declare Shape_CheckBrokenPoint()
@@ -53,16 +63,7 @@ Declare Vd_UpdateTimeLine()
 ; LAyers
 Declare VD_Layer_UpdateUI(update=0)
 
-; shape edit
-Declare ShapeGetProperties(state=1)
-Declare Shape_SelectAll(Selection=1)
-Declare VD_Shape_ChangeImage()
-Declare VD_Shape_Convert(to_Pt=1, typ=0)
-Declare Shape_Delete()
-Declare Shape_SetPropertie(propertie=#ShapePropertie_Color, value=-1)
-Declare Shape_SetFXpropertie(propertie=#ShapePropertie_Color,mode=0,value=-1,i=-1)
-Declare Shape_SetOrigin(Mode=0,x=0,y=0,update=1)
-Declare MouseOnShape(m,i,x,y)
+
 ; Shape
 Declare ShapeExportFx()
 Declare ShapeLoadFx()
@@ -73,7 +74,6 @@ Declare Shape_Add(x,y)
 Declare AddPathRoundBox(x, y, w, h, r)
 Declare Shape_Save(file$ = "",autosave=0, selection=0)
 Declare Shape_Load(merge=0, file$ ="",draw=1)
-Declare.a Shape_CheckIfShapeIsOk(j,i,confirm=0)
 
 ; Manu (files)
 Declare VD_OpenTheHelp(html=0)
@@ -89,7 +89,7 @@ Declare OpenWinVectorDrawing()
 
 
 
-; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 59
-; FirstLine = 52
+; IDE Options = PureBasic 5.61 (Windows - x86)
+; CursorPosition = 84
+; FirstLine = 64
 ; EnableXP

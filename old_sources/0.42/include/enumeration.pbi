@@ -525,27 +525,25 @@ Enumeration ; menu
   ;}
   
   ;{ edit    
-  #menuVD_ShapeCopy 
-  #menuVD_ShapePast
-  #menuVD_ShapeCopyFX
-  #menuVD_ShapePastFX
-  #menuVD_ShapePastToshape 
-  ;}
-  
-  ;{ select
   #menuVD_ShapeSelectAll    
   #menuVD_ShapeDeselectAll    
+  #menuVD_ShapeCopy 
+  #menuVD_ShapePast
+  #menuVD_ShapePastToshape 
   #menuVD_ShapeLockSelect
-  ;}
-  ;{ SHape
-  #menuVD_ShapeDelete 
-  #menuVD_ShapeVerifyIfOk
+  #menuVD_ShapeDelete    
   #menuVD_SetShapeToBottom
   #menuVD_SetShapeToTop
   #menuVD_SetShapeToOrigin
   #menuVD_SetShapeToCursor
   #menuVD_SetOriginToShape
   #menuVD_SetOriginToMouse
+  
+  #menuVD_DeleteObjet
+  #menuVD_AddObjet
+  #menuVD_SetObjetToBottom
+  #menuVD_SetObjetToTop
+  #menuVD_MergeObjetWithBottom
   
   #menuVD_HideSelected
   #menuVD_UnHideAll
@@ -559,15 +557,6 @@ Enumeration ; menu
  
   #menuVD_ShapeSetParent
   #menuVD_ShapeDeParenting
-  
-  ;}
-  
-  ;{ layer
-  #menuVD_DeleteObjet
-  #menuVD_AddObjet
-  #menuVD_SetObjetToBottom
-  #menuVD_SetObjetToTop
-  #menuVD_MergeObjetWithBottom
   ;}
   
   ;{ view
@@ -878,7 +867,7 @@ EndEnumeration
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 561
-; FirstLine = 34
-; Folding = QcAA1DFA+
+; CursorPosition = 162
+; FirstLine = 48
+; Folding = YcAAIoAw
 ; EnableXP
