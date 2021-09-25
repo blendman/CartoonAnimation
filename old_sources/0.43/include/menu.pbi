@@ -486,15 +486,7 @@ Procedure VD_GetFileExists(filename$)
   EndIf
   
 EndProcedure
-Procedure VD_MessageConfirm(text$)
-  If MessageRequester(lang("Info"), lang(text$), #PB_MessageRequester_YesNo) = #PB_MessageRequester_No
-      ProcedureReturn 1
-    Else
-      ProcedureReturn 0
-    EndIf
-  EndProcedure
-  
-  
+
 ; new
 Procedure Doc_New(mode=1,copy=0,draw=1,x=0,y=0)
   
@@ -1503,8 +1495,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 488
-; FirstLine = 12
-; Folding = AKCAQhvO3FAAAAAAAAAAAAAAAAAA5T9
+; CursorPosition = 131
+; FirstLine = 6
+; Folding = ALCAAFojdBAAAAAAAAAAAAAAAAAAAA-
 ; EnableXP
 ; DisableDebugger

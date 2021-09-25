@@ -810,18 +810,16 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                    Shape_GetStartTransformation(1,x,y)
                                 EndIf
                                 
+                                
                                 Rot = (x-\StartRot) ; *0.1
+                                \Rot = (x-\StartRot) *0.1
                                 If vd\ctrl
                                   ;\rot =\rot/90
                                   rot = rot *10
                                 EndIf
                                 
-                                If vdOptions\RotationOnPoint = 0
-                                  \Rot = rot *0.1
-                                EndIf
-
                                 ; Debug "ok rotation "+StrD(\rot)
-                                
+                                If use_forpoint = 1
                                   Cos.f = Cos(Radian(rot))
                                   Sin.f = Sin(Radian(rot))
                                   
@@ -840,17 +838,15 @@ If EventType() = #PB_EventType_LeftButtonDown Or
                                       EndIf
                                     Next 
                                   Else
-                                    If vdOptions\RotationOnPoint = 1
-                                      For k = 0 To ArraySize(\pt()) 
-                                        Xx = \pt(k)\startRotX ;-x1                                         
-                                        Yy = \pt(k)\startRotY ;-y1
-                                        
-                                        \pt(k)\x = Xx*Cos - Yy*Sin + x1 
-                                        \pt(k)\y = Xx*Sin + Yy*Cos + y1
-                                      Next 
-                                    EndIf
+                                    For k = 0 To ArraySize(\pt()) 
+                                      Xx = \pt(k)\startRotX ;-x1                                         
+                                      Yy = \pt(k)\startRotY ;-y1
+                                      
+                                      \pt(k)\x = Xx*Cos - Yy*Sin + x1 
+                                      \pt(k)\y = Xx*Sin + Yy*Cos + y1
+                                    Next 
                                   EndIf
-                                
+                                EndIf
                                 ;}
                                 
                               Case #VD_ShapeBox, #VD_ShapeBoxRnd, #VD_ShapeCircle, #VD_ShapeImage, #VD_ShapeText
@@ -1071,8 +1067,8 @@ EndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 811
-; FirstLine = 300
-; Folding = g-06884f2uMX+80+--2nv---f4fH+
+; CursorPosition = 814
+; FirstLine = 306
+; Folding = g-06884f2uMX+80+--2nv---v8vD-
 ; EnableXP
 ; DisableDebugger

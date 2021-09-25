@@ -454,23 +454,12 @@ CompilerEndIf
 ; - with gradient, some text for gadgets "style" should be changed (linew\h\depth)
 ; - copy/paste all fx from a shape to another.
 ;- view\show name
-; - importer des shapes d'un fichier (on aurait une fenetre ui s'ouvre avec la liste des shapes qu'on peut importer.
-; WIP - view\show name
-; pour rotation avec parent : ajouter un tableau de rotation par parent avec centre rotation ?
-
-
-; 22/09/2021 0.44 (69)
-; // New
-; - VD_MessageConfirm(text$)
-; // Changes
-; - now, doc_new() is ok if VD_MessageConfirm(text$) =1
-; - rotation for curve/line use now \rot only in objet mode (not in edit mode "point").
-; - Preference (& VDoptions) : RotationUsePoint
-
 
 ; 20/09/2021 0.43.8 (68)
+; // New
+; WIP - view\show name
 ; // Changes
-; - rotation for curve/line use now \rot. The rotation is no more calculated on point (with editmode=objet).
+; - rotation for curve/line use now \rot. The rotation is no more calculated on point.
 ; - procedure_draw : now, I use VdDrawShape1(vo,j) in all procedure, to get the same resulat to draw the sahpe, its border selection...
 ; // fixes
 ; - rotation + curve/lien : the selection border wasn't correct
@@ -1572,8 +1561,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 458
-; FirstLine = 133
+; CursorPosition = 459
+; FirstLine = 139
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger

@@ -54,10 +54,8 @@ Repeat
               
               ;{ * toolbar
             Case #G_ToolVDnew
-              If  VdOptions\DocHasChanged = 0 Or VD_MessageConfirm("ADo you want to save your work before to clear the document ?") =1
-                Doc_New()
-                DrawCanvas() 
-              EndIf
+              Doc_New()
+              DrawCanvas() 
               SetActiveGadget(#G_canvasVector)
               
             Case #G_ToolVDOpen
@@ -930,10 +928,8 @@ Repeat
           Shape_Save(VD\DocFilename$)
           
         Case #menuVD_ShapeNew 
-          If  VdOptions\DocHasChanged = 0 Or VD_MessageConfirm("Do you want to save your work before to clear the document ?")
-            Doc_New()
-            DrawCanvas()
-          EndIf
+          Doc_New()
+          DrawCanvas()
           
         Case #menuVD_ShapeMergeShape
           Shape_Load(1)
@@ -1339,8 +1335,8 @@ EndIf
 VD_SaveOptions()
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 932
-; FirstLine = 48
-; Folding = LWi---------------fKAACDvw
+; CursorPosition = 1209
+; FirstLine = 314
+; Folding = LegeAW7lPeEAAAB9AAQCAowwL9
 ; EnableXP
 ; DisableDebugger

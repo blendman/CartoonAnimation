@@ -1,7 +1,7 @@
 ﻿
 ; XIncludeFile "include\infos.pbi"
 
-#ProgramVersionVD = "0.44"
+#ProgramVersionVD = "0.43.8"
 #ProgramNameVD = "Cartoon Animation "
 #PB_Compiler_Backend = 0
 

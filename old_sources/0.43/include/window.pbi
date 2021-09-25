@@ -270,7 +270,6 @@ Procedure WindowPref()
       ;       AddStringGadget(#G_pref_Theme, x1, y1, 250, 20, OptionsIE\Theme$, lang("Theme :"), lang("Set the directory for the icone and images theme")) : y1+35
       AddGadget(#G_Pref_UseBeta, #Gad_Chkbox, x1, y1, 200, h1, LAng("Use beta features"),0,0,lang("Use beta features (attention, some features can be unstables and have unwanted behavior or may crash the program)"),VdOptions\Beta) : y1+h1+10
       AddGadget(#G_Pref_ToolMoveCanSelect, #Gad_Chkbox, x1, y1, 200, h1, LAng("Tool Move can select"),0,0,lang("Enable tool move can select"),VdOptions\ToolMoveCanSelect) : y1+h1+10
-      AddGadget(#G_Pref_RotationOnPoint, #Gad_Chkbox, x1, y1, 200, h1, LAng("Rotation On Point"),0,0,lang("Enable Rotation calculated on points (not on object) with curves/lines."),VdOptions\RotationOnPoint) : y1+h1+10
       ;} 
       
       ;{ saving
@@ -367,10 +366,6 @@ Procedure WindowPref()
     ;     
     Autosave = VdOptions\Autosave
     AutosaveTime = VdOptions\AutosaveTime
-    beta = VdOptions\Beta
-    RotationOnPoint = VdOptions\RotationOnPoint
-    ToolMoveCanSelect = VdOptions\ToolMoveCanSelect
-    
     ;     UsePaperForRendering = OptionsIE\UsePaperForRendering
     ;     
     ;     gridW = OptionsIE\GridW
@@ -405,9 +400,6 @@ Procedure WindowPref()
               
             Case #G_Pref_UseBeta
               beta = GetGadgetState(EventGadget)
-              
-            Case #G_Pref_RotationOnPoint
-              RotationOnPoint = GetGadgetState(EventGadget)
               
             Case #G_Pref_ToolMoveCanSelect
               ToolMoveCanSelect = GetGadgetState(EventGadget)
@@ -504,7 +496,6 @@ Procedure WindowPref()
       VdOptions\AutosaveTime = AutosaveTime
       VdOptions\Beta = beta
       VdOptions\ToolMoveCanSelect = ToolMoveCanSelect
-      VdOptions\RotationOnPoint = RotationOnPoint
       ;       OptionsIE\UsePaperForRendering = UsePaperForRendering
       ;       
       ;       ; painting
@@ -1461,8 +1452,8 @@ Procedure WindowIntro()
 EndProcedure
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 371
-; FirstLine = 55
-; Folding = AAAgPE52+0f-08-fAAAAAAAg
+; CursorPosition = 270
+; FirstLine = 19
+; Folding = AAAgPEAw+0f-08-fAAAAAAAg
 ; EnableXP
 ; DisableDebugger

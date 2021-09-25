@@ -520,7 +520,6 @@ Structure sVdOptions
   SnapY.w
   
   CenterTransformation.a
-  RotationOnPoint.a 
   
   GridW.w
   GridH.w
@@ -633,7 +632,7 @@ Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 523
-; FirstLine = 157
-; Folding = AAAgG+
+; CursorPosition = 151
+; FirstLine = 36
+; Folding = AAGAG+
 ; EnableXP
