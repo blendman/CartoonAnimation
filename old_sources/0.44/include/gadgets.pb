@@ -353,8 +353,8 @@ Procedure VD_CreateTheGadgets()
   If VdOptions\PanelW <=200
     VdOptions\PanelW =200
   EndIf
-  If VdOptions\PanelLayerW <=200
-    VdOptions\PanelLayerW =200
+  If VdOptions\PanelLayerW <=180
+    VdOptions\PanelLayerW =180
   EndIf
   PanelLayerW = VdOptions\PanelLayerW
   BarVDH = VdOptions\ToolBarH
@@ -423,10 +423,8 @@ Procedure VD_CreateTheGadgets()
       AddGadget(#G_shapeLock, #Gad_BtnImg, x1,y1,h1,h1,"",1, ImgLayer(#ivd_layerlock),lang("Lock the selected shape.")) : x1+h1+a
       AddGadget(#G_shapeShow, #Gad_Chkbox, x1,y1,w7,h1,lang("Show"),0,0,lang("Show the shape)")) : y1+h1+a
       x1=x0 
-      AddGadget(#G_shapeLink, #Gad_Chkbox, x1,y1,w3,h1,lang("Link"),0,0,lang("To link the shape with the next shape and get 'hole' in shape if intersection instead of filled color.")) : x1+w3+a
-      AddGadget(#G_shapeClipFX, #Gad_Chkbox, x1,y1,w3,h1,lang("ClipFx"),0,0,lang("Clip all the fx of the shape.")) : : y1+h1+a
+      AddGadget(#G_shapeLink, #Gad_Chkbox, x1,y1,w3,h1,lang("Link"),0,0,lang("To link the shape with the next shape and get 'hole' in shape if intersection instead of filled color.")) : : y1+h1+a
       y1+10
-      x1=x0
     EndIf
     
     ; properties
@@ -434,7 +432,7 @@ Procedure VD_CreateTheGadgets()
       AddGadget(#G_shapeName, #Gad_String, x1,y1,w7,h1,lang("Name"),0,0,lang("Set the name for the shape"),0,lang("Name")) : y1+h1+a
       AddGadget(#G_shapeClose, #Gad_Chkbox, x1,y1,w7,h1,lang("Open"),0,0,lang("Open or close the path (line, curve, complexe shape)"),0,lang("Open")) : : y1+h1+a
 
-      AddGadget(#G_shapeDepth, #Gad_Spin, x1,y1,w7,h1,lang("Depth"),0,1000000,lang("Set the depth of the shape (the more depth is high, the more the shape is on the top)"))
+      AddGadget(#G_shapeDepth, #Gad_Spin, x1,y1,w7,h1,lang("Depth"),0,1000,lang("Set the depth of the shape (the more depth is high, the more the shape is on the top)"))
       x1=x0 : y1+h1+a
       
       AddGadget(#G_shapeX, #Gad_Spin, x1,y1,w7,h1,lang("X "),-100000,100000,Lang("Set the X position of the shape.")) : y1+h1+a
@@ -564,8 +562,7 @@ Procedure VD_CreateTheGadgets()
       AddGadget(#G_shapeFxAdd, #Gad_Btn, x1,y1,w5,h1,"+",0,0,lang("Add a new Fx for the shape.")) : x1+w5+2 ;: x1=10 ;: y1+h1+a
       AddGadget(#G_shapeFxDel, #Gad_Btn, x1,y1,w5,h1,"-",0,0,lang("Delete the current Fx from the shape.")) : x1=10 : y1+h1+a
       AddGadget(#G_shapeFxActif, #Gad_Chkbox, x1,y1,w3,h1,lang("Actif"),0,0,lang("Set the Fx actif.")) : x1+w3+2
-      AddGadget(#G_shapeFxOpen, #Gad_Chkbox, x1,y1,w3,h1,lang("open"),0,0,lang("Set the Fx open.")) : x1+w3+2
-      ;AddGadget(#G_shapeFxClip, #Gad_Chkbox, x1,y1,w3,h1,lang("Clip"),0,0,lang("Use Clipping for FX.")) 
+      AddGadget(#G_shapeFxOpen, #Gad_Chkbox, x1,y1,w3,h1,lang("open"),0,0,lang("Set the Fx open.")) 
       
       y1+h1+10
     EndIf
@@ -661,27 +658,31 @@ Procedure VD_CreateTheGadgets()
     x1 = 10 : y1 = 10 : w7 = 60 : x3 = 0
     AddGadgetItem(#G_panelVD_R,-1,lang("Layer"))
     
+    
     ; AddGadget(#G_ObjCreate, #Gad_Chkbox, x1,y1,w6+35,h1,"Create new object.",0,0,"Create a new object when you add a new shape, box, circle, line...") : y1+h1+a
+    
     ; AddGadget(#G_ObjList, #Gad_ListV, x1,y1,w6+35,200,"",0,0,"Select the objet to modify.") : y1+200+a
+    
     y1 +VD_CreateLayerUi()
     
     ; AddGadget(#G_ObjDepth, #Gad_Spin, x1,y1,w6,h1,"Depth",-10000,10000,"Change the depth of the objet.") : y1+h1+a
     ; AddGadget(#G_ObjName, #Gad_String, x1,y1,w6,h1,"Name ",0,0,"Change the name of the objet.") : y1+h1+a
     
+    
     w10 = PanelLayerW-x1*2
     If ScrollAreaGadget(#G_ObjSAClip,0,y1,w10,Hg-y1-70,w10-25,Hg+1000)
       y1 = 10 : x1=0                 
       If FrameGadget(#PB_Any, x3,y1,PanelLayerW-x1*2,h1*5,lang("Properties")) : EndIf
-      y1 +15 : x1 +5
+      y1 +15 : x1 +10
       AddGadget(#G_ObjX, #Gad_Spin, x1,y1,w6,h1,"X ",-10000,10000,lang("Change the X of the objet.")) : y1+h1+a
       AddGadget(#G_ObjY, #Gad_Spin, x1,y1,w6,h1,"Y ",-10000,10000,lang("Change the Y of the objet.")) : y1+h1+a
       AddGadget(#G_ObjW, #Gad_Spin, x1,y1,w6,h1,"W ",0,100000,lang("Change the width of the objet.")) : y1+h1+a
       AddGadget(#G_ObjH, #Gad_Spin, x1,y1,w6,h1,"H ",0,100000,lang("Change the height of the objet.")) : y1+h1+a
       y1+10
       
-      x1 =0 
+      x1 =5 
       If FrameGadget(#PB_Any, x3,y1,PanelLayerW-x1*2,h1*11,lang("Clip")) : EndIf
-      y1 +15 : x1 +5
+      y1 +15 : x1 +10
       AddGadget(#G_ObjClip, #Gad_Chkbox,x1,y1,w6,h1,lang("Clip"),0, 0, lang("Use the Layer As clipping."),0,lang("Clip")) : y1+h1+a
       AddGadget(#G_ObjClipW, #Gad_Spin, x1,y1,w6,h1,LAng("ClipW"),0,100000,lang("Change the Width of clipping-box of the layer.")) : y1+h1+a
       AddGadget(#G_ObjClipH, #Gad_Spin, x1,y1,w6,h1,lang("ClipH"),0,100000,lang("Change the height of clipping-box of the layer.")) : y1+h1+a
@@ -2272,8 +2273,8 @@ EndProcedure
 ;}
 
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 356
-; FirstLine = 28
-; Folding = CBs8fAEAEsQvvhn18APA1z0HAgACACAOAAAAAAAAAAAAAAAy9BA+-
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 150
+; FirstLine = 31
+; Folding = CBs8fQGAEMQvvhn18APA9z0HAgICAAAOAAAAAAAAAAAAAAAy9BA+
 ; EnableXP

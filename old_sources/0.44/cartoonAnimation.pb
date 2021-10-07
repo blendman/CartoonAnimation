@@ -1,16 +1,20 @@
 ﻿
 ; XIncludeFile "include\infos.pbi"
 
-#ProgramVersionVD = "0.45.1"
+#ProgramVersionVD = "0.44"
 #ProgramNameVD = "Cartoon Animation "
 #PB_Compiler_Backend = 0
-; nb lines : 15700
 
 XIncludeFile "include\enumeration.pbi"
+
 XIncludeFile "include\structures.pbi" ; structure & variables global
+
 XIncludeFile "include\lang.pbi" ; for langage localisation
+
 XIncludeFile "include\init.pbi" ; init encoder/decoder
+
 XIncludeFile "include\macros.pbi" 
+
 XIncludeFile "include\procedures.pbi" 
 ; XIncludeFile "include\declaration.pbi" 
 ; XIncludeFile "include\menu.pbi" 

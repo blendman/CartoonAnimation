@@ -166,7 +166,6 @@ Enumeration ; Gadgets
   #G_shapeClose 
   #G_shapeDepth
   #G_shapeClip  
-  #G_shapeClipFX  
   #G_shapeParent
   ;}
   
@@ -526,8 +525,7 @@ Enumeration ; menu
   #menuVD_ShapeQuit
   ;}
   
-  ;{ edit  
-  #menuVD_ShapeCut
+  ;{ edit    
   #menuVD_ShapeCopy 
   #menuVD_ShapePast
   #menuVD_ShapeCopyFX
@@ -540,7 +538,6 @@ Enumeration ; menu
   #menuVD_ShapeDeselectAll    
   #menuVD_ShapeLockSelect
   ;}
-  
   ;{ SHape
   #menuVD_ShapeDelete 
   #menuVD_ShapeVerifyIfOk
@@ -569,10 +566,9 @@ Enumeration ; menu
   ;{ layer
   #menuVD_DeleteObjet
   #menuVD_AddObjet
-  #menuVD_DuplicateLayerWithSelected
   #menuVD_SetObjetToBottom
   #menuVD_SetObjetToTop
-  #menuVD_MergeLayerWithBottom
+  #menuVD_MergeObjetWithBottom
   ;}
   
   ;{ view
@@ -593,7 +589,6 @@ Enumeration ; menu
   #menuVD_ShowBoundingboxSelection
   #menuVD_ShowBoundingboxShape
   #menuVD_ShowSelection
-  #menuVD_ShowCenter
   #menuVD_ViewReset
   #menuVD_ViewCenter
   #menuVD_ShowGrid
@@ -883,8 +878,8 @@ EndEnumeration
 
 
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 168
-; FirstLine = 45
-; Folding = YcAAAEFA+
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 383
+; FirstLine = 9
+; Folding = IcQEwDFA+
 ; EnableXP

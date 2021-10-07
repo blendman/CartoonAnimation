@@ -48,9 +48,7 @@ Procedure ChangeShortCut(Create=1)
     AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_N,#menuVD_ShapeNew)
     AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_S,#menuVD_ShapeSave)
     AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_Shift|#PB_Shortcut_E,#menuVD_ExportImageObj)
-    AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Shift|#PB_Shortcut_E,#menuVD_ExportImageSelected)
     
-    AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_X,#menuVD_ShapeCut)
     AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_C,#menuVD_ShapeCopy)
     AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_V,#menuVD_ShapePast)
     AddKeyboardShortcut(#Win_VD_main,#PB_Shortcut_Control|#PB_Shortcut_D,#menuVD_ShapeDeselectAll)
@@ -113,7 +111,7 @@ Procedure VD_CreateTheMenu()
     MenuBar()
     MenuItem(#menuVD_ProjProperties,lang("Project properties"))
     MenuItem(#menuVD_ExportImageObj,lang("Export the object as image")+Chr(9)+"Ctrl+Shift+E")
-    MenuItem(#menuVD_ExportImageSelected,lang("Export the selected as image")+Chr(9)+"Shift+E")
+    MenuItem(#menuVD_ExportImageSelected,lang("Export the selected as image"))
     MenuItem(#menuVD_ExportImageGroup,lang("Export the groups as image"))
     MenuItem(#menuVD_ExportScene,lang("Export Scene (full image)"))
     MenuBar()
@@ -127,7 +125,6 @@ Procedure VD_CreateTheMenu()
     
     ;{ EDIT
     MenuTitle(lang("Edit"))
-    MenuItem(#menuVD_ShapeCut,lang("Cut")+Chr(9)+"Ctrl+X")
     MenuItem(#menuVD_ShapeCopy,lang("Copy")+Chr(9)+"Ctrl+C")
     MenuItem(#menuVD_ShapePast,lang("Paste")+Chr(9)+"Ctrl+V")
     MenuItem(#menuVD_ShapePastToshape,lang("Past previous parameters to shape"))
@@ -160,7 +157,6 @@ Procedure VD_CreateTheMenu()
     MenuItem(#menuVD_HideAncre,lang("Hide anchor"))
     MenuItem(#menuVD_ShowAncreSelected,lang("Show anchor of selected shapes"))
     MenuItem(#menuVD_ShowSelection,lang("Show selection (dash stroke)"))
-    MenuItem(#menuVD_ShowCenter,lang("Show center of shape"))
     MenuItem(#menuVD_ShowBoundingboxSelection,lang("Show boundingbox selection"))
     MenuItem(#menuVD_ShowBoundingboxShape,lang("Show shape boundingbox"))
     
@@ -188,7 +184,6 @@ Procedure VD_CreateTheMenu()
     ;{ Layers
     MenuTitle(lang("Layer"))
     MenuItem(#menuVD_AddObjet,lang("Add a new Layer"))
-    MenuItem(#menuVD_DuplicateLayerWithSelected,lang("Create a new Layer with selected shape"))
     MenuItem(#menuVD_DeleteObjet,lang("Delete the current Layer"))
     ;}
     
@@ -1268,20 +1263,19 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
             If Obj(m)\Hide = 0 
               For j =0 To ArraySize(Obj(m)\Shape())  
                 If Obj(m)\Shape(j)\Hide = 0 And (selected = 0 Or Obj(m)\Shape(j)\selected) 
-                  VD_DrawFinalShape(m,j) 
-                  ;                   ; si clippath
-                  ;                   ;                           SaveVectorState()
-                  ;                   ;                           VdDrawShape1(m,j)
-                  ;                   ;                           ClipPath()
-                  ;                   
-                  ;                   ; on dessine les fx en dessous
-                  ;                   VdDrawFx(m,j,0)                            
-                  ;                   ; dessin du shape
-                  ;                   VdDrawShape1(m,j)
-                  ;                   VDDrawShapeColor(m,j)                            
-                  ;                   ; si fx au dessus
-                  ;                   VdDrawFx(m,j,1) 
-                  ;                   ; RestoreVectorState()   
+                  ; si clippath
+                  ;                           SaveVectorState()
+                  ;                           VdDrawShape1(m,j)
+                  ;                           ClipPath()
+                  
+                  ; on dessine les fx en dessous
+                  VdDrawFx(m,j,0)                            
+                  ; dessin du shape
+                  VdDrawShape1(m,j)
+                  VDDrawShapeColor(m,j)                            
+                  ; si fx au dessus
+                  VdDrawFx(m,j,1) 
+                  ; RestoreVectorState()   
                 EndIf
               Next
             EndIf
@@ -1381,13 +1375,14 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
     
       
       ; unpremultiply, to fixe the PB bug eport with vectorlib
-      CompilerIf #PB_Compiler_Backend = 0
-        If StartDrawing(ImageOutput(#Img_Export))
+      If StartDrawing(ImageOutput(#Img_Export))
+        CompilerIf #PB_Compiler_Backend = 0
           Premultiply::UnpremultiplyPixels(DrawingBuffer(), (DrawingBufferPitch()*OutputHeight())>>2)
-          StopDrawing()
-        EndIf
-      CompilerEndIf
-    
+        CompilerEndIf
+        
+        StopDrawing()
+      EndIf
+      
       ; SaveImage(#Img_Export, File$+"_original.png", #PB_ImagePlugin_PNG)
       
       If GrabImage(#Img_Export,#Img_ExportCopy,x,y,w,h)
@@ -1395,9 +1390,6 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
         ; If it's a preview for the bank image :
         If forbankimg>=1
           If forbankimg = 1
-            If vdoptions\bankOutputSize=0
-              vdoptions\bankOutputSize=64
-            EndIf
             ResizeImageProportion(#Img_ExportCopy,vdoptions\bankOutputSize,#PB_Image_Smooth)
           ElseIf forbankimg = 2 ; for character creator
              ; ResizeImageProportion(#Img_ExportCopy,vdoptions\bankOutputSizeFOrCreation,#PB_Image_Smooth)
@@ -1406,13 +1398,7 @@ Procedure Scene_Export(scene=0,forbankimg=0,file$=#Empty$,selected=0)
         
         ; on sauve
         If SaveImage(#Img_ExportCopy, File$, format) = 0
-          error$ = Str(format)+"/"+Str(x)+":"+Str(y)+" | "+Str(w)+"/"+Str(h)+Chr(10)
-          error$ + Str(forbankimg)+" / "+Str(vdoptions\bankOutputSize)
-          MessageRequester(lang("Save image"), lang("Can't save image: " )+ File$+Chr(10)+error$)
-          
-          If SaveImage(#Img_Export, File$, format) = 0
-             MessageRequester(lang("Save image"), lang("error to save image export normal"))
-          EndIf
+          MessageRequester(lang("Save image"), lang("Can't save image: " )+ File$)
           ; Else
           ; MessageRequester("Save image","Image saved ! ")
         EndIf
@@ -1516,9 +1502,9 @@ EndProcedure
 ;}
 
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 1270
-; FirstLine = 105
-; Folding = gSAAQBrO3FAAAAAAAAAAAwB+HAA+vPx-
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 488
+; FirstLine = 12
+; Folding = AKCAQhvO3FAAAAAAAAAAAAAAAAAA5T9
 ; EnableXP
 ; DisableDebugger

@@ -36,14 +36,13 @@ Declare Vd_SetPoint(param=0,draw=1)
 ; draw
 Declare ShapeDrawFx(Obj,Shape,fx)
 Declare VDDrawFx(vo,j,dessus=0)
-Declare VdDrawShape1(vo,j, noreset=0)
+Declare VdDrawShape1(vo,j)
 Declare VDDrawShapeColor(vo,j)
 Declare Grid3D()
 Declare VDDrawUtil()
 Declare DrawCanvas(x=0,y=0,Selected=0,gad=#G_canvasVector)
 Declare VD_ShapeCoord(i,camw.d=1,camh.d=1)
 Declare DrawObjClipping(m)
-Declare VD_DrawFinalShape(w,j)
 
 ; ui, update
 Declare UpdateListShape()
@@ -75,7 +74,6 @@ Declare AddPathRoundBox(x, y, w, h, r)
 Declare Shape_Save(file$ = "",autosave=0, selection=0)
 Declare Shape_Load(merge=0, file$ ="",draw=1)
 Declare.a Shape_CheckIfShapeIsOk(j,i,confirm=0)
-Declare Shape_SortDepth(Ze_idunik$)
 
 ; Manu (files)
 Declare VD_OpenTheHelp(html=0)
@@ -92,6 +90,6 @@ Declare OpenWinVectorDrawing()
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 38
-; FirstLine = 28
+; CursorPosition = 59
+; FirstLine = 52
 ; EnableXP

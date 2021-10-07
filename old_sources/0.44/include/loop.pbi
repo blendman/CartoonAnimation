@@ -467,6 +467,12 @@ Repeat
                 DrawCanvas(0,0,0)
               EndIf
               
+            Case #G_shapeLink
+              If ShapeId > -1
+                Obj(ObjId)\Shape(ShapeId)\Linked = GetGadgetState(#G_shapeLink)
+                DrawCanvas()
+              EndIf
+              
             Case #G_shapeLock 
               If ShapeId > -1
                 Obj(ObjId)\Shape(ShapeId)\Locked = GetGadgetState(#G_shapeLock)
@@ -492,18 +498,7 @@ Repeat
                 Obj(ObjId)\Shape(ShapeId)\y = GetGadgetState(#G_shapeY)
                 Drawcanvas()
               EndIf
-               
-            Case #G_shapeLink
-              If ShapeId > -1
-                Obj(ObjId)\Shape(ShapeId)\Linked = GetGadgetState(#G_shapeLink)
-                DrawCanvas()
-              EndIf
               
-            Case #G_shapeClipFX
-              If ShapeId > -1
-                Obj(ObjId)\Shape(ShapeId)\ClipFX = GetGadgetState(EventGadget)
-                DrawCanvas()
-              EndIf   
               ;}
               
               ;{ text
@@ -735,12 +730,6 @@ Repeat
                 Drawcanvas()
               EndIf
               
-            Case #G_shapeFxClip
-              If shapeId > -1
-                Obj(ObjId)\Shape(ShapeId)\Fx(ShapeFxId)\Clip = GetGadgetState(#G_shapeFxOpen)
-                Drawcanvas()
-              EndIf
-              
             Case #G_shapeFxActif 
               Shape_SetFXpropertie(#ShapePropertie_ActiveFx,0)
               
@@ -917,15 +906,10 @@ Repeat
             vd\EditMode = #VD_Editmode_Object
             SetGadgetState(#G_ToolVDEditMode,  vd\EditMode)
           Else
-            If Layer_CheckifOk(ObjId) = 1 And  Obj(ObjId)\Actif > 0 
-              If shapeId>-1 And shapeID<= ArraySize(Obj(ObjId)\shape())
-                vd\EditMode = #VD_Editmode_Point
-                SetGadgetState(#G_ToolVDEditMode,  vd\EditMode)
-              EndIf
-            EndIf
+            vd\EditMode = #VD_Editmode_Point
+            SetGadgetState(#G_ToolVDEditMode,  vd\EditMode)
           EndIf
           DrawCanvas() 
-          
           
         Case #menuVD_PointMirored
           Vd\PtUsemirored = 1-Vd\PtUsemirored
@@ -991,14 +975,45 @@ Repeat
           Shape_SelectAll(0)
           DrawCanvas()
           
-        Case #menuVD_ShapeCut 
-          VD_Shape_Copy(1)
-         
         Case #menuVD_ShapeCopy                    
-          VD_Shape_Copy()
+          If ShapeId>-1 Or ArraySize(obj(ObjId)\Shape())>=0
+            nb=-1
+            For i=0 To ArraySize(obj(ObjId)\Shape())
+              With obj(ObjId)\Shape(i)
+                If \Selected Or i = shapeid
+                  nb+1
+                  ReDim CopyObj\shape.sShape(nb)
+                  CopyObj\Shape(nb)=Obj(ObjId)\Shape(i)
+                  CopyObj\Shape(nb)\Nom$ = "Copy_"+Str(ArraySize(Obj(ObjId)\Shape())+1)
+                EndIf
+              EndWith
+            Next
+;             CopyObj\Shape(0)=Obj(ObjId)\Shape(ShapeId)
+;             CopyObj\Shape(0)\Nom$ = "Shape_"+Str(ArraySize(Obj(ObjId)\Shape())+1)
+          EndIf 
           
         Case #menuVD_ShapePast 
-         VD_Shape_Paste()
+          ;{
+          x = ((WindowMouseX(#Win_VD_main) - GadgetX(#G_canvasVector))*100)/VdOptions\Zoom - VD\ViewX 
+          y = ((WindowMouseY(#Win_VD_main) - GadgetY(#G_canvasVector))*100)/VdOptions\Zoom - VD\ViewY
+          Shape_SelectAll(0) 
+          For k = 0 To ArraySize(CopyObj\Shape())
+            n = ArraySize(Obj(ObjId)\Shape())+1
+            ReDim Obj(ObjId)\Shape.sShape(n)
+            ShapeId = n
+            Doc_New(0,1)
+            Obj(ObjId)\Shape(ShapeId) = CopyObj\Shape(k)                   
+            Obj(ObjId)\Shape(ShapeId)\idUnik$ = Shape_CreateIdUnik()                 
+            Obj(ObjId)\Shape(ShapeId)\X =x +CopyObj\Shape(k)\X - CopyObj\Shape(0)\x  
+            Obj(ObjId)\Shape(ShapeId)\y =y +CopyObj\Shape(k)\y - CopyObj\Shape(0)\y
+            ; Debug "X " + Obj(ObjId)\Shape(ShapeId)\X+ "/"+ x
+          Next
+          Ze_idunik$ = obj(ObjId)\shape(shapeId)\idUnik$
+          Shape_SortDepth(Ze_idunik$)
+          ShapeGetProperties()
+          ;Debug "alpha "+Obj(ObjId)\Shape(ShapeId)\Alpha
+          ;Debug Obj(ObjId)\Shape(ShapeId)\Nom$ 
+          ;}
           
         Case #menuVD_ShapePastToshape
           If ShapeId>-1  
@@ -1022,9 +1037,6 @@ Repeat
           
         Case #menuVD_ShowGrid
           Vd_ShowMenu(#menuVD_ShowGrid,VdOptions\ShowGrid)
-          
-        Case #menuVD_ShowCenter
-          Vd_ShowMenu(#menuVD_ShowCenter,VdOptions\ShowCenter)
           
         Case #menuVD_ShowSelection
           Vd_ShowMenu(#menuVD_ShowSelection,VdOptions\ShowSelection)
@@ -1098,11 +1110,6 @@ Repeat
           ;}
           
           ;{ Layers
-        Case #menuVD_DuplicateLayerWithSelected
-          VD_Shape_Copy()
-          Vd_LayerAdd()
-          VD_Shape_Paste(1)
-          
         Case #menuVD_AddObjet
           Vd_LayerAdd()
           
@@ -1331,8 +1338,9 @@ EndIf
 
 VD_SaveOptions()
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 503
-; FirstLine = 168
-; Folding = Leicv------46--8-8-5CgwwL9
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 932
+; FirstLine = 48
+; Folding = LWi---------------fKAACDvw
 ; EnableXP
+; DisableDebugger

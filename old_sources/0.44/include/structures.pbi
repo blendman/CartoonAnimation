@@ -232,9 +232,7 @@ Structure sShape
   open.a ; il est open ou clos ? (par defaut il est clos)
   Clip.a  ; doit-on cliquer le shape dans le précédent ?
   Linked.a ; le shape est-il "lié " avec les autres ?, autrement dit ferme-t-on le chemin après le précédent ou le laisse-t-on ouvert ?
-  ClipFX.a
-  ClipFX_Ok.a
-  
+   
   ; le shape parent : si on move/rotate/scale, ça move/scale/rotate l'enfant.
   Parent.sParent
   Group$
@@ -459,7 +457,6 @@ Structure sVdOptions
   ShowSelection.a
   ShowShapeBoundingBox.a
   ShowBoxselect.a
-  ShowCenter.a
   ShowCameraBorder.a
   ShowCameraCache.a
   ShowCameraSafe.a
@@ -635,8 +632,8 @@ Global Dim Scene.sScene(0)
 Global Mouseincanvas, othergadgethasfocus, mouseX, mouseY
 
 
-; IDE Options = PureBasic 5.61 (Windows - x86)
-; CursorPosition = 235
-; FirstLine = 125
-; Folding = AAFAG+
+; IDE Options = PureBasic 5.73 LTS (Windows - x86)
+; CursorPosition = 523
+; FirstLine = 157
+; Folding = AAAgG+
 ; EnableXP

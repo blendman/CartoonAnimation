@@ -796,7 +796,7 @@ Procedure Shape_Add(x,y)
         
       Case #VD_actionAddCircle
         nom$ ="Circle_"
-        s=4
+        s=10
         
       Case #VD_actionAddShape
         nom$ ="Shape_"
@@ -1223,71 +1223,6 @@ Procedure Shape_SetAngle(Rot)
   Next
   
   Drawcanvas() 
-  
-EndProcedure
-Procedure VD_Shape_Copy(cut=0)
-  ; to copy the selection of shape
-  If GetActiveGadget() = #G_canvasVector
-    If ShapeId>-1 Or ArraySize(obj(ObjId)\Shape())>=0
-      ; copy the shapes
-      nb=-1
-      For i=0 To ArraySize(obj(ObjId)\Shape())
-        With obj(ObjId)\Shape(i)
-          If \Selected Or i = shapeid
-            nb+1
-            ReDim CopyObj\shape.sShape(nb)
-            CopyObj\Shape(nb)=Obj(ObjId)\Shape(i)
-            If cut=0
-              CopyObj\Shape(nb)\Nom$ = "Copy_"+Str(ArraySize(Obj(ObjId)\Shape())+1)
-            EndIf
-          EndIf
-        EndWith
-      Next
-      ; delete shape if cut
-      If cut=1
-        Shape_Delete()
-      EndIf
-    EndIf 
-  EndIf 
-EndProcedure
-Procedure VD_Shape_Paste(newlayer=0)
-  
-  ; to paste shapes
-  If newlayer =0
-    x = ((WindowMouseX(#Win_VD_main) - GadgetX(#G_canvasVector))*100)/VdOptions\Zoom - VD\ViewX 
-    y = ((WindowMouseY(#Win_VD_main) - GadgetY(#G_canvasVector))*100)/VdOptions\Zoom - VD\ViewY
-  Else
-    ; x =  CopyObj\Shape(0)\x  
-    ; y =  CopyObj\Shape(0)\x  
-  EndIf
-
-  Shape_SelectAll(0) 
-  For k = 0 To ArraySize(CopyObj\Shape())
-    n = ArraySize(Obj(ObjId)\Shape())+1
-    ReDim Obj(ObjId)\Shape.sShape(n)
-    ShapeId = n
-    
-    Doc_New(0,1)
-    ; copy the shapes
-    Obj(ObjId)\Shape(ShapeId) = CopyObj\Shape(k)                   
-    Obj(ObjId)\Shape(ShapeId)\idUnik$ = Shape_CreateIdUnik() 
-    If newlayer =0
-      Obj(ObjId)\Shape(ShapeId)\X =x +CopyObj\Shape(k)\X - CopyObj\Shape(0)\x  
-      Obj(ObjId)\Shape(ShapeId)\y =y +CopyObj\Shape(k)\y - CopyObj\Shape(0)\y
-    EndIf
-    ; Debug "X " + Obj(ObjId)\Shape(ShapeId)\X+ "/"+ x
-  Next
-  
-  ; then we have to sort the new shapes
-  If newlayer
-    shapeId=0
-  EndIf
-  
-  Ze_idunik$ = obj(ObjId)\shape(shapeId)\idUnik$
-  Shape_SortDepth(Ze_idunik$)
-  ShapeGetProperties()
-  ; Debug "alpha "+Obj(ObjId)\Shape(ShapeId)\Alpha
-  ; Debug Obj(ObjId)\Shape(ShapeId)\Nom$ 
   
 EndProcedure
 
@@ -2639,7 +2574,7 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 798
-; FirstLine = 35
-; Folding = AAAAAAAAAAAAAAAAAMDAAAAAAAAgfPAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA5
+; CursorPosition = 2444
+; FirstLine = 170
+; Folding = AAg---0fBAAAAAAA-NRAJAAAAAAAAAAAAA1fAXCAACIA40BAAAAAAAAAOAfBAA9
 ; EnableXP

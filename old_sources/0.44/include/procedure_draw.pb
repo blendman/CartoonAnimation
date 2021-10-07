@@ -1,5 +1,6 @@
 ﻿
-; macro used for shape drawing
+
+; macro utilisied for shape drawing
 Macro ShapeSetParentingPosition(i,j)
   ; pour connaitre la position du shape sil a un parent
   vo = i
@@ -44,7 +45,7 @@ Procedure VD_ShapeCoord(i,camw.d=1,camh.d=1)
   With Obj(i)
     
     ScaleCoordinates(\w*0.01*camw,\h*0.01*camh)
-    ; RotateCoordinates(\RotX,\RotY,\Rot)
+    RotateCoordinates(\RotX,\RotY,\Rot)
     TranslateCoordinates(\x,\y)
     
   EndWith
@@ -59,6 +60,8 @@ Procedure ShapeDrawFx(Obj,Shape,fx)
     k = fx
     
     z.d = VdOptions\Zoom * 0.01
+    
+    ;ScaleCoordinates(Z,Z)
     
     ; pour dessiner les tyle de fx des shapes (ombres, stroke...)
     With Obj(a)\Shape(j)
@@ -187,11 +190,7 @@ Procedure ShapeDrawFx(Obj,Shape,fx)
                 
         EndSelect
 
-        If obj(vo)\Shape(j)\ClipFX_OK=0 And \Fx(k)\Depth = 0 
-          obj(vo)\Shape(j)\ClipFX_OK=1  
-          ClipPath()
-        EndIf
-            
+
         If \Linked = 0 Or j = ArraySize(Obj(ObjId)\Shape())
                 
             VectorSourceColor(\Fx(k)\color) 
@@ -210,6 +209,8 @@ Procedure ShapeDrawFx(Obj,Shape,fx)
         EndIf
     
     EndWith
+    
+    ;ResetCoordinates()
    
 EndProcedure
 Procedure VDDrawFx(vo,j,dessus=0)
@@ -224,7 +225,7 @@ Procedure VDDrawFx(vo,j,dessus=0)
           If \Fx(k)\Actif = 1 
             
             ShapeDrawFx(vo,j,k)
-           
+            
           EndIf                        
           
         EndIf
@@ -236,35 +237,7 @@ Procedure VDDrawFx(vo,j,dessus=0)
 EndProcedure
 
 ; shape
-Procedure VD_resetRotateCoord(vo,j,mode=1)
-  
-  ; to reset the rotate coordinate of a shape
-  ; mode = 1 : no reset
-  ; mode = -1 : reset 
-  
-  With Obj(vo)\Shape(j)
-    
-    ShapeSetParentingPosition(vo,j)
-    vx = Vd\viewX + \x + px ; + Obj(ObjId)\x 
-    vy = Vd\viewY + \y + pY ; + Obj(ObjId)\y
-    
-    If \FinalRot <>0
-      vx1 = Vd\viewX + Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\x ; + Obj(ObjId)\x 
-      vy1 = Vd\viewY + Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\y ; + Obj(ObjId)\y
-      ; attention, il faut recalculer les positions en X et Y par rapport à la rotation ! 
-      RotateCoordinates(Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Cx+vx1, Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\cy+vy1, mode * \FinalRot) 
-      ; attention, il faut recalculer les positions en X et Y par rapport à la rotation ! 
-    EndIf
-    If \rot <> 0
-      RotateCoordinates(\Cx+vx, \cy+vy, mode * \Rot) 
-    EndIf
-    
-  EndWith
-  
-EndProcedure
-
-    
-Procedure VdDrawShape1(vo,j, noreset=0)
+Procedure VdDrawShape1(vo,j)
     
     ; pour dessiner le chemin , avant les opérations de remplissage 
     ; (donc pour la couche normal et éventuellement d'autres couche (fx...)
@@ -274,7 +247,7 @@ Procedure VdDrawShape1(vo,j, noreset=0)
     With Obj(vo)\Shape(j)
       
       ShapeSetParentingPosition(vo,j)
-       ; VD_ShapeCoord(vo)
+      VD_ShapeCoord(vo)
       
         vx = Vd\viewX + \x + px ; + Obj(ObjId)\x 
         vy = Vd\viewY + \y + pY ; + Obj(ObjId)\y
@@ -285,7 +258,8 @@ Procedure VdDrawShape1(vo,j, noreset=0)
           RotateCoordinates(Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Cx+vx1, Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\cy+vy1, \FinalRot) 
           ; attention, il faut recalculer les positions en X et Y par rapport à la rotation ! 
         EndIf
-        MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+        
+         MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
         
         If \rot <> 0
           ;RotateCoordinates(\pt(0)\x+\Cx+vx, \pt(0)\y+\cy+vy, \FinalRot) 
@@ -293,6 +267,7 @@ Procedure VdDrawShape1(vo,j, noreset=0)
           ; faire la rotation par rapport à un centre de l'objet \centerX+vx et \centerY+vy
           ; de base : \centerX = \pt(0)\x+\Cx et \centerY =  \pt(0)\y+\cy
         EndIf
+        
         MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
         
 ;         If \shaptyp = #VD_ShapeCurve
@@ -315,6 +290,8 @@ Procedure VdDrawShape1(vo,j, noreset=0)
 ;             Next 
 ;           EndIf
 ;         EndIf
+        
+        
         
         Select \ShapTyp
                 
@@ -459,21 +436,12 @@ Procedure VdDrawShape1(vo,j, noreset=0)
             
         EndSelect
         
-        ; reset coordinates for rotation
-        ;If noreset =0
-          If \FinalRot <>0
-            ; vx1 = Vd\viewX + Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\x ; + Obj(ObjId)\x 
-            ; vy1 = Vd\viewY + Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\y ; + Obj(ObjId)\y
-            RotateCoordinates(Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\Cx+vx1, Obj(vo)\Shape(Obj(vo)\Shape(j)\Parent\id-1)\cy+vy1, -\FinalRot) 
-            ; attention, il faut recalculer les positions en X et Y par rapport à la rotation ! 
-          EndIf
-          If \rot <> 0
-            RotateCoordinates(\Cx+vx, \cy+vy, -\Rot) 
-          EndIf
+        ;If \rot <> 0
+          VD_ResetCoord()
         ;EndIf
         
-        
     EndWith
+    
     
 EndProcedure
 Procedure VDDrawShapeColor(vo,j)
@@ -1049,36 +1017,43 @@ Procedure VDDrawUtil()
             
             ShapeSetParentingPosition(ObjId,shapeId)
             
+            vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
+            vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
+;             
+;             MovePathCursor(\pt(0)\x+vx,\pt(0)\y+vy)
+;            
+;             Select \ShapTyp
+;                 
+;               Case #VD_ShapeShape, #VD_ShapeCurve  
+;                 DrawShapeCurve(ObjID,shapeId,vx,vy)
+;                 
+;               Case #VD_ShapeText
+;                 sizeW = \d ; VectorTextWidth(\text$, #PB_VectorText_Visible)
+;                 sizeH = VectorParagraphHeight(\text$, \d,200000)
+;                 AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,SizeW,SizeH)
+;                 
+;               Case #VD_ShapeImage 
+;                 AddPathBox(\pt(0)\x+vx,\pt(0)\y+vy,\SizeW,\SizeH)
+;                 
+;               Default
+                VdDrawShape1(ObjId, ShapeId)
+                
+;             EndSelect
+            VectorSourceColor(RGBA(60,30,40,255)) 
+            DashPath(1,5)
             
-            
-            If VdOptions\showselection 
-              VdDrawShape1(ObjId, ShapeId)
-              VectorSourceColor(RGBA(60,30,40,255)) 
-              DashPath(1,5)
-            EndIf
-            
-            If VdOptions\ShowCenter        
-              ; le centre du shape en bleu
-               If VdOptions\showselection 
-                 ;VD_resetRotateCoord(vo,j)
-               EndIf
-               vx = vd\ViewX + \X +px ;+ Obj(ObjId)\x 
-               vy = vd\ViewY + \Y +py ;+ Obj(ObjId)\y
-              MovePathCursor(vx,vy)
-              AddPathCircle(\Cx,\cy,b,0,360,#PB_Path_Relative)
-              VectorSourceColor(RGBA(255,0,216,200))
-              FillPath()
-              If VdOptions\showselection 
-                ;VD_resetRotateCoord(vo,j,-1)
-              EndIf
-            EndIf
-           
+            ; le centre du shape en bleu
+            MovePathCursor(vx,vy)
+            AddPathCircle(\Cx,\cy,b,0,360,#PB_Path_Relative)
+            VectorSourceColor(RGBA(255,0,216,200))
+            FillPath()
           EndWith
         EndIf     
         
       EndIf
       
   EndIf
+  
   
   
   ;{ other utilities to show
@@ -1204,53 +1179,6 @@ Procedure DrawObjClipping(m)
     EndWith
   EndIf
 EndProcedure
-Procedure VD_DrawFinalShape(m,j)
-  
-  ; to draw the final shape, with fx, clipping....
-  If obj(m)\Shape(j)\ClipFX=0
-    ;{ not use clippath for fx
-    ; on dessine les fx en dessous
-    VdDrawFx(m,j,0)
-    ;{ le shape
-    VdDrawShape1(m,j)
-    If Obj(m)\Shape(j)\Linked = 0 Or j = ArraySize(Obj(m)\Shape())
-      VDDrawShapeColor(m,j) ; color et fillpath()/strokepath()                                    
-    EndIf
-    ;}
-    ; si fx au dessus
-    VdDrawFx(m,j,1) 
-    ;}
-  Else
-    ;{ if use clippath
-    SaveVectorState()
-    ; VdDrawShape1(m,j)
-    ; clippath
-    
-    obj(m)\Shape(j)\ClipFX_OK=0  
-    ; on dessine les fx en dessous
-    VdDrawFx(m,j,0)
-    
-    ;{ le shape
-    VdDrawShape1(m,j)
-    If Obj(m)\Shape(j)\Linked = 0 Or j = ArraySize(Obj(m)\Shape())
-      VDDrawShapeColor(m,j) ; color et fillpath()/strokepath()                                    
-    EndIf
-    
-    If obj(vo)\Shape(j)\ClipFX_OK=0 
-      obj(vo)\Shape(j)\ClipFX_OK=1 
-      VdDrawShape1(m,j)
-      ClipPath()
-    EndIf
-
-    ;}
-    ; si fx au dessus
-    VdDrawFx(m,j,1)                    
-    RestoreVectorState()
-    ;}
-  EndIf
-  
-
-EndProcedure
 Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
   
   ; puis, on affiche les objets (et les shapes qui les composent)
@@ -1259,7 +1187,7 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
     If Obj(m)\Hide = 0
       
       VD_ResetCoord()
-     
+      ; VD_ShapeCoord(m)
       
       ; for selection
       If Selected = 1 And objid = m
@@ -1334,9 +1262,8 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
 ;       VectorSourceColor(RGBA(255,100,100,250))
 ;       StrokePath(50)
 ;       
+       
       VD_ShapeCoord(m)
-      
-     
       
       ; then draw
       BeginVectorLayer(Obj(m)\Alpha)
@@ -1346,8 +1273,28 @@ Procedure VD_DrawScene(x,y,Selected=0, playanim=0)
        ; If VdOptions\ShowOnlySel = 0 Or j = ShapeId Or playanim=1 Or selected =1
           
         If Obj(m)\Shape(j)\Hide = 0
-          VD_DrawFinalShape(m,j)
-        EndIf
+          
+          ; si clippath
+            ; SaveVectorState()
+            ; VdDrawShape1(m,j)
+            ; ClipPath()    
+            
+            ; on dessine les fx en dessous
+            VdDrawFx(m,j,0)
+            
+            ;{ le shape
+            VdDrawShape1(m,j)
+            
+            If Obj(m)\Shape(j)\Linked = 0 Or j = ArraySize(Obj(m)\Shape())
+              VDDrawShapeColor(m,j) ; color et fillpath()/strokepath()                                    
+            EndIf
+            ;}
+            
+            ; si fx au dessus
+            VdDrawFx(m,j,1)                    
+            ; RestoreVectorState()
+            
+          EndIf
           
         ; EndIf
       Next
@@ -1473,8 +1420,8 @@ EndProcedure
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 1057
-; FirstLine = 156
-; Folding = UDAT--BA5KIjAeAAAAA-wfAox---50Dy--
+; CursorPosition = 258
+; FirstLine = 39
+; Folding = Vl-v-zfw9nn-O--44--veQ-8---Ay--
 ; EnableXP
 ; DisableDebugger

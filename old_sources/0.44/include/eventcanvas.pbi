@@ -60,6 +60,8 @@ If EventType() = #PB_EventType_LeftButtonDown Or
     
     If StartVectorDrawing(CanvasVectorOutput(#G_canvasVector))
     
+    ; update coordonnate of the object
+    ;VD_ShapeCoord(ObjId)
     
     x5 = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_MouseX)                        
     y5 = GetGadgetAttribute(#G_canvasVector, #PB_Canvas_MouseY)
@@ -1069,8 +1071,8 @@ EndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 66
-; FirstLine = 24
-; Folding = g-06884f2uMX+-0---2nv----4fH+
+; CursorPosition = 811
+; FirstLine = 300
+; Folding = g-06884f2uMX+80+--2nv---f4fH+
 ; EnableXP
 ; DisableDebugger

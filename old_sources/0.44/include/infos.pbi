@@ -382,9 +382,6 @@ CompilerEndIf
 ; - clic to select shape doesn't use the obj()\w,h,x,y parameters.e
 ; - bug avec merge 2 shapes (draw selection border).
 ; ok 0.42 - add options for gradient
-; 0.45 - cut shapes (ctrl+X)
-; 0.45 - ajouter : dupliquer layer with selected
-; 0.45 - fx could have option to be clipped or not
 
 ; ok - ajouter un système de storyboard (voir le fichier cartoon_dev) : see BDcreator
 ; ok - ajouter un système de création de page de BD : see BDcreator
@@ -457,51 +454,9 @@ CompilerEndIf
 ; - with gradient, some text for gadgets "style" should be changed (linew\h\depth)
 ; - copy/paste all fx from a shape to another.
 ;- view\show name
-; - importer des shapes d'un fichier (on aurait une fenetre qui s'ouvre avec la liste des shapes qu'on peut importer.
+; - importer des shapes d'un fichier (on aurait une fenetre ui s'ouvre avec la liste des shapes qu'on peut importer.
 ; WIP - view\show name
 ; pour rotation avec parent : ajouter un tableau de rotation par parent avec centre rotation ?
-
-; - add group parameters to save/load
-; - shape : add gadget group
-
-
-; 07/10/2021 0.45.1 (74)
-; // Fixes
-; - fixe a bug when rotate shape system
-; - fixe a bug with rotate shape and parent (there is always some bugs with parenting and rotate)
-
-
-; 05/10/2021 0.45 (73)
-; // New
-; - DuplicateLayerWithSelected
-; - menu\edit\cut
-; - VD_Shape_copy(cut=0)
-; - VD_Shape_Paste(newlayer=0)
-; - add shapefx\clip
-; - vdoptions\showCenter
-; - menu\view\showCenter
-; - tab Edit : add clipFX gadget
-; // changes
-; - change position for some gadgets (tab layer)
-; - copy/cut only if activegadget() = canvasmain
-; - add PathClip to fx (option)
-; // Fixes
-; - view\dont show dash stroke for selected didn't work
-
-; 04/10/2021 0.44.4 (72)
-; // fixes
-; - set editpoint to point only if shapeId >=0
-
-; 01/10/2021 0.44.3 (71)
-; // New
-; - add shortcut : save selected as image (shift+E)
-; // Changes
-; - change the depth max from 1000 to 1000000
-
-
-; 28/09/2021 0.44.1 (70)
-; // Fixes
-; - sometime, when save file, image preview isn't saved because vdoptions\bankOutputSize =0
 
 
 ; 22/09/2021 0.44 (69)
@@ -1617,8 +1572,8 @@ CompilerEndIf
 
 
 ; IDE Options = PureBasic 5.73 LTS (Windows - x86)
-; CursorPosition = 467
-; FirstLine = 148
+; CursorPosition = 458
+; FirstLine = 133
 ; Folding = h8
 ; EnableXP
 ; DisableDebugger
