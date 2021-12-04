@@ -1,7 +1,7 @@
 
 # What is Cartoon (animation) ?
 
-Cartoon is a 2D animation software developped by Blendman, in purebasic. With Cartoon you can create 2D vector drawings, (and in a futur version, you will able to create animation and save it of course :)). This sofware is open-source under MIT license, please read the license file for more information.
+Cartoon is a 2D animation software developped by Blendman, in purebasic. With Cartoon you can create 2D vector drawings, (and in a futur version, you will able to create animation and save it of course :)). This sofware is open-source under GPL license, please read the license file for more information.
 
 # ScreenShots
 
